@@ -17,11 +17,11 @@ export const Route = createFileRoute("/")({
 
 /* ──────────────────────────────── ATOMS ─────────────────────────────── */
 
-function Sticker({ children, className = "", rotate = 0 }: { children: React.ReactNode; className?: string; rotate?: number }) {
+function Sticker({ children, className = "", rotate = 0, style }: { children: React.ReactNode; className?: string; rotate?: number; style?: React.CSSProperties }) {
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 label-tiny ${className}`}
-      style={{ transform: `rotate(${rotate}deg)` }}
+      style={{ transform: `rotate(${rotate}deg)`, ...style }}
     >
       {children}
     </span>
