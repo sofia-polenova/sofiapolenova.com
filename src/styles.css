@@ -144,12 +144,14 @@
 }
 
 @layer base {
-  * {
-    border-color: var(--color-border);
-  }
-
+  * { border-color: var(--color-border); }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
   }
+  .font-serif-italic { font-family: var(--font-serif); font-style: italic; font-weight: 400; }
+  .font-serif { font-family: var(--font-serif); font-weight: 400; }
+  .font-hand { font-family: var(--font-hand); }
+  .label-tiny { font-family: var(--font-sans); text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.72rem; font-weight: 600; }
 }
