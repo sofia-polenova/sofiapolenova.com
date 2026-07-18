@@ -221,7 +221,7 @@ export default function PersonalPage() {
               </div>
               <span style={{ fontFamily: "'Anton', sans-serif", fontSize: 26, flexShrink: 0 }}>30 000 ₽</span>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "20px 0", borderTop: "1px solid rgba(0,0,0,0.1)", gap: 16, background: "#1e2e1a", margin: "0 -24px", padding: "20px 24px", borderRadius: 4 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "20px 24px", gap: 16, background: "#1e2e1a", margin: "0 -24px", borderRadius: 4 }}>
               <div>
                 <p style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 16, margin: "0 0 4px", color: "#fff" }}>Максимальный результат</p>
                 <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase" as const, color: "rgba(255,255,255,0.45)", margin: "0 0 8px" }}>VIP-сопровождение с врачом</p>
