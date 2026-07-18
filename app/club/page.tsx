@@ -9,7 +9,7 @@ function useFadeIn() {
     if (!el) return;
     const obs = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) { el.style.opacity = "1"; el.style.transform = "translateY(0)"; obs.disconnect(); } },
-      { threshold: 0.12 }
+      { threshold: 0.05 }
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -20,7 +20,7 @@ function useFadeIn() {
 function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   const ref = useFadeIn();
   return (
-    <div ref={ref} style={{ opacity: 0, transform: "translateY(48px)", transition: `opacity 0.55s cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 0.55s cubic-bezier(0.22,1,0.36,1) ${delay}ms` }}>
+    <div ref={ref} style={{ opacity: 0, transform: "translateY(48px)", transition: `opacity 0.35s cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 0.35s cubic-bezier(0.22,1,0.36,1) ${delay}ms` }}>
       {children}
     </div>
   );
@@ -487,7 +487,7 @@ export default function ClubPage() {
           </FadeIn>
 
           {/* 02 */}
-          <FadeIn delay={700}>
+          <FadeIn delay={80}>
             <div style={{ padding: "28px 0", borderTop: "1px solid rgba(0,0,0,0.1)" }}>
               <div style={{ display: "flex", gap: 20, marginBottom: 20 }}>
                 <span style={{ fontFamily: "'Anton', sans-serif", fontSize: 13, color: "#4a6b3a", letterSpacing: 1, flexShrink: 0, marginTop: 3 }}>02</span>
@@ -515,7 +515,7 @@ export default function ClubPage() {
           </FadeIn>
 
           {/* 03 */}
-          <FadeIn delay={1400}>
+          <FadeIn delay={160}>
             <div style={{ padding: "28px 0", borderTop: "1px solid rgba(0,0,0,0.1)" }}>
               <div style={{ display: "flex", gap: 20, marginBottom: 20 }}>
                 <span style={{ fontFamily: "'Anton', sans-serif", fontSize: 13, color: "#4a6b3a", letterSpacing: 1, flexShrink: 0, marginTop: 3 }}>03</span>
@@ -549,7 +549,7 @@ export default function ClubPage() {
           </FadeIn>
 
           {/* 04 */}
-          <FadeIn delay={2100}>
+          <FadeIn delay={240}>
             <div style={{ padding: "28px 0", borderTop: "1px solid rgba(0,0,0,0.1)" }}>
               <div style={{ display: "flex", gap: 20, marginBottom: 20 }}>
                 <span style={{ fontFamily: "'Anton', sans-serif", fontSize: 13, color: "#4a6b3a", letterSpacing: 1, flexShrink: 0, marginTop: 3 }}>04</span>
