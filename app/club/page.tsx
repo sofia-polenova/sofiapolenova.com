@@ -533,16 +533,18 @@ export default function ClubPage() {
                   { title: "Как справиться с перееданием в ПМС?", duration: "16:48" },
                   { title: "Как зависимость от лайков связана с желанием взвешиваться каждый день?", duration: "19:34" },
                 ].map((p, i) => (
-                  <div key={i} style={{ background: "#1a1a1a", borderRadius: 10, padding: "14px 16px", display: "flex", alignItems: "center", gap: 14 }}>
-                    <div style={{ width: 34, height: 34, borderRadius: "50%", background: "#4a6b3a", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                      <span style={{ color: "#fff", fontSize: 12 }}>▶</span>
+                  <FadeIn key={i} delay={i * 90}>
+                    <div style={{ background: "#1a1a1a", borderRadius: 10, padding: "14px 16px", display: "flex", alignItems: "center", gap: 14 }}>
+                      <div style={{ width: 34, height: 34, borderRadius: "50%", background: "#4a6b3a", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <span style={{ color: "#fff", fontSize: 12 }}>▶</span>
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 500, color: "#fff", margin: "0 0 2px", lineHeight: 1.3 }}>{p.title}</p>
+                        <p style={{ fontFamily: "var(--font-sans)", fontSize: 11, color: "rgba(255,255,255,0.45)", margin: 0, letterSpacing: 1, textTransform: "uppercase" as const }}>подкаст</p>
+                      </div>
+                      <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, color: "rgba(255,255,255,0.45)", flexShrink: 0, letterSpacing: 0.5 }}>{p.duration}</span>
                     </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 500, color: "#fff", margin: "0 0 2px", lineHeight: 1.3 }}>{p.title}</p>
-                      <p style={{ fontFamily: "var(--font-sans)", fontSize: 11, color: "rgba(255,255,255,0.45)", margin: 0, letterSpacing: 1, textTransform: "uppercase" as const }}>подкаст</p>
-                    </div>
-                    <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, color: "rgba(255,255,255,0.45)", flexShrink: 0, letterSpacing: 0.5 }}>{p.duration}</span>
-                  </div>
+                  </FadeIn>
                 ))}
               </div>
             </div>
@@ -701,7 +703,7 @@ export default function ClubPage() {
           <p style={{ fontSize: 12, color: "#bbb", margin: 0 }}>ИНН: 440117728694 · ОГРНИП: 323440000001972</p>
         </div>
 
-        <p style={{ fontSize: 11, color: "#ccc", margin: "12px 0 0" }}>© 2025 Поленова Софья Николаевна. Все права защищены.</p>
+        <p style={{ fontSize: 11, color: "#ccc", margin: "12px 0 0" }}>© 2026 Поленова Софья Николаевна. Все права защищены.</p>
       </div>
     </main>
   );
