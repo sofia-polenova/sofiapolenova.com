@@ -83,13 +83,13 @@ function Story() {
           fontFamily: "var(--font-display)", fontSize: "clamp(32px, 8vw, 52px)",
           lineHeight: 1.0, textAlign: "center", margin: "0 0 28px", textTransform: "uppercase"
         }}>
-          Я прошла через всё это — знаю как помочь
+          «Результат живёт не в силе воли, а в системе привычек, которые встроены в твою жизнь»
         </h2>
         <p style={{
           fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 18,
           textAlign: "center", lineHeight: 1.6, color: "#444", margin: "0 0 40px"
         }}>
-          «Я понимаю, каково это — когда тренируешься, а тело не меняется. Когда срываешься после очередного марафона. Моя цель — сделать так, чтобы движение стало твоим образом жизни, а не пыткой»
+          «Я смотрю на тело целиком, силовые в связке с осанкой и дыханием, а вместо запретов мягкая дисциплина из маленьких привычек, которые не выжигают, а меняют тело спокойно и надолго»
         </p>
         {/* Stats */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16, textAlign: "center", borderTop: "1px solid rgba(0,0,0,0.12)", paddingTop: 32 }}>
