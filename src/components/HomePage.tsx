@@ -93,7 +93,7 @@ function Story() {
         </p>
         {/* Stats */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16, textAlign: "center", borderTop: "1px solid rgba(0,0,0,0.12)", paddingTop: 32 }}>
-          {[["6+", "лет опыта"], ["50+", "результатов"]].map(([n, l]) => (
+          {[["8+", "лет опыта"], ["50+", "результатов"]].map(([n, l]) => (
             <div key={l}>
               <div style={{ fontFamily: "var(--font-display)", fontSize: 40, lineHeight: 1, color: "#4a6b3a" }}>{n}</div>
               <div style={{ fontFamily: "var(--font-sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: 2, color: "#666", marginTop: 6 }}>{l}</div>
@@ -246,14 +246,20 @@ function Reviews() {
 /* ─── EDUCATION ─── */
 const EDUCATION = [
   { year: "2019", title: "Высшее тренерское образование", place: "СПбГУФК им. П. Ф. Лесгафта — Санкт-Петербургский государственный университет физической культуры имени П. Ф. Лесгафта · Диплом с отличием" },
-  { year: "2024", title: "ТБС и ягодицы — практика тренировки в 3D", place: "Обучающий центр «Анатомия», Санкт-Петербург · 16 часов" },
-  { year: "2023", title: "Позвоночник. Стабильность", place: "Обучающий центр «Анатомия», Санкт-Петербург · 8 часов" },
+  { year: "2023", title: "Позвоночник. Стабильность", place: "Обучающий центр «Анатомия», Санкт-Петербург · 8 часов, очно" },
+  { year: "2023", title: "Health Coaching и комплексное ведение подопечных в онлайн-формате", place: "Health Coach academy · 120 часов" },
+  { year: "2024", title: "ТБС и ягодицы — практика тренировки в 3D", place: "Обучающий центр «Анатомия», Санкт-Петербург · 16 часов, очно" },
+  { year: "2026", title: "Диагностика и составление программ функциональной реабилитации", place: "Академия спортивной подготовки и функционального восстановления (AST) · в процессе обучения" },
 ];
 
 const CERTS = [
   "/assets/edu/diploma.jpg",
+  "/assets/edu/cert3.jpg",
   "/assets/edu/cert1.jpg",
+  "/assets/edu/cert4.jpg",
   "/assets/edu/cert2.jpg",
+  "/assets/edu/cert5.jpg",
+  "/assets/edu/cert6.jpg",
 ];
 
 function Education() {
@@ -265,7 +271,7 @@ function Education() {
         </h2>
 
         {/* Timeline */}
-        <div style={{ marginBottom: 40 }}>
+        <div style={{ marginBottom: 16 }}>
           {EDUCATION.map((e, i) => (
             <div key={i} style={{ display: "flex", gap: 20, padding: "20px 0", borderTop: "1px solid rgba(0,0,0,0.15)" }}>
               <span style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "#4a6b3a", minWidth: 36, paddingTop: 2, fontWeight: 600 }}>{e.year}</span>
@@ -278,10 +284,14 @@ function Education() {
           <div style={{ borderTop: "1px solid rgba(0,0,0,0.15)" }} />
         </div>
 
+        <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 14, color: "#666", margin: "0 0 24px" }}>
+          и другие ↓
+        </p>
+
         {/* Certificate images */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
+        <div style={{ display: "flex", overflowX: "auto", gap: 10, scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch", paddingBottom: 4 }}>
           {CERTS.map((src, i) => (
-            <a key={i} href={src} target="_blank" rel="noopener noreferrer">
+            <a key={i} href={src} target="_blank" rel="noopener noreferrer" style={{ flex: "0 0 auto", width: "31%", minWidth: 140, scrollSnapAlign: "start" }}>
               <img
                 src={src}
                 alt={`Диплом ${i + 1}`}
@@ -418,8 +428,8 @@ export default function HomePage() {
       <Nav />
       <Hero />
       <Story />
-      <Services />
       <Education />
+      <Services />
       <CasesIndex />
       <Footer />
     </main>
