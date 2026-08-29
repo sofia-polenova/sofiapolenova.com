@@ -146,3 +146,10 @@
   .font-hand { font-family: var(--font-hand); }
   .label-tiny { font-family: var(--font-sans); text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.72rem; font-weight: 600; }
 }
+
+/* Hero video: вертикальный ролик на мобилке, горизонтальный промо на десктопе */
+.hero-video--desktop { display: none; }
+@media (min-width: 768px) {
+  .hero-video--mobile { display: none; }
+  .hero-video--desktop { display: block; }
+}

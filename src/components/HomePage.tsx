@@ -18,7 +18,9 @@ function Nav() {
 function Hero() {
   return (
     <section style={{ position: "relative", background: "#1a1a1a", overflow: "hidden", minHeight: "90vh", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+      {/* Mobile: вертикальный формат */}
       <video
+        className="hero-video hero-video--mobile"
         autoPlay
         muted
         loop
@@ -26,6 +28,17 @@ function Hero() {
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", opacity: 0.85 }}
       >
         <source src="/assets/hero.mp4" type="video/mp4" />
+      </video>
+      {/* Desktop: горизонтальный промо-ролик */}
+      <video
+        className="hero-video hero-video--desktop"
+        autoPlay
+        muted
+        loop
+        playsInline
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", opacity: 0.85 }}
+      >
+        <source src="/assets/hero-desktop.mp4" type="video/mp4" />
       </video>
       {/* gradient overlay */}
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.6) 100%)" }} />
