@@ -31,8 +31,11 @@ export default function ProgramsPage() {
           3. По программам
         </div>
         <h1 style={S.h1}>Сопровождение по тренировкам и питанию</h1>
+        <p style={{ ...S.lead, marginBottom: 16 }}>
+          Готовая индивидуальная программа тренировок под твою цель, тело и образ жизни — для зала или для дома. Ты занимаешься сама, но не одна: остаёмся на связи, я отвечаю на вопросы и корректирую программу по ходу.
+        </p>
         <p style={S.lead}>
-          Индивидуальная программа тренировок и питания под твою цель — веду тебя с ежедневной обратной связью и корректирую по ходу. Есть облегчённый формат: сопровождение по питанию плюс программа тренировок, которую ты выполняешь самостоятельно.
+          Можно работать только с питанием: начинаем с консультации, дальше ты присылаешь отчёты в чат, а я контролирую и мягко направляю — без жёстких меню и подсчёта калорий.
         </p>
 
         {/* Спорт */}
@@ -80,13 +83,16 @@ export default function ProgramsPage() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, padding: "16px 0", borderTop: "1px solid rgba(0,0,0,0.12)" }}>
             <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 15, color: "#0A0A0A", lineHeight: 1.4, paddingTop: 4 }}>Тренировки + питание</span>
             <span style={{ textAlign: "right" as const, flexShrink: 0 }}>
-              <span style={{ display: "block", fontFamily: "'Anton', sans-serif", fontSize: 26, lineHeight: 1 }}>≈ $170 / месяц</span>
-              <span style={{ display: "block", fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontSize: 14, color: "#666", marginTop: 2 }}>от 15 000 ₽ / месяц</span>
+              <span style={{ display: "block", fontFamily: "'Anton', sans-serif", fontSize: 26, lineHeight: 1 }}>$230 / месяц</span>
+              <span style={{ display: "block", fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontSize: 14, color: "#666", marginTop: 2 }}>20 000 ₽ / месяц</span>
             </span>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, padding: "16px 0", borderTop: "1px solid rgba(0,0,0,0.12)" }}>
-            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 15, color: "#0A0A0A", lineHeight: 1.4, paddingTop: 4 }}>Питание + составление программы тренировок</span>
-            <span style={{ fontFamily: "'Anton', sans-serif", fontSize: 15, color: "#666", flexShrink: 0, paddingTop: 4 }}>По запросу</span>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 15, color: "#0A0A0A", lineHeight: 1.4, paddingTop: 4 }}>Только питание</span>
+            <span style={{ textAlign: "right" as const, flexShrink: 0 }}>
+              <span style={{ display: "block", fontFamily: "'Anton', sans-serif", fontSize: 26, lineHeight: 1 }}>$175 / месяц</span>
+              <span style={{ display: "block", fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontSize: 14, color: "#666", marginTop: 2 }}>15 000 ₽ / месяц</span>
+            </span>
           </div>
           <div style={{ borderTop: "1px solid rgba(0,0,0,0.12)" }} />
         </div>
