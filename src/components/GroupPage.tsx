@@ -1,10 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /* ─────────────────────────────────────────────
-   ГРУППОВЫЕ ТРЕНИРОВКИ — ШАБЛОН
-   Черновая структура. Софья, заполни блоки,
-   помеченные [ ... ] и комментариями TODO.
+   ГРУППОВЫЕ ТРЕНИРОВКИ
+   Оформление в стиле страницы клуба:
+   parallax-hero, fade-in на скролле, медиа-карусель.
+   Шрифты — только Anton / Inter / Instrument Serif
+   через CSS-переменные, как на главной.
    ───────────────────────────────────────────── */
 
 const BG = "#F0EDE6";
@@ -12,161 +14,158 @@ const CARD = "#E3E0D8";
 const DARK = "#0A0A0A";
 const GREEN = "#4a6b3a";
 const GRAY = "#666";
-const FONT_D = "'Anton', sans-serif";
-const FONT_S = "'Inter', sans-serif";
+
+const FONT_D = "var(--font-display)"; // Anton
+const FONT_S = "var(--font-sans)";    // Inter
+const FONT_SERIF = "var(--font-serif)"; // Instrument Serif
 
 const TG_SOFIA = "https://t.me/sofiapolenova";
 
-function Nav() {
+/* ── Fade-in on scroll ── */
+function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = "1";
+          el.style.transform = "translateY(0)";
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.05 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
   return (
-    <nav style={{ background: BG, borderBottom: "1px solid rgba(0,0,0,0.08)", padding: "16px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", position: "sticky", top: 0, zIndex: 100 }}>
-      <a href="/" style={{ fontFamily: FONT_S, fontSize: 13, textDecoration: "none", color: GRAY, letterSpacing: 1 }}>← Назад</a>
-      <a href="/" style={{ fontFamily: FONT_D, fontSize: 16, letterSpacing: 1, color: DARK, textDecoration: "none" }}>SOFIA POLENOVA</a>
-      <div style={{ width: 60 }} />
-    </nav>
+    <div ref={ref} style={{ opacity: 0, transform: "translateY(48px)", transition: `opacity 0.35s cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 0.35s cubic-bezier(0.22,1,0.36,1) ${delay}ms` }}>
+      {children}
+    </div>
   );
 }
 
-function wrap(children: React.ReactNode) {
-  return <div style={{ maxWidth: 600, margin: "0 auto", padding: "0 20px" }}>{children}</div>;
-}
+const S = {
+  page: { background: BG, minHeight: "100vh", fontFamily: FONT_S } as React.CSSProperties,
+  nav: { background: BG, borderBottom: "1px solid rgba(0,0,0,0.08)", padding: "16px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", position: "sticky" as const, top: 0, zIndex: 100 },
+  back: { fontFamily: FONT_S, fontSize: 13, textDecoration: "none", color: GRAY, letterSpacing: 1 } as React.CSSProperties,
+  logo: { fontFamily: FONT_D, fontSize: 16, letterSpacing: 1, color: DARK, textDecoration: "none" } as React.CSSProperties,
+  wrap: { maxWidth: 600, margin: "0 auto", padding: "0 20px 80px" } as React.CSSProperties,
+  eyebrow: { fontFamily: FONT_S, fontSize: 11, fontWeight: 600, letterSpacing: 3, textTransform: "uppercase" as const, color: "#999", margin: "0 0 16px" },
+  h2: { fontFamily: FONT_D, fontSize: "clamp(28px, 7vw, 44px)", textTransform: "uppercase" as const, lineHeight: 1, margin: "0 0 24px" },
+  lead: { fontFamily: FONT_S, fontSize: "clamp(15px, 4vw, 17px)", lineHeight: 1.75, color: "#444", margin: "0 0 20px" } as React.CSSProperties,
+  divider: { borderTop: "1px solid rgba(0,0,0,0.12)", margin: "48px 0" } as React.CSSProperties,
+  btn: { display: "block", textAlign: "center" as const, fontFamily: FONT_S, fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 24px", color: "#F0EDE6", textDecoration: "none", background: DARK },
+};
 
-const eyebrow: React.CSSProperties = { fontFamily: FONT_S, fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: GRAY, marginBottom: 12 };
-const h2: React.CSSProperties = { fontFamily: FONT_D, fontSize: "clamp(28px, 8vw, 48px)", textTransform: "uppercase", lineHeight: 1.05, margin: "0 0 24px" };
-const lead: React.CSSProperties = { fontFamily: FONT_S, fontSize: 17, lineHeight: 1.65, color: "#333" };
-const listItem: React.CSSProperties = { fontFamily: FONT_S, fontSize: 14, color: "#333", padding: "10px 0", borderBottom: "1px solid rgba(0,0,0,0.08)", display: "flex", gap: 10, lineHeight: 1.5 };
-const btnDark: React.CSSProperties = { display: "block", textAlign: "center", fontFamily: FONT_S, fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", padding: "18px 24px", color: "#F0EDE6", textDecoration: "none", background: DARK };
+/* ── Parallax hero ── */
+function ParallaxHero() {
+  const textRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
-/* ── HERO ── */
-function Hero() {
+  useEffect(() => {
+    const onScroll = () => {
+      if (!textRef.current || !sectionRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const offset = Math.max(0, -rect.top * 0.4);
+      textRef.current.style.transform = `translateY(-${offset}px)`;
+      textRef.current.style.opacity = String(Math.max(0, 1 - (-rect.top / (window.innerHeight * 0.6))));
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <section style={{ background: BG, padding: "48px 20px 56px" }}>
-      {wrap(<>
-        <div style={eyebrow}>Групповые тренировки</div>
-        <h1 style={{ fontFamily: FONT_D, fontSize: "clamp(44px, 12vw, 84px)", textTransform: "uppercase", lineHeight: 0.98, margin: "0 0 24px" }}>
+    <div ref={sectionRef} style={{ position: "relative", height: "100vh", margin: "0 0 48px", overflow: "hidden", background: "#1a1a1a" }}>
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        poster="/assets/training-1.jpg"
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%", opacity: 0.9 }}
+      >
+        <source src="/assets/trenirovka.mov" type="video/quicktime" />
+        <source src="/assets/trenirovka.mov" />
+      </video>
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 32%, rgba(0,0,0,0) 42%, rgba(0,0,0,0.9) 100%)" }} />
+
+      <div style={{ position: "absolute", top: "16vh", left: 0, right: 0, textAlign: "center", padding: "0 20px" }}>
+        <p style={{ fontFamily: FONT_D, fontSize: "clamp(38px, 11vw, 76px)", textTransform: "uppercase", lineHeight: 0.98, color: "#fff", margin: 0, letterSpacing: 1, textShadow: "0 2px 12px rgba(0,0,0,0.4)" }}>
           Групповые<br />тренировки
-        </h1>
-        {/* TODO Софья: 1–2 абзаца — что это за формат и для кого */}
-        <p style={{ ...lead, maxWidth: 480, marginBottom: 28 }}>
-          Живые онлайн-тренировки в небольшой группе. Занимаемся вместе по расписанию,
-          я ставлю технику и держу нагрузку безопасной. Между занятиями — записи и чат
-          с обратной связью. [дополнить]
         </p>
-        <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 6 }}>
-          <span style={{ fontFamily: FONT_D, fontSize: 40, lineHeight: 1 }}>от 8 000 ₽</span>
-          <span style={{ fontFamily: FONT_S, fontSize: 14, color: GRAY }}>в месяц · ≈ $90</span>
-        </div>
-        <p style={{ fontFamily: FONT_S, fontSize: 13, color: GRAY, margin: "0 0 28px" }}>
-          Первая тренировка — бесплатно.
+      </div>
+
+      <div ref={textRef} style={{ position: "absolute", bottom: 40, left: 32, right: 32, transition: "transform 0.05s linear, opacity 0.05s linear" }}>
+        <p style={{ fontFamily: FONT_D, fontSize: "clamp(20px, 5vw, 34px)", textTransform: "uppercase", lineHeight: 1.2, color: "#fff", margin: "0 0 14px" }}>
+          Живые онлайн-занятия<br />в маленькой группе
         </p>
-        <a href={TG_SOFIA} target="_blank" rel="noopener noreferrer" style={btnDark}>
-          Написать Софье →
-        </a>
-      </>)}
-    </section>
+        <p style={{ fontFamily: FONT_SERIF, fontStyle: "italic", fontSize: "clamp(16px, 3.5vw, 22px)", color: "#fff", margin: 0, lineHeight: 1.5 }}>
+          со стабильным расписанием и вниманием к каждой
+        </p>
+      </div>
+    </div>
   );
 }
 
-/* ── КАК ЭТО УСТРОЕНО ── */
-function How() {
-  // TODO Софья: подставь реальные цифры вместо [ ... ]
-  const rows: [string, string][] = [
-    ["Формат", "Живые тренировки в Zoom + записи в личном кабинете"],
-    ["Расписание", "[дни недели] · [время] МСК"],
-    ["Длительность", "[45–60] минут"],
-    ["Размер группы", "до [8–10] человек"],
-    ["Уровень", "Подходит новичкам — все упражнения адаптируются"],
-    ["Оборудование", "[коврик; резинки — по желанию]"],
-  ];
-  return (
-    <section style={{ background: CARD, padding: "56px 20px" }}>
-      {wrap(<>
-        <h2 style={h2}>Как это устроено</h2>
-        <div>
-          {rows.map(([k, v]) => (
-            <div key={k} style={{ display: "flex", gap: 16, padding: "16px 0", borderTop: "1px solid rgba(0,0,0,0.12)" }}>
-              <span style={{ fontFamily: FONT_S, fontSize: 12, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase", color: GREEN, minWidth: 110, flexShrink: 0, paddingTop: 2 }}>{k}</span>
-              <span style={{ fontFamily: FONT_S, fontSize: 15, color: "#333", lineHeight: 1.5 }}>{v}</span>
-            </div>
-          ))}
-          <div style={{ borderTop: "1px solid rgba(0,0,0,0.12)" }} />
-        </div>
-      </>)}
-    </section>
-  );
-}
+/* ── Media carousel (фото и видео с тренировок) ── */
+const MEDIA: { type: "img" | "video"; src: string }[] = [
+  { type: "img", src: "/assets/training-1.jpg" },
+  { type: "video", src: "/assets/trenirovka.mov" },
+  { type: "img", src: "/assets/training-2.jpg" },
+  { type: "video", src: "/assets/trenirovka2.mov" },
+  { type: "img", src: "/assets/training-3.jpg" },
+  { type: "img", src: "/assets/training-4.jpg" },
+];
 
-/* ── ЧТО ВХОДИТ ── */
-function Includes() {
-  // TODO Софья: финальный список того, что получает участница
-  const items = [
-    "Живые групповые тренировки по расписанию",
-    "Записи всех тренировок — можно заниматься когда удобно",
-    "Разбор техники и обратная связь в чате группы",
-    "Новый фокус каждые [4] недели",
-    "Ответы на вопросы по тренировкам и телу",
-    "[подкасты / материалы по питанию — если входит]",
-  ];
+function MediaCarousel() {
   return (
-    <section style={{ background: BG, padding: "56px 20px" }}>
-      {wrap(<>
-        <h2 style={h2}>Что входит</h2>
-        <div style={{ background: CARD, padding: "8px 24px 16px" }}>
-          {items.map((it) => (
-            <div key={it} style={listItem}><span style={{ color: GREEN, flexShrink: 0 }}>✓</span>{it}</div>
-          ))}
-        </div>
-      </>)}
-    </section>
-  );
-}
-
-/* ── КОМУ ПОДХОДИТ ── */
-function ForWho() {
-  return (
-    <section style={{ background: CARD, padding: "56px 20px" }}>
-      {wrap(<>
-        <h2 style={h2}>Кому подходит</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 12 }}>
-          <div style={{ background: BG, padding: "20px 22px" }}>
-            <div style={{ fontFamily: FONT_S, fontSize: 11, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase", color: GREEN, marginBottom: 12 }}>Подойдёт</div>
-            {/* TODO Софья */}
-            {["Хочешь регулярность и поддержку группы", "Занималась сама, но не хватает системы", "Нужна безопасная техника и внимание тренера", "Комфортно заниматься онлайн из дома"].map(t => (
-              <div key={t} style={{ fontFamily: FONT_S, fontSize: 14, color: "#333", padding: "7px 0", lineHeight: 1.5 }}>· {t}</div>
-            ))}
+    <div style={{ margin: "0 -20px", overflowX: "auto", WebkitOverflowScrolling: "touch", scrollbarWidth: "none" } as React.CSSProperties}>
+      <div style={{ display: "flex", gap: 10, padding: "0 20px", width: "max-content" }}>
+        {MEDIA.map((m, i) => (
+          <div key={i} style={{ width: 220, height: 300, borderRadius: 8, overflow: "hidden", flexShrink: 0, background: "#111" }}>
+            {m.type === "video" ? (
+              <video src={m.src} style={{ width: "100%", height: "100%", objectFit: "cover" }} autoPlay muted loop playsInline />
+            ) : (
+              <img src={m.src} alt="Тренировка" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            )}
           </div>
-          <div style={{ background: BG, padding: "20px 22px" }}>
-            <div style={{ fontFamily: FONT_S, fontSize: 11, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase", color: "#c0603d", marginBottom: 12 }}>Лучше выбрать другой формат</div>
-            {/* TODO Софья */}
-            {["Нужна полностью индивидуальная программа → «Личная работа»", "Хочешь заниматься по своему графику без созвонов → «По моим программам»", "[…]"].map(t => (
-              <div key={t} style={{ fontFamily: FONT_S, fontSize: 14, color: "#333", padding: "7px 0", lineHeight: 1.5 }}>· {t}</div>
-            ))}
-          </div>
-        </div>
-      </>)}
-    </section>
+        ))}
+        <div style={{ flexShrink: 0, width: 8 }} />
+      </div>
+    </div>
   );
 }
 
-/* ── СТОИМОСТЬ ── */
-function Price() {
+/* ── Numbered block ── */
+function Block({ num, title, children }: { num: string; title: string; children: React.ReactNode }) {
   return (
-    <section style={{ background: BG, padding: "56px 20px" }}>
-      {wrap(<>
-        <h2 style={h2}>Стоимость</h2>
-        <div style={{ fontFamily: FONT_D, fontSize: 56, lineHeight: 1, marginBottom: 4 }}>от 8 000 ₽</div>
-        <div style={{ fontFamily: FONT_S, fontSize: 13, color: GRAY, letterSpacing: 1, textTransform: "uppercase", marginBottom: 20 }}>
-          в месяц · ≈ $90
+    <div style={{ padding: "28px 0", borderTop: "1px solid rgba(0,0,0,0.1)" }}>
+      <div style={{ display: "flex", gap: 20 }}>
+        <span style={{ fontFamily: FONT_D, fontSize: 13, color: GREEN, letterSpacing: 1, flexShrink: 0, marginTop: 3 }}>{num}</span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p style={{ fontFamily: FONT_D, fontSize: "clamp(20px, 5vw, 28px)", textTransform: "uppercase", lineHeight: 1, margin: "0 0 12px", color: DARK }}>{title}</p>
+          {children}
         </div>
-        {/* TODO Софья: условия оплаты */}
-        <p style={{ fontFamily: FONT_S, fontSize: 13, color: GRAY, margin: "0 0 28px", lineHeight: 1.6 }}>
-          [оплата помесячно; отменить можно в любой момент; что входит в «от» и от чего зависит цена]
-        </p>
-        <a href={TG_SOFIA} target="_blank" rel="noopener noreferrer" style={btnDark}>
-          Написать Софье →
-        </a>
-      </>)}
-    </section>
+      </div>
+    </div>
+  );
+}
+
+const body: React.CSSProperties = { fontFamily: FONT_S, fontSize: 15, lineHeight: 1.65, color: "#555", margin: "0 0 12px" };
+
+/* ── Pricing row ── */
+function PriceRow({ label, rub, usd }: { label: string; rub: string; usd: string }) {
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "18px 0", borderTop: "1px solid rgba(0,0,0,0.12)", gap: 16 }}>
+      <span style={{ fontFamily: FONT_S, fontSize: 15, color: DARK, lineHeight: 1.4, paddingTop: 6 }}>{label}</span>
+      <span style={{ textAlign: "right", flexShrink: 0 }}>
+        <span style={{ display: "block", fontFamily: FONT_D, fontSize: 26, lineHeight: 1 }}>{rub}</span>
+        <span style={{ display: "block", fontFamily: FONT_SERIF, fontStyle: "italic", fontSize: 14, color: GRAY, marginTop: 2 }}>{usd}</span>
+      </span>
+    </div>
   );
 }
 
@@ -237,7 +236,6 @@ function Quiz() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [done, setDone] = useState(false);
   const [link, setLink] = useState("");
-
   const total = QUESTIONS.length;
 
   function choose(label: string) {
@@ -250,12 +248,9 @@ function Quiz() {
       const tg = buildTelegramLink(next);
       setLink(tg);
       setDone(true);
-      // сразу открываем Telegram с подставленными ответами
       window.open(tg, "_blank", "noopener,noreferrer");
     }
   }
-
-  const dotWrap: React.CSSProperties = { display: "flex", gap: 8, justifyContent: "center", margin: "0 0 36px" };
 
   if (done) {
     return (
@@ -265,7 +260,7 @@ function Quiz() {
           Спасибо! Открываю Telegram с твоими ответами.<br />
           Если чат не открылся — нажми кнопку.
         </p>
-        <a href={link} target="_blank" rel="noopener noreferrer" style={{ ...btnDark, display: "inline-block", padding: "16px 32px" }}>
+        <a href={link} target="_blank" rel="noopener noreferrer" style={{ ...S.btn, display: "inline-block", padding: "16px 32px" }}>
           Открыть чат с Софьей →
         </a>
       </div>
@@ -276,7 +271,7 @@ function Quiz() {
 
   return (
     <div>
-      <div style={dotWrap}>
+      <div style={{ display: "flex", gap: 8, justifyContent: "center", margin: "0 0 32px" }}>
         {QUESTIONS.map((_, i) => (
           <span
             key={i}
@@ -294,37 +289,27 @@ function Quiz() {
       <p style={{ fontFamily: FONT_S, fontSize: 12, color: GRAY, textAlign: "center", margin: "0 0 12px" }}>
         Вопрос {step + 1} из {total}
       </p>
-      <h3 style={{ fontFamily: FONT_D, fontSize: "clamp(22px, 6vw, 32px)", textTransform: "uppercase", textAlign: "center", lineHeight: 1.15, margin: "0 0 28px" }}>
+      <p style={{ fontFamily: FONT_D, fontSize: "clamp(22px, 6vw, 32px)", textTransform: "uppercase", textAlign: "center", lineHeight: 1.15, margin: "0 0 28px" }}>
         {q.q}
-      </h3>
+      </p>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {q.options.map((opt) => (
           <button
             key={opt.label}
             onClick={() => choose(opt.label)}
-            style={{
-              display: "flex", alignItems: "center", gap: 16, width: "100%", textAlign: "left",
-              background: "#fff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 14,
-              padding: "18px 20px", cursor: "pointer", fontFamily: FONT_S,
-            }}
+            style={{ display: "flex", alignItems: "center", gap: 16, width: "100%", textAlign: "left", background: "#fff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 14, padding: "18px 20px", cursor: "pointer", fontFamily: FONT_S }}
           >
-            <span style={{
-              width: 44, height: 44, borderRadius: 10, background: "#EFEODF", flexShrink: 0,
-              display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20,
-            }}>
+            <span style={{ width: 44, height: 44, borderRadius: 10, background: "#EFEODF", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>
               {opt.icon}
             </span>
-            <span style={{ fontSize: 15, color: "#0A0A0A", lineHeight: 1.4 }}>{opt.label}</span>
+            <span style={{ fontSize: 15, color: DARK, lineHeight: 1.4 }}>{opt.label}</span>
           </button>
         ))}
       </div>
 
       {step > 0 && (
-        <button
-          onClick={() => setStep(step - 1)}
-          style={{ background: "none", border: "none", cursor: "pointer", fontFamily: FONT_S, fontSize: 13, color: GRAY, marginTop: 20, padding: 4 }}
-        >
+        <button onClick={() => setStep(step - 1)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: FONT_S, fontSize: 13, color: GRAY, marginTop: 20, padding: 4 }}>
           ‹ Назад
         </button>
       )}
@@ -332,52 +317,141 @@ function Quiz() {
   );
 }
 
-function QuizSection() {
-  return (
-    <section id="test" style={{ background: "#E8EDE4", padding: "60px 20px 72px" }}>
-      {wrap(<>
-        <div style={{ ...eyebrow, textAlign: "center", color: GREEN }}>Подберём формат</div>
-        <h2 style={{ ...h2, textAlign: "center", margin: "0 0 12px" }}>
-          Не уверена, что выбрать?
-        </h2>
-        <p style={{ fontFamily: FONT_S, fontSize: 15, color: GRAY, textAlign: "center", margin: "0 0 40px", lineHeight: 1.6 }}>
-          Ответь на 5 вопросов — я пойму твой формат и напишу тебе в Telegram.
-        </p>
-        <Quiz />
-      </>)}
-    </section>
-  );
-}
-
-/* ── FOOTER ── */
+/* ── Footer (документы, как на странице клуба) ── */
 function Footer() {
   return (
-    <footer style={{ background: DARK, color: "#F0EDE6", padding: "40px 20px", textAlign: "center" }}>
-      <div style={{ fontFamily: FONT_D, fontSize: 32, marginBottom: 24 }}>SOFIA POLENOVA</div>
-      <a href={TG_SOFIA} target="_blank" rel="noopener noreferrer"
-        style={{ display: "block", maxWidth: 400, margin: "0 auto 12px", fontFamily: FONT_S, fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", padding: "16px 24px", border: "2px solid rgba(255,255,255,0.3)", color: "#F0EDE6", textDecoration: "none" }}>
-        Telegram
-      </a>
-      <div style={{ display: "flex", gap: 18, flexWrap: "wrap", justifyContent: "center", marginTop: 20 }}>
-        <a href="/oferta" style={{ fontFamily: FONT_S, fontSize: 12, color: "rgba(255,255,255,0.4)", textDecoration: "underline", textUnderlineOffset: 3 }}>Оферта</a>
-        <a href="/privacy" style={{ fontFamily: FONT_S, fontSize: 12, color: "rgba(255,255,255,0.4)", textDecoration: "underline", textUnderlineOffset: 3 }}>Политика конфиденциальности</a>
-        <a href="/consent" style={{ fontFamily: FONT_S, fontSize: 12, color: "rgba(255,255,255,0.4)", textDecoration: "underline", textUnderlineOffset: 3 }}>Согласие на обработку ПД</a>
-      </div>
-      <div style={{ fontFamily: FONT_S, fontSize: 12, color: GRAY, marginTop: 20 }}>© 2026 Поленова Софья Николаевна</div>
-    </footer>
+    <div style={{ borderTop: "1px solid rgba(0,0,0,0.08)", marginTop: 48, padding: "32px 20px 48px", display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 10, textAlign: "center" as const }}>
+      <p style={{ fontFamily: FONT_S, fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, color: "#bbb", margin: "0 0 4px" }}>Документы</p>
+      <a href="/oferta" style={{ fontFamily: FONT_S, fontSize: 13, color: "#888", textDecoration: "underline", textUnderlineOffset: 3 }}>Договор оферты</a>
+      <a href="/privacy" style={{ fontFamily: FONT_S, fontSize: 13, color: "#888", textDecoration: "underline", textUnderlineOffset: 3 }}>Политика конфиденциальности</a>
+      <a href="/consent" style={{ fontFamily: FONT_S, fontSize: 13, color: "#888", textDecoration: "underline", textUnderlineOffset: 3 }}>Согласие на обработку персональных данных</a>
+      <p style={{ fontFamily: FONT_S, fontSize: 11, color: "#ccc", margin: "12px 0 0" }}>© 2026 Поленова Софья Николаевна. Все права защищены.</p>
+    </div>
   );
 }
 
 export default function GroupPage() {
   return (
-    <main style={{ background: BG, fontFamily: FONT_S }}>
-      <Nav />
-      <Hero />
-      <How />
-      <Includes />
-      <ForWho />
-      <Price />
-      <QuizSection />
+    <main style={S.page}>
+      <nav style={S.nav}>
+        <a href="/" style={S.back}>← Назад</a>
+        <a href="/" style={S.logo}>SOFIA POLENOVA</a>
+        <div style={{ width: 60 }} />
+      </nav>
+
+      <ParallaxHero />
+
+      <div style={S.wrap}>
+        {/* Формат */}
+        <FadeIn>
+          <p style={S.eyebrow}>Формат</p>
+          <p style={S.lead}>
+            Онлайн-занятия в небольшой группе со стабильным расписанием. Заниматься можно
+            от 1 до 3 раз в неделю. Подходит новичкам, тем, кто готовится к беременности
+            и родам, и тем, кто восстанавливается после.
+          </p>
+        </FadeIn>
+
+        <div style={{ height: 24 }} />
+
+        {/* 01 — как проходит */}
+        <FadeIn>
+          <Block num="01" title="Как проходит">
+            <div style={{ marginBottom: 16 }}>
+              {[
+                ["Дни", "Вторник · Четверг · Суббота"],
+                ["Время", "10:00 по МСК"],
+                ["Длительность", "55–75 минут"],
+                ["В группе", "одновременно от 2 до 8 человек"],
+              ].map(([k, v]) => (
+                <div key={k} style={{ display: "flex", gap: 14, padding: "9px 0", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+                  <span style={{ fontFamily: FONT_S, fontSize: 12, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase", color: GREEN, minWidth: 104, flexShrink: 0, paddingTop: 1 }}>{k}</span>
+                  <span style={{ fontFamily: FONT_S, fontSize: 14, color: "#333", lineHeight: 1.5 }}>{v}</span>
+                </div>
+              ))}
+            </div>
+            <p style={{ ...body, margin: "0 0 20px" }}>
+              Веду вживую — вижу всех участниц и поправляю технику прямо на занятии.
+            </p>
+            <MediaCarousel />
+          </Block>
+        </FadeIn>
+
+        {/* 02 — короткие комплексы */}
+        <FadeIn>
+          <Block num="02" title="Короткие комплексы">
+            <p style={{ ...body, margin: 0 }}>
+              Дополнительно есть короткие комплексы упражнений — их можно использовать
+              как домашнее задание между занятиями или как утреннюю зарядку.
+            </p>
+          </Block>
+        </FadeIn>
+
+        {/* 03 — оборудование */}
+        <FadeIn>
+          <Block num="03" title="Оборудование">
+            <p style={{ ...body, margin: "0 0 8px" }}>
+              Понадобится МФР-мяч, коврик и фитнес-резинки.
+            </p>
+            <p style={{ ...body, margin: 0 }}>
+              Полное описание оборудования — в чате группы.
+            </p>
+          </Block>
+        </FadeIn>
+
+        <div style={{ borderTop: "1px solid rgba(0,0,0,0.1)" }} />
+
+        <div style={S.divider} />
+
+        {/* Кому подходит */}
+        <FadeIn>
+          <p style={S.eyebrow}>Кому подходит</p>
+          <div>
+            {[
+              "Новичкам",
+              "Тем, кто готовится к беременности и родам",
+              "Тем, кто восстанавливается после родов",
+            ].map((t, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 0", borderTop: "1px solid rgba(0,0,0,0.12)" }}>
+                <div style={{ width: 24, height: 24, borderRadius: "50%", border: `1.5px solid ${GREEN}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <span style={{ color: GREEN, fontSize: 12 }}>✓</span>
+                </div>
+                <span style={{ fontFamily: FONT_S, fontSize: 15, color: DARK, lineHeight: 1.4 }}>{t}</span>
+              </div>
+            ))}
+            <div style={{ borderTop: "1px solid rgba(0,0,0,0.12)" }} />
+          </div>
+        </FadeIn>
+
+        <div style={S.divider} />
+
+        {/* Стоимость */}
+        <FadeIn>
+          <h2 style={S.h2}>Стоимость</h2>
+          <div style={{ marginBottom: 28 }}>
+            <PriceRow label="1 раз в неделю" rub="8 000 ₽" usd="≈ $90 / мес" />
+            <PriceRow label="2 раза в неделю" rub="16 000 ₽" usd="≈ $180 / мес" />
+            <PriceRow label="3 раза в неделю" rub="24 000 ₽" usd="≈ $270 / мес" />
+            <div style={{ borderTop: "1px solid rgba(0,0,0,0.12)" }} />
+          </div>
+          <a href={TG_SOFIA} target="_blank" rel="noopener noreferrer" style={S.btn}>
+            Написать Софье →
+          </a>
+        </FadeIn>
+
+        <div style={S.divider} />
+
+        {/* Тест */}
+        <FadeIn>
+          <p style={{ ...S.eyebrow, textAlign: "center", color: GREEN }}>Подберём формат</p>
+          <h2 style={{ ...S.h2, textAlign: "center", margin: "0 0 12px" }}>Не уверена, что выбрать?</h2>
+          <p style={{ fontFamily: FONT_S, fontSize: 15, color: GRAY, textAlign: "center", margin: "0 0 40px", lineHeight: 1.6 }}>
+            Ответь на 5 вопросов — я пойму твой формат и напишу тебе в Telegram.
+          </p>
+          <Quiz />
+        </FadeIn>
+      </div>
+
       <Footer />
     </main>
   );

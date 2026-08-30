@@ -125,6 +125,7 @@ const SERVICES = [
     title: "Бесплатная тренировка на дыхание",
     desc: "Делаем плоский живот через работу с дыханием и глубокими мышцами. Формат «повторяй за мной» — без оборудования, дома.",
     price: null,
+    priceUsd: null,
     btnText: "Попробовать бесплатно",
     href: "https://t.me/SofiaPolenova_bot?start=zhivot",
     external: true,
@@ -132,8 +133,9 @@ const SERVICES = [
   {
     num: "2",
     title: "Групповые тренировки",
-    desc: "Живые онлайн-тренировки в небольшой группе по расписанию, записи и обратная связь в чате. Первая тренировка — бесплатно.",
-    price: "от 8 000 ₽ · $90",
+    desc: "Онлайн-занятия в небольшой группе со стабильным расписанием. Заниматься можно от 1 до 3 раз в неделю. Подходит новичкам, тем, кто готовится к беременности и родам, и тем, кто восстанавливается после.",
+    price: "от 8 000 ₽",
+    priceUsd: "≈ $90",
     btnText: "Узнать подробнее →",
     href: "/group",
     external: false,
@@ -143,6 +145,7 @@ const SERVICES = [
     title: "По моим программам",
     desc: "Индивидуальная программа тренировок под твою цель и образ жизни.",
     price: "от 12 000 ₽",
+    priceUsd: "≈ $135",
     btnText: "Узнать подробнее →",
     href: "/programs",
     external: false,
@@ -152,6 +155,7 @@ const SERVICES = [
     title: "Личная работа",
     desc: "Индивидуальные тренировки, работа с питанием, консультации дополнительных специалистов.",
     price: "По запросу",
+    priceUsd: null,
     btnText: "Узнать подробнее →",
     href: "/personal",
     external: false,
@@ -178,24 +182,21 @@ function Services() {
                   <span style={{ color: "#4a6b3a" }}>{s.num}.</span> {s.title}
                 </h3>
                 {s.price && (
-                  <span style={{ fontFamily: "var(--font-display)", fontSize: 18, whiteSpace: "nowrap", flexShrink: 0 }}>
-                    {s.price}
+                  <span style={{ textAlign: "right", flexShrink: 0, lineHeight: 1.15 }}>
+                    <span style={{ display: "block", fontFamily: "var(--font-display)", fontSize: 18, whiteSpace: "nowrap" }}>
+                      {s.price}
+                    </span>
+                    {s.priceUsd && (
+                      <span style={{ display: "block", fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 13, color: "#666", whiteSpace: "nowrap", marginTop: 2 }}>
+                        {s.priceUsd}
+                      </span>
+                    )}
                   </span>
                 )}
               </div>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: 15, lineHeight: 1.6, color: "#333", margin: "0 0 16px" }}>
                 {s.desc}
               </p>
-              {"prices" in s && (s as {prices?: [string,string][]}).prices && (
-                <div style={{ marginBottom: 20, borderTop: "1px solid rgba(0,0,0,0.12)", paddingTop: 16 }}>
-                  {((s as {prices?: [string,string][]}).prices ?? []).map(([label, price]: [string, string]) => (
-                    <div key={label} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
-                      <span style={{ fontFamily: "var(--font-sans)", fontSize: 15 }}>· {label}</span>
-                      <span style={{ fontFamily: "var(--font-display)", fontSize: 16 }}>{price}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
               <a
                 href={s.href}
                 target={s.external ? "_blank" : undefined}
