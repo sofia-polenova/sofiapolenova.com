@@ -297,14 +297,27 @@ export default function GroupPage() {
         </p>
       </PhotoBlock>
 
-      {/* короткие комплексы — крупная строка на весь экран */}
-      <div style={{ padding: "64px 20px" }}>
+      {/* короткие комплексы */}
+      <div style={{ padding: "56px 20px" }}>
         <FadeIn>
-          <p style={{ fontFamily: FONT_D, fontSize: "clamp(26px, 7.5vw, 48px)", textTransform: "uppercase", lineHeight: 1.12, color: DARK, margin: 0, maxWidth: 860, marginLeft: "auto", marginRight: "auto" }}>
-            Между занятиями остаются короткие комплексы — их можно делать как{" "}
-            <span style={{ color: GREEN }}>домашнее задание</span> или как{" "}
-            <span style={{ color: GREEN }}>утреннюю зарядку</span>.
-          </p>
+          <div style={{ maxWidth: 720, marginLeft: "auto", marginRight: "auto" }}>
+            <p style={{ fontFamily: FONT_SERIF, fontStyle: "italic", fontSize: "clamp(19px, 4.6vw, 30px)", lineHeight: 1.4, color: DARK, margin: 0 }}>
+              Между занятиями остаются короткие комплексы — их можно делать как{" "}
+              <span style={{ color: GREEN }}>домашнее задание</span> или как{" "}
+              <span style={{ color: GREEN }}>утреннюю зарядку</span>.
+            </p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 22 }}>
+              {[
+                ["Комплекс на дыхание", "10 минут"],
+                ["Упражнения на раскрытие грудного отдела", "8 минут"],
+                ["Мобильность ТБС", "12 минут"],
+              ].map(([name, dur]) => (
+                <span key={name} style={{ display: "inline-block", background: "#E8EDE4", borderRadius: 100, padding: "9px 18px", fontFamily: FONT_S, fontSize: 13, color: "#333", lineHeight: 1.4 }}>
+                  {name} <span style={{ color: GREEN, fontWeight: 600 }}>· {dur}</span>
+                </span>
+              ))}
+            </div>
+          </div>
         </FadeIn>
       </div>
 
