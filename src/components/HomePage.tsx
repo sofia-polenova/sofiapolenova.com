@@ -143,7 +143,7 @@ const SERVICES: Service[] = [
     priceUsd: null,
     perMonth: false,
     prices: null,
-    image: "/assets/yt-ploskiy-zhivot.png",
+    image: "/assets/oblozhka-ploskiy-zhivot.webp",
     btnText: "Попробовать бесплатно",
     href: "https://t.me/SofiaPolenova_bot?start=zhivot",
     external: true,
