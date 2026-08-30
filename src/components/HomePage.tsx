@@ -246,7 +246,7 @@ function Services() {
                   rel={s.external ? "noopener noreferrer" : undefined}
                   style={{ display: "block", marginBottom: 16 }}
                 >
-                  <img src={s.image} alt={s.title} style={{ width: "100%", display: "block" }} />
+                  <img src={s.image} alt={s.title} style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", objectPosition: "center", display: "block" }} />
                 </a>
               )}
 
