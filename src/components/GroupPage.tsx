@@ -112,11 +112,8 @@ function ParallaxHero() {
 
 /* ── Media carousel (фото и видео с тренировок) ── */
 const MEDIA: { type: "img" | "video"; src: string }[] = [
-  { type: "img", src: "/assets/training-1.jpg" },
   { type: "video", src: "/assets/trenirovka.mov" },
-  { type: "img", src: "/assets/training-2.jpg" },
   { type: "video", src: "/assets/trenirovka2.mov" },
-  { type: "img", src: "/assets/training-3.jpg" },
   { type: "img", src: "/assets/training-4.jpg" },
 ];
 
@@ -345,14 +342,22 @@ export default function GroupPage() {
         {/* Формат */}
         <FadeIn>
           <p style={S.eyebrow}>Формат</p>
-          <p style={S.lead}>
-            Онлайн-занятия в небольшой группе со стабильным расписанием. Заниматься можно
-            от 1 до 3 раз в неделю. Подходит новичкам, тем, кто готовится к беременности
-            и родам, и тем, кто восстанавливается после родов.
+          <p style={{ ...S.lead, textWrap: "pretty" } as React.CSSProperties}>
+            Небольшая группа и живые онлайн-занятия по стабильному расписанию — приходить
+            можно от одного до трёх раз в неделю, как удобно тебе.
+          </p>
+          <p style={{ ...S.lead, textWrap: "pretty" } as React.CSSProperties}>
+            Я веду каждую тренировку сама: показываю движения, слежу за техникой и
+            подстраиваю нагрузку под каждую участницу. Между занятиями остаются короткие
+            комплексы, которые можно делать дома.
+          </p>
+          <p style={{ ...S.lead, margin: 0, textWrap: "pretty" } as React.CSSProperties}>
+            Формат подходит новичкам, тем, кто готовится к беременности и родам, и тем,
+            кто восстанавливается после родов.
           </p>
         </FadeIn>
 
-        <div style={{ height: 24 }} />
+        <div style={{ height: 28 }} />
 
         {/* 01 — как проходит */}
         <FadeIn>
@@ -364,8 +369,8 @@ export default function GroupPage() {
                 ["Длительность", "55–75 минут"],
                 ["В группе", "одновременно от 2 до 8 человек"],
               ].map(([k, v]) => (
-                <div key={k} style={{ display: "flex", gap: 14, padding: "9px 0", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
-                  <span style={{ fontFamily: FONT_S, fontSize: 12, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase", color: GREEN, minWidth: 104, flexShrink: 0, paddingTop: 1 }}>{k}</span>
+                <div key={k} style={{ display: "grid", gridTemplateColumns: "132px 1fr", gap: 12, padding: "9px 0", borderBottom: "1px solid rgba(0,0,0,0.08)", alignItems: "start" }}>
+                  <span style={{ fontFamily: FONT_S, fontSize: 12, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase", color: GREEN, paddingTop: 2 }}>{k}</span>
                   <span style={{ fontFamily: FONT_S, fontSize: 14, color: "#333", lineHeight: 1.5 }}>{v}</span>
                 </div>
               ))}

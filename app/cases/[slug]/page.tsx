@@ -95,7 +95,7 @@ function CaseMushcy() {
             Такой результат можно сделать:
           </div>
           <a href="/programs" style={{ display: "block", textAlign: "center" as const, fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 24px", color: "#F0EDE6", textDecoration: "none", background: "#0A0A0A", marginBottom: 10 }}>
-            На программе тренировок · от 12 000 ₽ →
+            На программе тренировок · от 15 000 ₽ →
           </a>
           <a href="/personal" style={{ display: "block", textAlign: "center" as const, fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 24px", color: "#0A0A0A", textDecoration: "none", border: "2px solid #0A0A0A", background: "transparent" }}>
             На личном ведении →
@@ -191,7 +191,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
   if (slug === "beremennost") return <CaseBeremennost />;
   if (slug === "zhivot-osanka") return (
     <CasePlaceholder num="03" title="Живот и осанка" buttons={<>
-      <a href="/programs" style={BTN_DARK}>На программе тренировок · от 12 000 ₽ →</a>
+      <a href="/programs" style={BTN_DARK}>На программе тренировок · от 15 000 ₽ →</a>
       <a href="/personal" style={BTN_OUT}>На личном ведении →</a>
     </>} />
   );

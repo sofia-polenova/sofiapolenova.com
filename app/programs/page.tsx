@@ -30,9 +30,9 @@ export default function ProgramsPage() {
         <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, color: "#666", marginBottom: 12 }}>
           3. По программам
         </div>
-        <h1 style={S.h1}>По моим программам</h1>
+        <h1 style={S.h1}>Сопровождение по тренировкам и питанию</h1>
         <p style={S.lead}>
-          Полное сопровождение: тренировки, питание и восстановление — под твою жизнь. Ежедневная обратная связь.
+          Сопровождение по программе тренировок и питанию — под твою жизнь, с ежедневной обратной связью. Есть облегчённый формат: сопровождение по питанию с составлением программы тренировок.
         </p>
 
         {/* Спорт */}
@@ -76,8 +76,20 @@ export default function ProgramsPage() {
 
         <div style={S.divider} />
 
-        <div style={S.price}>от 12 000 ₽</div>
-        <div style={{ ...S.period, marginBottom: 32 }}>в месяц</div>
+        <div style={{ marginBottom: 32 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, padding: "16px 0", borderTop: "1px solid rgba(0,0,0,0.12)" }}>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 15, color: "#0A0A0A", lineHeight: 1.4, paddingTop: 4 }}>Тренировки + питание</span>
+            <span style={{ textAlign: "right" as const, flexShrink: 0 }}>
+              <span style={{ display: "block", fontFamily: "'Anton', sans-serif", fontSize: 26, lineHeight: 1 }}>от 15 000 ₽</span>
+              <span style={{ display: "block", fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontSize: 14, color: "#666", marginTop: 2 }}>≈ $170 / месяц</span>
+            </span>
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, padding: "16px 0", borderTop: "1px solid rgba(0,0,0,0.12)" }}>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 15, color: "#0A0A0A", lineHeight: 1.4, paddingTop: 4 }}>Питание + составление программы тренировок</span>
+            <span style={{ fontFamily: "'Anton', sans-serif", fontSize: 15, color: "#666", flexShrink: 0, paddingTop: 4 }}>По запросу</span>
+          </div>
+          <div style={{ borderTop: "1px solid rgba(0,0,0,0.12)" }} />
+        </div>
 
         <a href="https://t.me/sofiapolenova" target="_blank" rel="noopener noreferrer" style={S.btn}>
           Написать Софье →

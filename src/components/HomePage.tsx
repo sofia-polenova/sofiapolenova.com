@@ -126,6 +126,7 @@ const SERVICES = [
     desc: "Делаем плоский живот через работу с дыханием и глубокими мышцами. Формат «повторяй за мной» — без оборудования, дома.",
     price: null,
     priceUsd: null,
+    perMonth: false,
     btnText: "Попробовать бесплатно",
     href: "https://t.me/SofiaPolenova_bot?start=zhivot",
     external: true,
@@ -136,16 +137,18 @@ const SERVICES = [
     desc: "Онлайн-занятия в небольшой группе со стабильным расписанием. Заниматься можно от 1 до 3 раз в неделю. Подходит новичкам, тем, кто готовится к беременности и родам, и тем, кто восстанавливается после родов.",
     price: "от 8 000 ₽",
     priceUsd: "≈ $90",
+    perMonth: true,
     btnText: "Узнать подробнее →",
     href: "/group",
     external: false,
   },
   {
     num: "3",
-    title: "По моим программам",
-    desc: "Индивидуальная программа тренировок под твою цель и образ жизни.",
-    price: "от 12 000 ₽",
-    priceUsd: "≈ $135",
+    title: "Сопровождение по тренировкам и питанию",
+    desc: "Сопровождение по программе тренировок и питанию. Есть облегчённый формат — сопровождение по питанию с составлением программы тренировок.",
+    price: "от 15 000 ₽",
+    priceUsd: "≈ $170",
+    perMonth: true,
     btnText: "Узнать подробнее →",
     href: "/programs",
     external: false,
@@ -156,6 +159,7 @@ const SERVICES = [
     desc: "Индивидуальные тренировки, работа с питанием, консультации дополнительных специалистов.",
     price: "По запросу",
     priceUsd: null,
+    perMonth: false,
     btnText: "Узнать подробнее →",
     href: "/personal",
     external: false,
@@ -185,6 +189,9 @@ function Services() {
                   <span style={{ textAlign: "right", flexShrink: 0, lineHeight: 1.15 }}>
                     <span style={{ display: "block", fontFamily: "var(--font-display)", fontSize: 18, whiteSpace: "nowrap" }}>
                       {s.price}
+                      {s.perMonth && (
+                        <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 400, letterSpacing: 0, textTransform: "none", color: "#666" }}> / месяц</span>
+                      )}
                     </span>
                     {s.priceUsd && (
                       <span style={{ display: "block", fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 13, color: "#666", whiteSpace: "nowrap", marginTop: 2 }}>
