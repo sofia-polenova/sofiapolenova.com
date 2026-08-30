@@ -174,11 +174,6 @@ function Services() {
                   </span>
                 )}
               </div>
-              {s.badge && (
-                <div style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase", color: "#4a5c3d", marginBottom: 10 }}>
-                  {s.badge}
-                </div>
-              )}
               <p style={{ fontFamily: "var(--font-sans)", fontSize: 15, lineHeight: 1.6, color: "#333", margin: "0 0 16px" }}>
                 {s.desc}
               </p>
