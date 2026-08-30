@@ -156,6 +156,9 @@
   .hero-video--desktop { display: block; }
 }
 
+/* anchor targets clear the sticky nav */
+section[id] { scroll-margin-top: 64px; }
+
 /* ─── Design accents (green CTA + sage highlights, sharp corners) ─── */
 .pill-btn {
   display: block; text-align: center;

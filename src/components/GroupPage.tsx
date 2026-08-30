@@ -20,6 +20,9 @@ const FONT_S = "var(--font-sans)";    // Inter
 const FONT_SERIF = "var(--font-serif)"; // Instrument Serif
 
 const TG_SOFIA = "https://t.me/sofiap_fitness";
+const MSG_GROUP =
+  "Привет, Софья! Хочу тренироваться в групповом формате.\n\nЦели:\nМои ограничения:\nСколько раз в неделю:\nВопросы:";
+const TG_GROUP = `${TG_SOFIA}?text=${encodeURIComponent(MSG_GROUP)}`;
 
 /* ── Fade-in on scroll ── */
 function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
@@ -203,6 +206,18 @@ function Block({ num, title, children }: { num: string; title: string; children:
   );
 }
 
+/* just the numbered heading, same look as Block */
+function SectionHead({ num, title }: { num: string; title: string }) {
+  return (
+    <div style={{ display: "flex", gap: 20, padding: "28px 0 16px", borderTop: "1px solid rgba(0,0,0,0.1)" }}>
+      <span style={{ fontFamily: FONT_D, fontSize: 13, color: GREEN, letterSpacing: 1, flexShrink: 0, marginTop: 3 }}>{num}</span>
+      <p style={{ fontFamily: FONT_D, fontSize: "clamp(20px, 5vw, 28px)", textTransform: "uppercase", lineHeight: 1, margin: 0, color: DARK }}>{title}</p>
+    </div>
+  );
+}
+
+const HL: React.CSSProperties = { color: "#4a6b3a", fontWeight: 700 };
+
 const body: React.CSSProperties = { fontFamily: FONT_S, fontSize: 15, lineHeight: 1.65, color: "#555", margin: "0 0 12px" };
 
 /* ── Pricing row ── */
@@ -243,13 +258,13 @@ export default function GroupPage() {
       <ParallaxHero />
 
       <div style={S.wrap}>
-        <div style={{ height: 48 }} />
+        <div style={{ height: 40 }} />
 
-        {/* Кому подходит */}
+        {/* 01 — кому подходит */}
         <FadeIn>
-          <p style={S.eyebrow}>Кому подходит?</p>
+          <SectionHead num="01" title="Кому подходит?" />
         </FadeIn>
-        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 8 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 28 }}>
           {AUDIENCE.map((a, i) => {
             const dark = i % 2 === 0;
             return (
@@ -268,43 +283,47 @@ export default function GroupPage() {
           })}
         </div>
 
-        <div style={S.divider} />
-
-        {/* 01 — как проходит */}
+        {/* 02 — как проходит */}
         <FadeIn>
-          <Block num="01" title="Как проходит">
-            <div style={{ marginBottom: 16 }}>
-              {[
-                ["Дни", "Вторник · Четверг · Суббота"],
-                ["Время", "10:00 по МСК"],
-                ["Длительность", "55–75 минут"],
-                ["В группе", "одновременно от 2 до 8 человек"],
-              ].map(([k, v]) => (
-                <div key={k} style={{ display: "grid", gridTemplateColumns: "132px 1fr", gap: 12, padding: "9px 0", borderBottom: "1px solid rgba(0,0,0,0.08)", alignItems: "start" }}>
-                  <span style={{ fontFamily: FONT_S, fontSize: 12, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase", color: GREEN, paddingTop: 2 }}>{k}</span>
-                  <span style={{ fontFamily: FONT_S, fontSize: 14, color: "#333", lineHeight: 1.5 }}>{v}</span>
-                </div>
+          <Block num="02" title="Как проходит">
+            <div style={{ marginBottom: 18 }}>
+              {([
+                ["📅", "Дни", <><span style={HL}>Вт · Чт · Сб</span></>],
+                ["⏰", "Время", <><span style={HL}>10:00</span> по МСК</>],
+                ["⏱️", "Длительность", <><span style={HL}>55–75</span> минут</>],
+                ["👥", "В группе", <>одновременно <span style={HL}>2–8</span> человек</>],
+                ["🎥", "Где", <>онлайн в Zoom, <span style={HL}>из дома</span></>],
+              ] as [string, string, React.ReactNode][]).map(([emoji, label, value], i) => (
+                <RevealRow key={label} index={i} from="left">
+                  <div style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "12px 0", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+                    <span style={{ fontSize: 20, lineHeight: 1.3, flexShrink: 0 }}>{emoji}</span>
+                    <div>
+                      <span style={{ display: "block", fontFamily: FONT_S, fontSize: 11, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase", color: GREEN, marginBottom: 2 }}>{label}</span>
+                      <span style={{ fontFamily: FONT_S, fontSize: 15, color: "#333", lineHeight: 1.5 }}>{value}</span>
+                    </div>
+                  </div>
+                </RevealRow>
               ))}
             </div>
             <MediaCarousel />
           </Block>
         </FadeIn>
 
-        {/* 02 — короткие комплексы */}
+        {/* 03 — короткие комплексы */}
         <FadeIn>
-          <Block num="02" title="Короткие комплексы">
+          <Block num="03" title="🧩 Короткие комплексы">
             <p style={{ ...body, margin: 0 }}>
-              Дополнительно есть короткие комплексы упражнений — их можно использовать
-              как домашнее задание между занятиями или как утреннюю зарядку.
+              Между занятиями остаются короткие комплексы упражнений — их можно делать как{" "}
+              <span style={HL}>домашнее задание</span> или как <span style={HL}>утреннюю зарядку</span>.
             </p>
           </Block>
         </FadeIn>
 
-        {/* 03 — оборудование */}
+        {/* 04 — оборудование */}
         <FadeIn>
-          <Block num="03" title="Оборудование">
+          <Block num="04" title="🧰 Оборудование">
             <p style={{ ...body, margin: "0 0 8px" }}>
-              Понадобится МФР-мяч, коврик и фитнес-резинки.
+              Понадобится <span style={HL}>МФР-мяч, коврик и фитнес-резинки</span>.
             </p>
             <p style={{ ...body, margin: 0 }}>
               Полное описание оборудования — в чате группы.
@@ -314,7 +333,7 @@ export default function GroupPage() {
 
         <div style={{ borderTop: "1px solid rgba(0,0,0,0.1)" }} />
 
-        <div style={S.divider} />
+        <div style={{ height: 40 }} />
 
         {/* Стоимость */}
         <FadeIn>
@@ -325,7 +344,7 @@ export default function GroupPage() {
             <PriceRow label="3 раза в неделю" rub="24 000 ₽ / месяц" usd="$300 / месяц" />
             <div style={{ borderTop: "1px solid rgba(0,0,0,0.12)" }} />
           </div>
-          <a href={TG_SOFIA} target="_blank" rel="noopener noreferrer" style={S.btn}>
+          <a href={TG_GROUP} target="_blank" rel="noopener noreferrer" style={S.btn}>
             Написать Софье →
           </a>
         </FadeIn>

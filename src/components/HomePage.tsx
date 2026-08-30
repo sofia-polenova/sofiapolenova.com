@@ -6,10 +6,12 @@ import FormatQuiz from "@/components/FormatQuiz";
 function Nav() {
   return (
     <nav style={{ background: "#F0EDE6", borderBottom: "1px solid rgba(0,0,0,0.08)", position: "sticky", top: 0, zIndex: 100 }}>
-      <div style={{ maxWidth: 600, margin: "0 auto", padding: "16px 20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <a href="/" style={{ fontFamily: "var(--font-display)", fontSize: 18, letterSpacing: 1, textDecoration: "none", color: "#0A0A0A" }}>SOFIA POLENOVA</a>
-        <div style={{ display: "flex", gap: 20 }}>
-          <a href="#services" style={{ fontFamily: "var(--font-sans)", fontSize: 12, textTransform: "uppercase", letterSpacing: 1, textDecoration: "none", color: "#666" }}>Тренировки</a>
+      <div style={{ maxWidth: 600, margin: "0 auto", padding: "14px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+        <a href="/" style={{ fontFamily: "var(--font-display)", fontSize: 16, letterSpacing: 1, textDecoration: "none", color: "#0A0A0A", whiteSpace: "nowrap" }}>SOFIA POLENOVA</a>
+        <div style={{ display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "flex-end" }}>
+          {[["Образование", "#education"], ["Цены", "#services"], ["Кейсы", "#cases"]].map(([label, href]) => (
+            <a key={href} href={href} style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5, textDecoration: "none", color: "#666", whiteSpace: "nowrap" }}>{label}</a>
+          ))}
         </div>
       </div>
     </nav>
@@ -122,7 +124,18 @@ type Service = {
   btnText: string;
   href: string;
   external: boolean;
+  tgText: string | null;
 };
+
+const TG = "https://t.me/sofiap_fitness";
+const tgLink = (text: string) => `${TG}?text=${encodeURIComponent(text)}`;
+
+const MSG_PERSONAL =
+  "Привет, Софья! Меня интересуют индивидуальные тренировки.\n\nЦели:\nМои ограничения:\nУдобное расписание:\nВопросы:";
+const MSG_PROGRAM =
+  "Привет, Софья! Хочу тренироваться по готовой программе.\n\nЦели:\nМои ограничения:\nЗал или дом:\nВопросы:";
+const MSG_NUTRITION =
+  "Привет, Софья! Хочу поработать с питанием.\n\nЦели:\nМои ограничения (аллергии, непереносимости):\nВопросы:";
 
 const SERVICES: Service[] = [
   {
@@ -138,6 +151,7 @@ const SERVICES: Service[] = [
     btnText: "Попробовать бесплатно",
     href: "https://t.me/SofiaPolenova_bot?start=zhivot",
     external: true,
+    tgText: null,
   },
   {
     num: "2",
@@ -156,6 +170,7 @@ const SERVICES: Service[] = [
     btnText: "Узнать подробнее →",
     href: "/group",
     external: false,
+    tgText: null,
   },
   {
     num: "3",
@@ -174,6 +189,7 @@ const SERVICES: Service[] = [
     btnText: "Хочу тренироваться с Софьей",
     href: "https://t.me/sofiap_fitness",
     external: true,
+    tgText: MSG_PERSONAL,
   },
   {
     num: "4",
@@ -188,6 +204,7 @@ const SERVICES: Service[] = [
     btnText: "Записаться →",
     href: "https://t.me/sofiap_fitness",
     external: true,
+    tgText: MSG_PROGRAM,
   },
 ];
 
@@ -268,7 +285,7 @@ function Services() {
               )}
 
               <a
-                href={s.href}
+                href={s.tgText ? tgLink(s.tgText) : s.href}
                 target={s.external ? "_blank" : undefined}
                 rel={s.external ? "noopener noreferrer" : undefined}
                 className="pill-btn"
@@ -318,7 +335,7 @@ function Nutrition() {
             ))}
             <div style={{ borderTop: "1px solid rgba(0,0,0,0.14)" }} />
           </div>
-          <a href="https://t.me/sofiap_fitness" target="_blank" rel="noopener noreferrer" className="pill-btn">
+          <a href={tgLink(MSG_NUTRITION)} target="_blank" rel="noopener noreferrer" className="pill-btn">
             Написать Софье →
           </a>
         </div>
@@ -381,7 +398,7 @@ const CERTS = [
 
 function Education() {
   return (
-    <section style={{ background: "#E3E0D8", padding: "60px 20px" }}>
+    <section id="education" style={{ background: "#E3E0D8", padding: "60px 20px" }}>
       <div style={{ maxWidth: 600, margin: "0 auto" }}>
         <h2 style={SECTION_H2}>
           Образование
@@ -426,7 +443,7 @@ function Education() {
 /* ─── CASES INDEX ─── */
 function CasesIndex() {
   return (
-    <section style={{ background: "#F0EDE6", padding: "60px 20px" }}>
+    <section id="cases" style={{ background: "#F0EDE6", padding: "60px 20px" }}>
       <div style={{ maxWidth: 600, margin: "0 auto" }}>
         <h2 style={SECTION_H2}>
           Кейсы клиентов
