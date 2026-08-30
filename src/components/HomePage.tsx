@@ -7,7 +7,7 @@ function Nav() {
       <div style={{ maxWidth: 600, margin: "0 auto", padding: "16px 20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <a href="/" style={{ fontFamily: "var(--font-display)", fontSize: 18, letterSpacing: 1, textDecoration: "none", color: "#0A0A0A" }}>SOFIA POLENOVA</a>
         <div style={{ display: "flex", gap: 20 }}>
-          <a href="/coaching" style={{ fontFamily: "var(--font-sans)", fontSize: 12, textTransform: "uppercase", letterSpacing: 1, textDecoration: "none", color: "#666" }}>Личная работа</a>
+          <a href="/personal" style={{ fontFamily: "var(--font-sans)", fontSize: 12, textTransform: "uppercase", letterSpacing: 1, textDecoration: "none", color: "#666" }}>Личное ведение</a>
         </div>
       </div>
     </nav>

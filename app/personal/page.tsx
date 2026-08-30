@@ -1,6 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
-import type { Metadata } from "next";
+import { useRef, useEffect } from "react";
 
 const S = {
   page: { background: "#F0EDE6", minHeight: "100vh", fontFamily: "var(--font-sans)" } as React.CSSProperties,
@@ -8,9 +7,9 @@ const S = {
   back: { fontFamily: "var(--font-sans)", fontSize: 13, textDecoration: "none", color: "#666", letterSpacing: 1 } as React.CSSProperties,
   logo: { fontFamily: "'Anton', sans-serif", fontSize: 16, letterSpacing: 1, color: "#0A0A0A", textDecoration: "none" } as React.CSSProperties,
   wrap: { maxWidth: 600, margin: "0 auto", padding: "40px 20px 80px" } as React.CSSProperties,
-  h1: { fontFamily: "'Anton', sans-serif", fontSize: "clamp(48px, 12vw, 80px)", textTransform: "uppercase" as const, lineHeight: 0.95, margin: "0 0 24px", letterSpacing: -1 },
+  h1: { fontFamily: "'Anton', sans-serif", fontSize: "clamp(40px, 11vw, 68px)", textTransform: "uppercase" as const, lineHeight: 1, margin: "0 0 20px" },
   h2: { fontFamily: "'Anton', sans-serif", fontSize: "clamp(22px, 6vw, 32px)", textTransform: "uppercase" as const, margin: "0 0 20px", letterSpacing: 0.5 },
-  lead: { fontSize: "clamp(16px, 4vw, 18px)", lineHeight: 1.7, color: "#333", marginBottom: 0 } as React.CSSProperties,
+  lead: { fontSize: "clamp(16px, 4vw, 18px)", lineHeight: 1.65, color: "#333", margin: 0 } as React.CSSProperties,
   divider: { borderTop: "1px solid rgba(0,0,0,0.12)", margin: "40px 0" } as React.CSSProperties,
   btn: { display: "block", textAlign: "center" as const, fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 24px", color: "#F0EDE6", textDecoration: "none", background: "#0A0A0A", marginBottom: 12 },
   btnOutline: { display: "block", textAlign: "center" as const, fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 24px", border: "2px solid #0A0A0A", color: "#0A0A0A", textDecoration: "none", background: "transparent" },
@@ -32,71 +31,43 @@ function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
     return () => obs.disconnect();
   }, []);
   return (
-    <div ref={ref} style={{ opacity: 0, transform: "translateY(48px)", transition: `opacity 1.1s cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 1.1s cubic-bezier(0.22,1,0.36,1) ${delay}ms` }}>
+    <div ref={ref} style={{ opacity: 0, transform: "translateY(32px)", transition: `opacity 0.6s cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 0.6s cubic-bezier(0.22,1,0.36,1) ${delay}ms` }}>
       {children}
     </div>
   );
 }
 
-const STEPS = [
+const PLANS = [
   {
-    num: "01",
-    title: "Анкета",
-    text: "Ты заполняешь анкету — я собираю данные о твоём образе жизни, целях, ограничениях и опыте. Это основа для всей дальнейшей работы.",
+    title: "2 тренировки в неделю",
+    tag: "Осталось 1 место",
+    note: "Персональные тренировки онлайн + программа, сопровождение по питанию и связь между занятиями",
+    usd: "~$400 / месяц",
+    rub: "32 000 ₽ / месяц",
   },
   {
-    num: "02",
-    title: "Установочная сессия",
-    text: "Проводим созвон, где вместе определяемся с целями и задачами на период работы. Я задаю вопросы, ты рассказываешь — в результате у нас общее понимание куда идём.",
+    title: "3 тренировки в неделю",
+    tag: "Осталось 1 место",
+    note: "То же самое, с большей нагрузкой и более быстрым прогрессом",
+    usd: "~$540 / месяц",
+    rub: "42 000 ₽ / месяц",
   },
   {
-    num: "03",
-    title: "План работы",
-    text: "Составляю индивидуальный план: сколько раз в неделю занимаемся, пишу программу тренировок под твои цели и возможности.",
-  },
-  {
-    num: "04",
-    title: "Ежедневные отчёты",
-    text: "Каждый день ты скидываешь мне отчёт в чат — что ела, сколько спала, сколько шагов. Это позволяет мне видеть полную картину и реагировать вовремя.",
-  },
-  {
-    num: "05",
-    title: "Сопровождение",
-    text: "Облегчаю весь процесс: пишу продуктовую корзину, придумываем как внедрить пищевые привычки без стресса. Я рядом на каждом этапе.",
+    title: "Разовое занятие",
+    tag: "",
+    note: "60 минут онлайн: постановка техники и разбор вопросов",
+    usd: "~$55",
+    rub: "4 500 ₽",
   },
 ];
 
 const INCLUDES = [
-  {
-    icon: "🏋️",
-    title: "Тренировки",
-    items: [
-      "Персональная программа под твои цели и уровень подготовки",
-      "Каждая тренировка уникальна — могут сочетаться силовые, пилатес, растяжка",
-      "Веду в реальном времени онлайн — ставлю технику, корректирую движения",
-      "Подходит для новичков и тех, кто возвращается после перерыва",
-    ],
-  },
-  {
-    icon: "🍽",
-    title: "Питание",
-    items: [
-      "Не готовое меню и не подсчёт КБЖУ",
-      "Учу правильно выбирать продукты и распределять их в течение дня",
-      "Пишу продуктовую корзину, помогаю выстроить привычки постепенно",
-      "Учитываю любые ограничения: вегетарианство, непереносимости, аллергии",
-    ],
-  },
-  {
-    icon: "💬",
-    title: "Поддержка",
-    items: [
-      "Безлимитная связь по вопросам тренировок и питания",
-      "Разбор отчётов и корректировка плана по ходу",
-      "При необходимости подключаю врача, нутрициолога или психолога",
-      "Работа с анализами крови — подбор БАДов и препаратов",
-    ],
-  },
+  "Индивидуальная программа под твою цель, тело и уровень — зал или дом",
+  "Тренируемся онлайн в реальном времени: ставлю технику, поправляю движения",
+  "Работа с осанкой и дисбалансами, безопасная нагрузка без травм",
+  "Разбор твоих видео между тренировками",
+  "Сопровождение по питанию — без жёстких меню и подсчёта калорий",
+  "Связь в мессенджере и регулярные созвоны",
 ];
 
 export default function PersonalPage() {
@@ -115,141 +86,62 @@ export default function PersonalPage() {
             4. Личное ведение
           </div>
           <h1 style={S.h1}>Личное ведение и персональные тренировки</h1>
-          <p style={{ ...S.lead, marginBottom: 0 }}>
-            Персональные тренировки один на один — акцент на осанку, дома или в зале. Полное сопровождение по тренировкам и питанию, консультации и регулярные созвоны. Беру ограниченное число человек.
+          <p style={S.lead}>
+            Тренировки один на один — веду вживую онлайн, ставлю технику и выстраиваю осанку. Питание и связь между занятиями тоже входят.
           </p>
         </FadeIn>
 
         <div style={S.divider} />
 
-        {/* Почему ведение */}
-        <FadeIn>
-          <h2 style={S.h2}>Почему ведение,<br />а не просто тренировки?</h2>
-        </FadeIn>
-        <FadeIn delay={100}>
-          <p style={{ ...S.lead, marginBottom: 16 }}>
-            Персоналки часто ограничиваются только тренировкой 1 на 1 — она даже в большинстве случаев не отличается от групповой. Тебе просто уделяют чуть больше времени. И всё.
-          </p>
-          <p style={{ ...S.lead, marginBottom: 16 }}>
-            Одна тренировка не работает — работает систематика. Результат будет только в системе.
-          </p>
-          <p style={{ ...S.lead }}>
-            В формате ведения ты получаешь конкретные индивидуальные действия только для себя — с учётом особенностей твоего организма, ритма жизни и уровня подготовки.
-          </p>
-        </FadeIn>
-
-        <div style={S.divider} />
-
-        {/* Как мы работаем */}
-        <FadeIn>
-          <h2 style={S.h2}>Как мы работаем</h2>
-        </FadeIn>
-        <div style={{ display: "flex", flexDirection: "column" as const }}>
-          {STEPS.map((step, i) => (
-            <FadeIn key={step.num} delay={i * 100}>
-              <div style={{ display: "flex", gap: 20, padding: "20px 0", borderTop: "1px solid rgba(0,0,0,0.1)" }}>
-                <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 13, color: "#bbb", letterSpacing: 1, flexShrink: 0, paddingTop: 3 }}>{step.num}</div>
-                <div>
-                  <p style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 15, margin: "0 0 6px", color: "#0A0A0A" }}>{step.title}</p>
-                  <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "#555", margin: 0, lineHeight: 1.65 }}>{step.text}</p>
-                </div>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-
-        <div style={S.divider} />
-
-        {/* Что входит */}
-        <FadeIn>
-          <h2 style={S.h2}>Что входит</h2>
-        </FadeIn>
-        <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
-          {INCLUDES.map((block, i) => (
-            <FadeIn key={block.title} delay={i * 120}>
-              <div style={{ background: "#E3E0D8", padding: "24px", borderRadius: 4 }}>
-                <p style={{ fontFamily: "'Anton', sans-serif", fontSize: 18, textTransform: "uppercase" as const, margin: "0 0 16px" }}>
-                  {block.icon} {block.title}
-                </p>
-                {block.items.map(item => (
-                  <div key={item} style={{ display: "flex", gap: 10, padding: "9px 0", borderBottom: "1px solid rgba(0,0,0,0.08)", fontSize: 14, color: "#333", lineHeight: 1.5 }}>
-                    <span style={{ color: "#888", flexShrink: 0 }}>✓</span>{item}
-                  </div>
-                ))}
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-
-        <div style={S.divider} />
-
-        {/* Результаты */}
-        <FadeIn>
-          <h2 style={S.h2}>Каких результатов ждать?</h2>
-        </FadeIn>
-        <FadeIn delay={100}>
-          <p style={{ ...S.lead, marginBottom: 16 }}>
-            В среднем за первый месяц потеря веса — до 4 кг, в зависимости от того, насколько серьёзно ты относишься к процессу. Норма — 2–4 кг в месяц.
-          </p>
-          <p style={{ ...S.lead, marginBottom: 16 }}>
-            Помимо цифр на весах: ты научишься правильно выбирать продукты и самостоятельно выстраивать питание для себя. Почувствуешь тонус и укрепление мышц, прилив энергии и нормализацию обменных процессов.
-          </p>
-          <p style={{ ...S.lead }}>
-            От первых результатов — зарядишься мотивацией двигаться дальше.
-          </p>
-        </FadeIn>
-
-        <div style={S.divider} />
-
-        {/* Цены */}
+        {/* Стоимость — сразу */}
         <FadeIn>
           <h2 style={S.h2}>Стоимость</h2>
         </FadeIn>
-        <FadeIn delay={100}>
-          <div style={{ marginBottom: 32 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "20px 0", borderTop: "1px solid rgba(0,0,0,0.1)", gap: 16 }}>
-              <div>
-                <p style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 16, margin: "0 0 4px" }}>2 тренировки в неделю</p>
-                <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase" as const, color: "#4a6b3a", margin: "0 0 6px" }}>Осталось 1 место</p>
-                <p style={{ fontSize: 13, color: "#666", margin: 0, lineHeight: 1.5 }}>Программа тренировок + сопровождение по питанию + консультации + регулярные созвоны</p>
+        <FadeIn delay={80}>
+          <div style={{ marginBottom: 24 }}>
+            {PLANS.map((p) => (
+              <div key={p.title} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "18px 0", borderTop: "1px solid rgba(0,0,0,0.12)", gap: 16 }}>
+                <div>
+                  <p style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 16, margin: "0 0 4px" }}>{p.title}</p>
+                  {p.tag && (
+                    <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase" as const, color: "#4a6b3a", margin: "0 0 6px" }}>{p.tag}</p>
+                  )}
+                  <p style={{ fontSize: 13, color: "#666", margin: 0, lineHeight: 1.5 }}>{p.note}</p>
+                </div>
+                <span style={{ textAlign: "right" as const, flexShrink: 0 }}>
+                  <span style={{ display: "block", fontFamily: "'Anton', sans-serif", fontSize: 22, lineHeight: 1 }}>{p.usd}</span>
+                  <span style={{ display: "block", fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontSize: 13, color: "#666", marginTop: 2 }}>{p.rub}</span>
+                </span>
               </div>
-              <span style={{ textAlign: "right" as const, flexShrink: 0 }}>
-                <span style={{ display: "block", fontFamily: "'Anton', sans-serif", fontSize: 22, lineHeight: 1 }}>~$400 / месяц</span>
-                <span style={{ display: "block", fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontSize: 13, color: "#666", marginTop: 2 }}>32 000 ₽ / месяц</span>
-              </span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "20px 0", borderTop: "1px solid rgba(0,0,0,0.1)", gap: 16 }}>
-              <div>
-                <p style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 16, margin: "0 0 4px" }}>3 тренировки в неделю</p>
-                <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase" as const, color: "#4a6b3a", margin: "0 0 6px" }}>Осталось 1 место</p>
-                <p style={{ fontSize: 13, color: "#666", margin: 0, lineHeight: 1.5 }}>То же самое, но с большей нагрузкой и более быстрым прогрессом</p>
-              </div>
-              <span style={{ textAlign: "right" as const, flexShrink: 0 }}>
-                <span style={{ display: "block", fontFamily: "'Anton', sans-serif", fontSize: 22, lineHeight: 1 }}>~$540 / месяц</span>
-                <span style={{ display: "block", fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontSize: 13, color: "#666", marginTop: 2 }}>42 000 ₽ / месяц</span>
-              </span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "20px 0", borderTop: "1px solid rgba(0,0,0,0.1)", gap: 16 }}>
-              <div>
-                <p style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 16, margin: "0 0 6px" }}>Разовое занятие</p>
-                <p style={{ fontSize: 13, color: "#666", margin: 0, lineHeight: 1.5 }}>60 минут онлайн: постановка техники, разбор вопросов по тренировкам и питанию</p>
-              </div>
-              <span style={{ textAlign: "right" as const, flexShrink: 0 }}>
-                <span style={{ display: "block", fontFamily: "'Anton', sans-serif", fontSize: 22, lineHeight: 1 }}>~$55</span>
-                <span style={{ display: "block", fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontSize: 13, color: "#666", marginTop: 2 }}>4 500 ₽</span>
-              </span>
-            </div>
+            ))}
             <div style={{ borderTop: "1px solid rgba(0,0,0,0.12)" }} />
           </div>
         </FadeIn>
 
-        <FadeIn delay={150}>
+        <FadeIn delay={120}>
           <a href="https://t.me/sofiapolenova" target="_blank" rel="noopener noreferrer" style={S.btn}>
             Записаться →
           </a>
           <a href="https://t.me/SofiaPolenova_bot?start=zhivot" target="_blank" rel="noopener noreferrer" style={S.btnOutline}>
             Сначала попробовать бесплатно
           </a>
+        </FadeIn>
+
+        <div style={S.divider} />
+
+        {/* Что входит — компактно */}
+        <FadeIn>
+          <h2 style={S.h2}>Что входит</h2>
+        </FadeIn>
+        <FadeIn delay={80}>
+          <div>
+            {INCLUDES.map((item) => (
+              <div key={item} style={{ display: "flex", gap: 12, padding: "12px 0", borderTop: "1px solid rgba(0,0,0,0.1)", fontSize: 14, color: "#333", lineHeight: 1.55 }}>
+                <span style={{ color: "#4a6b3a", flexShrink: 0 }}>✓</span>{item}
+              </div>
+            ))}
+            <div style={{ borderTop: "1px solid rgba(0,0,0,0.1)" }} />
+          </div>
         </FadeIn>
 
         {/* Документы */}
@@ -260,7 +152,7 @@ export default function PersonalPage() {
             <a href="/consent" style={{ fontSize: 12, color: "#aaa", textDecoration: "underline", textUnderlineOffset: 3 }}>Согласие на обработку ПД</a>
           </div>
           <p style={{ fontSize: 11, color: "#ccc", margin: "4px 0 0" }}>ИП Поленова Софья Николаевна · ИНН 440117728694 · ОГРНИП 323440000001972</p>
-          <p style={{ fontSize: 11, color: "#ccc", margin: 0 }}>© 2025 Поленова Софья Николаевна. Все права защищены.</p>
+          <p style={{ fontSize: 11, color: "#ccc", margin: 0 }}>© 2026 Поленова Софья Николаевна. Все права защищены.</p>
         </div>
       </div>
     </main>
