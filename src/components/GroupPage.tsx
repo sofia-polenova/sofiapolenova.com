@@ -390,25 +390,7 @@ export default function GroupPage() {
       <ParallaxHero />
 
       <div style={S.wrap}>
-        {/* Формат */}
-        <FadeIn>
-          <p style={S.eyebrow}>Формат</p>
-          <p style={{ ...S.lead, textWrap: "pretty" } as React.CSSProperties}>
-            Небольшая группа и живые онлайн-занятия по стабильному расписанию — приходить
-            можно от одного до трёх раз в неделю, как удобно тебе.
-          </p>
-          <p style={{ ...S.lead, textWrap: "pretty" } as React.CSSProperties}>
-            Я веду каждую тренировку сама: показываю движения, слежу за техникой и
-            подстраиваю нагрузку под каждую участницу. Между занятиями остаются короткие
-            комплексы, которые можно делать дома.
-          </p>
-          <p style={{ ...S.lead, margin: 0, textWrap: "pretty" } as React.CSSProperties}>
-            Формат подходит новичкам, тем, кто готовится к беременности и родам, и тем,
-            кто восстанавливается после родов.
-          </p>
-        </FadeIn>
-
-        <div style={{ height: 28 }} />
+        <div style={{ height: 48 }} />
 
         {/* Кому подходит */}
         <FadeIn>
