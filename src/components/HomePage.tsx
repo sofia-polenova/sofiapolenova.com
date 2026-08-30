@@ -184,11 +184,11 @@ const SERVICES: Service[] = [
   },
   {
     num: "4",
-    title: "Сопровождение по тренировкам и питанию",
-    desc: "Тренируешься по готовой индивидуальной программе — в зале или дома — и остаёшься со мной на связи. Можно взять только питание: разбираем на консультации, дальше ты присылаешь отчёты в чат, а я контролирую и корректирую.",
-    price: "от 15 000 ₽",
-    priceUsd: "от $175",
-    perMonth: true,
+    title: "По готовой программе тренировок",
+    desc: "Напишу индивидуальную программу тренировок и останусь на связи — проверяю технику по записи. Программа на 4 недели с прогрессией. Заниматься можно в зале или дома.",
+    price: "15 000 ₽",
+    priceUsd: "≈ $175",
+    perMonth: false,
     prices: null,
     image: null,
     btnText: "Узнать подробнее →",
@@ -283,6 +283,58 @@ function Services() {
               </a>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── NUTRITION ─── */
+const NUTRITION_PRICES = [
+  { label: "Разовая консультация · 55 минут", usd: "≈ $55", rub: "4 500 ₽" },
+  { label: "Ведение по питанию", usd: "≈ $175 / месяц", rub: "15 000 ₽ / месяц" },
+];
+
+function Nutrition() {
+  return (
+    <section style={{ background: "#F0EDE6", padding: "20px 20px 60px" }}>
+      <div style={{ maxWidth: 600, margin: "0 auto" }}>
+        <h2 style={SECTION_H2}>
+          А если хочу поработать с питанием?
+        </h2>
+        <div style={{ background: "#E3E0D8", padding: "28px 24px" }}>
+          <h3 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(18px, 4.5vw, 26px)", textTransform: "uppercase", margin: "0 0 10px", lineHeight: 1.1 }}>
+            <span style={{ color: "#4a6b3a" }}>1.</span> Сопровождение по питанию
+          </h3>
+          <p style={{ fontFamily: "var(--font-sans)", fontSize: 15, lineHeight: 1.6, color: "#333", margin: "0 0 16px" }}>
+            Не составляю меню — проверяю отчёты и работаю через изменение привычек.
+          </p>
+          <div style={{ margin: "0 0 16px" }}>
+            {NUTRITION_PRICES.map((t) => (
+              <div key={t.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, padding: "12px 0", borderTop: "1px solid rgba(0,0,0,0.14)" }}>
+                <span style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "#333", paddingTop: 4 }}>{t.label}</span>
+                <span style={{ textAlign: "right", flexShrink: 0 }}>
+                  <span style={{ display: "block", fontFamily: "var(--font-display)", fontSize: 18, lineHeight: 1, whiteSpace: "nowrap" }}>{t.usd}</span>
+                  <span style={{ display: "block", fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 12, color: "#666", whiteSpace: "nowrap", marginTop: 2 }}>{t.rub}</span>
+                </span>
+              </div>
+            ))}
+            <div style={{ borderTop: "1px solid rgba(0,0,0,0.14)" }} />
+          </div>
+          <a
+            href="https://t.me/sofiapolenova"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "block", textAlign: "center",
+              fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 600,
+              letterSpacing: 2, textTransform: "uppercase",
+              padding: "16px 24px", border: "2px solid #0A0A0A",
+              color: "#0A0A0A", textDecoration: "none", background: "transparent"
+            }}
+          >
+            Написать Софье →
+          </a>
         </div>
       </div>
     </section>
@@ -559,6 +611,7 @@ export default function HomePage() {
       <Story />
       <Education />
       <Services />
+      <Nutrition />
       <CasesIndex />
       <PastFormats />
       <Footer />
