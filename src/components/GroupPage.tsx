@@ -277,36 +277,22 @@ export default function GroupPage() {
             ["📅", "Дни", <><span style={HL}>Вт · Чт · Сб</span></>],
             ["⏰", "Время", <><span style={HL}>10:00</span> по МСК</>],
             ["⏱️", "Длительность", <><span style={HL}>55–75</span> минут</>],
-            ["👥", "В группе", <>одновременно <span style={HL}>2–8</span> человек</>],
+            ["👥", "В группе", <><span style={HL}>2–8</span> человек одновременно</>],
             ["🎥", "Где", <>онлайн в Zoom, <span style={HL}>из дома</span></>],
+            ["🎒", "Оборудование", <>коврик, <span style={HL}>МФР-мяч</span>, резинки, гантели</>],
           ] as [string, string, React.ReactNode][]).map(([emoji, label, value], i) => (
             <RevealRow key={label} index={i} from="left">
-              <div style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "11px 0", borderBottom: "1px solid rgba(255,255,255,0.15)" }}>
-                <span style={{ fontSize: 20, lineHeight: 1.3, flexShrink: 0 }}>{emoji}</span>
-                <div>
-                  <span style={{ display: "block", fontFamily: FONT_S, fontSize: 11, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase", color: "#a8d18a", marginBottom: 2 }}>{label}</span>
-                  <span style={{ fontFamily: FONT_S, fontSize: 15, color: "rgba(255,255,255,0.9)", lineHeight: 1.5 }}>{value}</span>
-                </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 20, padding: "14px 0", borderBottom: "1px solid rgba(255,255,255,0.15)" }}>
+                <span style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+                  <span style={{ fontSize: 18, lineHeight: 1 }}>{emoji}</span>
+                  <span style={{ fontFamily: FONT_S, fontSize: 12, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase", color: "#a8d18a" }}>{label}</span>
+                </span>
+                <span style={{ fontFamily: FONT_S, fontSize: 15, color: "rgba(255,255,255,0.92)", lineHeight: 1.4, textAlign: "right" }}>{value}</span>
               </div>
             </RevealRow>
           ))}
         </div>
-      </PhotoBlock>
-
-      {/* 03 — короткие комплексы */}
-      <PhotoBlock src="/assets/training-2.jpg" num="03" title="Короткие комплексы">
-        <p style={{ ...bodyLight, margin: 0 }}>
-          Между занятиями остаются короткие комплексы упражнений — их можно делать как{" "}
-          <span style={HL}>домашнее задание</span> или как <span style={HL}>утреннюю зарядку</span>.
-        </p>
-      </PhotoBlock>
-
-      {/* 04 — оборудование */}
-      <PhotoBlock src="/assets/training-3.jpg" num="04" title="Оборудование">
-        <p style={{ ...bodyLight, margin: "0 0 8px" }}>
-          Понадобится <span style={HL}>МФР-мяч, коврик и фитнес-резинки</span>.
-        </p>
-        <p style={{ ...bodyLight, margin: 0 }}>
+        <p style={{ fontFamily: FONT_S, fontSize: 13, color: "rgba(255,255,255,0.55)", margin: "16px 0 0" }}>
           Полное описание оборудования — в чате группы.
         </p>
       </PhotoBlock>
@@ -329,6 +315,16 @@ export default function GroupPage() {
             </a>
           </div>
         </FadeIn>
+
+        <div style={{ padding: "72px 0 24px" }}>
+          <FadeIn>
+            <p style={{ fontFamily: FONT_D, fontSize: "clamp(24px, 6.5vw, 40px)", textTransform: "uppercase", lineHeight: 1.15, color: DARK, margin: 0 }}>
+              Между занятиями остаются короткие комплексы — их можно делать как{" "}
+              <span style={{ color: GREEN }}>домашнее задание</span> или как{" "}
+              <span style={{ color: GREEN }}>утреннюю зарядку</span>.
+            </p>
+          </FadeIn>
+        </div>
       </div>
 
       <Footer />
