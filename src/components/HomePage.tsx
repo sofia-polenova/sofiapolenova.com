@@ -173,9 +173,9 @@ const SERVICES: Service[] = [
     priceUsd: null,
     perMonth: true,
     prices: [
-      { label: "2 раза в неделю", usd: "$400 / месяц", rub: "32 000 ₽ / месяц" },
-      { label: "3 раза в неделю", usd: "$540 / месяц", rub: "42 000 ₽ / месяц" },
       { label: "Разовое занятие", usd: "$55", rub: "4 500 ₽" },
+      { label: "Абонемент на 8 тренировок", usd: "$400", rub: "32 000 ₽" },
+      { label: "Другие форматы и график", usd: "По запросу", rub: "" },
     ],
     image: null,
     btnText: "Узнать подробнее →",
@@ -257,8 +257,10 @@ function Services() {
                     <div key={t.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, padding: "12px 0", borderTop: "1px solid rgba(0,0,0,0.14)" }}>
                       <span style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "#333", paddingTop: 4 }}>{t.label}</span>
                       <span style={{ textAlign: "right", flexShrink: 0 }}>
-                        <span style={{ display: "block", fontFamily: "var(--font-display)", fontSize: 18, lineHeight: 1, whiteSpace: "nowrap" }}>{t.usd}</span>
-                        <span style={{ display: "block", fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 12, color: "#666", whiteSpace: "nowrap", marginTop: 2 }}>{t.rub}</span>
+                        <span style={{ display: "block", fontFamily: "var(--font-display)", fontSize: t.rub ? 18 : 13, color: t.rub ? "#0A0A0A" : "#666", lineHeight: 1, whiteSpace: "nowrap" }}>{t.usd}</span>
+                        {t.rub && (
+                          <span style={{ display: "block", fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 12, color: "#666", whiteSpace: "nowrap", marginTop: 2 }}>{t.rub}</span>
+                        )}
                       </span>
                     </div>
                   ))}

@@ -39,25 +39,25 @@ function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
 
 const PLANS = [
   {
-    title: "2 тренировки в неделю",
-    tag: "Осталось 1 место",
-    note: "Персональные тренировки онлайн + программа, сопровождение по питанию и связь между занятиями",
-    usd: "~$400 / месяц",
-    rub: "32 000 ₽ / месяц",
-  },
-  {
-    title: "3 тренировки в неделю",
-    tag: "Осталось 1 место",
-    note: "То же самое, с большей нагрузкой и более быстрым прогрессом",
-    usd: "~$540 / месяц",
-    rub: "42 000 ₽ / месяц",
-  },
-  {
     title: "Разовое занятие",
     tag: "",
     note: "60 минут онлайн: постановка техники и разбор вопросов",
     usd: "~$55",
     rub: "4 500 ₽",
+  },
+  {
+    title: "Абонемент на 8 тренировок",
+    tag: "",
+    note: "Персональные занятия один на один — программа под твою цель и корректировки по ходу",
+    usd: "~$400",
+    rub: "32 000 ₽",
+  },
+  {
+    title: "Другие форматы и график",
+    tag: "",
+    note: "3+ раза в неделю, короткие частые занятия, сопровождение по питанию — обсуждаем индивидуально",
+    usd: "По запросу",
+    rub: "",
   },
 ];
 
@@ -109,8 +109,10 @@ export default function PersonalPage() {
                   <p style={{ fontSize: 13, color: "#666", margin: 0, lineHeight: 1.5 }}>{p.note}</p>
                 </div>
                 <span style={{ textAlign: "right" as const, flexShrink: 0 }}>
-                  <span style={{ display: "block", fontFamily: "'Anton', sans-serif", fontSize: 22, lineHeight: 1 }}>{p.usd}</span>
-                  <span style={{ display: "block", fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontSize: 13, color: "#666", marginTop: 2 }}>{p.rub}</span>
+                  <span style={{ display: "block", fontFamily: "'Anton', sans-serif", fontSize: p.rub ? 22 : 14, color: p.rub ? "#0A0A0A" : "#666", lineHeight: 1 }}>{p.usd}</span>
+                  {p.rub && (
+                    <span style={{ display: "block", fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontSize: 13, color: "#666", marginTop: 2 }}>{p.rub}</span>
+                  )}
                 </span>
               </div>
             ))}
