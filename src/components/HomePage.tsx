@@ -209,29 +209,29 @@ function Services() {
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {SERVICES.map((s) => (
             <div key={s.num} className="svc-card" style={{ padding: "24px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 14 }}>
                 <span className="icon-chip">{s.icon}</span>
-                <h3 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(17px, 4.3vw, 24px)", textTransform: "uppercase", margin: 0, lineHeight: 1.15 }}>
-                  <span style={{ color: "#4a6b3a" }}>{s.num}.</span> {s.title}
-                </h3>
-              </div>
-
-              {s.href.includes("start=zhivot") && (
-                <span className="pill-tag" style={{ marginBottom: 12 }}>Бесплатно</span>
-              )}
-
-              {(s.priceUsd || s.price) && !s.prices && (
-                <div style={{ display: "flex", alignItems: "baseline", gap: 10, margin: "0 0 14px" }}>
-                  <span style={{ fontFamily: "var(--font-display)", fontSize: 24, lineHeight: 1 }}>
-                    {s.priceUsd ?? s.price}{s.perMonth ? " / месяц" : ""}
-                  </span>
-                  {s.priceUsd && s.price && (
-                    <span style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 14, color: "#666" }}>
-                      {s.price}{s.perMonth ? " / месяц" : ""}
-                    </span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <h3 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(17px, 4.3vw, 24px)", textTransform: "uppercase", margin: 0, lineHeight: 1.15 }}>
+                    <span style={{ color: "#4a6b3a" }}>{s.num}.</span> {s.title}
+                  </h3>
+                  {s.href.includes("start=zhivot") && (
+                    <span className="pill-tag" style={{ display: "inline-block", marginTop: 10 }}>Бесплатно</span>
+                  )}
+                  {(s.priceUsd || s.price) && !s.prices && (
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginTop: 10 }}>
+                      <span style={{ fontFamily: "var(--font-display)", fontSize: 24, lineHeight: 1 }}>
+                        {s.priceUsd ?? s.price}{s.perMonth ? " / месяц" : ""}
+                      </span>
+                      {s.priceUsd && s.price && (
+                        <span style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 14, color: "#666" }}>
+                          {s.price}{s.perMonth ? " / месяц" : ""}
+                        </span>
+                      )}
+                    </div>
                   )}
                 </div>
-              )}
+              </div>
 
               <p style={{ fontFamily: "var(--font-sans)", fontSize: 15, lineHeight: 1.6, color: "#333", margin: "0 0 16px" }}>
                 {s.desc}
@@ -422,13 +422,6 @@ function Education() {
 }
 
 /* ─── CASES INDEX ─── */
-const CASES = [
-  { slug: "myshcy-yagodiczy", label: "Набор мышечной массы, построение ягодиц" },
-  { slug: "beremennost", label: "Ведение во время беременности и послеродовом периоде" },
-  { slug: "zhivot-osanka", label: "Живот и осанка" },
-  { slug: "pitanie", label: "Питание без срывов" },
-];
-
 function CasesIndex() {
   return (
     <section style={{ background: "#F0EDE6", padding: "60px 20px" }}>
@@ -436,27 +429,11 @@ function CasesIndex() {
         <h2 style={SECTION_H2}>
           Кейсы клиентов
         </h2>
-        <div>
-          {CASES.map((c, i) => (
-            <a
-              key={c.slug}
-              href={`/cases/${c.slug}`}
-              style={{
-                display: "flex", alignItems: "center", justifyContent: "space-between",
-                padding: "20px 0", borderTop: "1px solid rgba(0,0,0,0.15)",
-                textDecoration: "none", color: "#0A0A0A",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-                <span style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "#4a6b3a", minWidth: 24 }}>
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span style={{ fontFamily: "var(--font-sans)", fontSize: 16, fontWeight: 500 }}>{c.label}</span>
-              </div>
-              <span style={{ fontSize: 18 }}>→</span>
-            </a>
-          ))}
-          <div style={{ borderTop: "1px solid rgba(0,0,0,0.15)" }} />
+        <div style={{ background: "#E3E0D8", padding: "48px 24px", textAlign: "center" }}>
+          <span className="pill-tag" style={{ marginBottom: 12 }}>Скоро</span>
+          <p style={{ fontFamily: "var(--font-sans)", fontSize: 15, color: "#666", margin: 0 }}>
+            Кейс скоро загрузим
+          </p>
         </div>
       </div>
     </section>
