@@ -152,7 +152,7 @@ const SERVICES: Service[] = [
       { label: "2 раза в неделю", usd: "$200 / месяц", rub: "16 000 ₽ / месяц" },
       { label: "3 раза в неделю", usd: "$300 / месяц", rub: "24 000 ₽ / месяц" },
     ],
-    image: null,
+    image: "/assets/gruppovye.jpg",
     btnText: "Узнать подробнее →",
     href: "/group",
     external: false,
