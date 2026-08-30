@@ -166,15 +166,20 @@ const SERVICES = [
   },
 ];
 
+const SECTION_H2: React.CSSProperties = {
+  fontFamily: "var(--font-display)",
+  fontSize: "clamp(32px, 9vw, 56px)",
+  textTransform: "uppercase",
+  lineHeight: 1,
+  textAlign: "left",
+  margin: "0 0 40px",
+};
+
 function Services() {
   return (
-    <section id="services" style={{ background: "#F0EDE6", paddingBottom: 60 }}>
-      <div style={{ maxWidth: 600, margin: "0 auto", padding: "0 20px" }}>
-        <h2 style={{
-          fontFamily: "var(--font-display)", fontSize: "clamp(28px, 7vw, 44px)",
-          textTransform: "uppercase", lineHeight: 1.05, textAlign: "center",
-          margin: "0 0 48px", paddingTop: 60
-        }}>
+    <section id="services" style={{ background: "#F0EDE6", padding: "60px 20px" }}>
+      <div style={{ maxWidth: 600, margin: "0 auto" }}>
+        <h2 style={SECTION_H2}>
           Как можно тренироваться со мной?
         </h2>
 
@@ -185,17 +190,17 @@ function Services() {
                 <h3 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(18px, 4.5vw, 26px)", textTransform: "uppercase", margin: 0, lineHeight: 1.1 }}>
                   <span style={{ color: "#4a6b3a" }}>{s.num}.</span> {s.title}
                 </h3>
-                {s.price && (
+                {(s.priceUsd || s.price) && (
                   <span style={{ textAlign: "right", flexShrink: 0, lineHeight: 1.15 }}>
-                    <span style={{ display: "block", fontFamily: "var(--font-display)", fontSize: 18, whiteSpace: "nowrap" }}>
-                      {s.price}
+                    <span style={{ display: "block", fontFamily: "var(--font-display)", fontSize: 20, whiteSpace: "nowrap" }}>
+                      {s.priceUsd ?? s.price}
                       {s.perMonth && (
                         <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 400, letterSpacing: 0, textTransform: "none", color: "#666" }}> / месяц</span>
                       )}
                     </span>
-                    {s.priceUsd && (
+                    {s.priceUsd && s.price && (
                       <span style={{ display: "block", fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 13, color: "#666", whiteSpace: "nowrap", marginTop: 2 }}>
-                        {s.priceUsd}
+                        {s.price}{s.perMonth ? " / месяц" : ""}
                       </span>
                     )}
                   </span>
@@ -237,7 +242,7 @@ function Reviews() {
   return (
     <section style={{ background: "#F0EDE6", padding: "60px 20px" }}>
       <div style={{ maxWidth: 600, margin: "0 auto" }}>
-        <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px, 10vw, 60px)", textTransform: "uppercase", lineHeight: 1, margin: "0 0 40px" }}>
+        <h2 style={SECTION_H2}>
           Отзывы участниц
         </h2>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -281,7 +286,7 @@ function Education() {
   return (
     <section style={{ background: "#E3E0D8", padding: "60px 20px" }}>
       <div style={{ maxWidth: 600, margin: "0 auto" }}>
-        <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px, 10vw, 60px)", textTransform: "uppercase", lineHeight: 1, margin: "0 0 40px" }}>
+        <h2 style={SECTION_H2}>
           Образование
         </h2>
 
@@ -333,7 +338,7 @@ function CasesIndex() {
   return (
     <section style={{ background: "#F0EDE6", padding: "60px 20px" }}>
       <div style={{ maxWidth: 600, margin: "0 auto" }}>
-        <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(40px, 12vw, 72px)", textTransform: "uppercase", lineHeight: 1, margin: "0 0 32px" }}>
+        <h2 style={SECTION_H2}>
           Кейсы клиентов
         </h2>
         <div>
@@ -378,7 +383,7 @@ function PastFormats() {
   return (
     <section style={{ background: "#E3E0D8", padding: "60px 20px" }}>
       <div style={{ maxWidth: 600, margin: "0 auto" }}>
-        <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(28px, 7vw, 44px)", textTransform: "uppercase", lineHeight: 1.05, margin: "0 0 8px" }}>
+        <h2 style={{ ...SECTION_H2, margin: "0 0 8px" }}>
           Прошлые форматы
         </h2>
         <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 16, color: "#666", margin: "0 0 32px" }}>

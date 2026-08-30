@@ -80,8 +80,8 @@ export default function ProgramsPage() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, padding: "16px 0", borderTop: "1px solid rgba(0,0,0,0.12)" }}>
             <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 15, color: "#0A0A0A", lineHeight: 1.4, paddingTop: 4 }}>Тренировки + питание</span>
             <span style={{ textAlign: "right" as const, flexShrink: 0 }}>
-              <span style={{ display: "block", fontFamily: "'Anton', sans-serif", fontSize: 26, lineHeight: 1 }}>от 15 000 ₽</span>
-              <span style={{ display: "block", fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontSize: 14, color: "#666", marginTop: 2 }}>≈ $170 / месяц</span>
+              <span style={{ display: "block", fontFamily: "'Anton', sans-serif", fontSize: 26, lineHeight: 1 }}>≈ $170 / месяц</span>
+              <span style={{ display: "block", fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontSize: 14, color: "#666", marginTop: 2 }}>от 15 000 ₽ / месяц</span>
             </span>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, padding: "16px 0", borderTop: "1px solid rgba(0,0,0,0.12)" }}>

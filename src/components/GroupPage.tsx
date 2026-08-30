@@ -159,8 +159,8 @@ function PriceRow({ label, rub, usd }: { label: string; rub: string; usd: string
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "18px 0", borderTop: "1px solid rgba(0,0,0,0.12)", gap: 16 }}>
       <span style={{ fontFamily: FONT_S, fontSize: 15, color: DARK, lineHeight: 1.4, paddingTop: 6 }}>{label}</span>
       <span style={{ textAlign: "right", flexShrink: 0 }}>
-        <span style={{ display: "block", fontFamily: FONT_D, fontSize: 26, lineHeight: 1 }}>{rub}</span>
-        <span style={{ display: "block", fontFamily: FONT_SERIF, fontStyle: "italic", fontSize: 14, color: GRAY, marginTop: 2 }}>{usd}</span>
+        <span style={{ display: "block", fontFamily: FONT_D, fontSize: 26, lineHeight: 1 }}>{usd}</span>
+        <span style={{ display: "block", fontFamily: FONT_SERIF, fontStyle: "italic", fontSize: 14, color: GRAY, marginTop: 2 }}>{rub}</span>
       </span>
     </div>
   );
@@ -375,9 +375,6 @@ export default function GroupPage() {
                 </div>
               ))}
             </div>
-            <p style={{ ...body, margin: "0 0 20px" }}>
-              Веду вживую — вижу всех участниц и поправляю технику прямо на занятии.
-            </p>
             <MediaCarousel />
           </Block>
         </FadeIn>
@@ -434,9 +431,9 @@ export default function GroupPage() {
         <FadeIn>
           <h2 style={S.h2}>Стоимость</h2>
           <div style={{ marginBottom: 28 }}>
-            <PriceRow label="1 раз в неделю" rub="8 000 ₽" usd="≈ $90 / мес" />
-            <PriceRow label="2 раза в неделю" rub="16 000 ₽" usd="≈ $180 / мес" />
-            <PriceRow label="3 раза в неделю" rub="24 000 ₽" usd="≈ $270 / мес" />
+            <PriceRow label="1 раз в неделю" rub="8 000 ₽ / месяц" usd="≈ $90 / месяц" />
+            <PriceRow label="2 раза в неделю" rub="16 000 ₽ / месяц" usd="≈ $180 / месяц" />
+            <PriceRow label="3 раза в неделю" rub="24 000 ₽ / месяц" usd="≈ $270 / месяц" />
             <div style={{ borderTop: "1px solid rgba(0,0,0,0.12)" }} />
           </div>
           <a href={TG_SOFIA} target="_blank" rel="noopener noreferrer" style={S.btn}>
