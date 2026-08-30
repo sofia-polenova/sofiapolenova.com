@@ -435,7 +435,7 @@ function Education() {
             </a>
           ))}
         </div>
-        <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 14, color: "#666", margin: "12px 0 0" }}>
+        <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 14, color: "#666", margin: "12px 0 0", textAlign: "center" }}>
           листай в сторону →
         </p>
       </div>

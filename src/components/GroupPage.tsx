@@ -306,13 +306,14 @@ export default function GroupPage() {
               <span style={{ color: GREEN }}>домашнее задание</span> или как{" "}
               <span style={{ color: GREEN }}>утреннюю зарядку</span>.
             </p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 22 }}>
+            <div style={{ display: "flex", flexWrap: "nowrap", gap: 10, marginTop: 22, overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: 4 }}>
               {[
                 ["Комплекс на дыхание", "10 минут"],
                 ["Упражнения на раскрытие грудного отдела", "8 минут"],
                 ["Мобильность ТБС", "12 минут"],
+                ["Лимфодренажная зарядка", "10 минут"],
               ].map(([name, dur]) => (
-                <span key={name} style={{ display: "inline-block", background: "#E8EDE4", borderRadius: 100, padding: "9px 18px", fontFamily: FONT_S, fontSize: 13, color: "#333", lineHeight: 1.4 }}>
+                <span key={name} style={{ display: "inline-block", flexShrink: 0, whiteSpace: "nowrap", background: "#E8EDE4", border: `1px solid ${GREEN}`, borderRadius: 100, padding: "9px 18px", fontFamily: FONT_S, fontSize: 13, color: "#333", lineHeight: 1.4 }}>
                   {name} <span style={{ color: GREEN, fontWeight: 600 }}>· {dur}</span>
                 </span>
               ))}
