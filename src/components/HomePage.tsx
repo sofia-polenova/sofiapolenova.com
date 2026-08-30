@@ -136,7 +136,7 @@ const SERVICES = [
     title: "Групповые тренировки",
     desc: "Онлайн-занятия в небольшой группе со стабильным расписанием. Заниматься можно от 1 до 3 раз в неделю. Подходит новичкам, тем, кто готовится к беременности и родам, и тем, кто восстанавливается после родов.",
     price: "от 8 000 ₽",
-    priceUsd: "≈ $90",
+    priceUsd: "$90",
     perMonth: true,
     btnText: "Узнать подробнее →",
     href: "/group",
@@ -193,10 +193,7 @@ function Services() {
                 {(s.priceUsd || s.price) && (
                   <span style={{ textAlign: "right", flexShrink: 0, lineHeight: 1.15 }}>
                     <span style={{ display: "block", fontFamily: "var(--font-display)", fontSize: 20, whiteSpace: "nowrap" }}>
-                      {s.priceUsd ?? s.price}
-                      {s.perMonth && (
-                        <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 400, letterSpacing: 0, textTransform: "none", color: "#666" }}> / месяц</span>
-                      )}
+                      {s.priceUsd ?? s.price}{s.perMonth ? " / месяц" : ""}
                     </span>
                     {s.priceUsd && s.price && (
                       <span style={{ display: "block", fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 13, color: "#666", whiteSpace: "nowrap", marginTop: 2 }}>

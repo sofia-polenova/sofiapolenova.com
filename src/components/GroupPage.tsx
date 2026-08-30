@@ -47,6 +47,57 @@ function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
   );
 }
 
+/* ── Reveal (вылетает сбоку при скролле) ── */
+function RevealRow({ children, index = 0 }: { children: React.ReactNode; index?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = "1";
+          el.style.transform = "none";
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.25 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  const d = Math.min(index, 4) * 80;
+  return (
+    <div ref={ref} style={{ opacity: 0, transform: "translateX(-32px)", transition: `opacity 0.55s cubic-bezier(0.22,1,0.36,1) ${d}ms, transform 0.55s cubic-bezier(0.22,1,0.36,1) ${d}ms` }}>
+      {children}
+    </div>
+  );
+}
+
+/* ── Кому подходит ── */
+const AUDIENCE: { title: string; text: string }[] = [
+  {
+    title: "Хочешь мягко вернуть движение в рутину",
+    text: "Начинаем постепенно и безопасно — с дыхания и осанки, без резкой нагрузки и надрыва. Тело привыкает к регулярности само, а тренировка перестаёт быть насилием над собой.",
+  },
+  {
+    title: "В декрете и не знаешь, с чего начать восстановление",
+    text: "Если после родов всё болит и тело будто не слушается — аккуратно возвращаем тонус: работаем с животом, тазовым дном и спиной, шаг за шагом.",
+  },
+  {
+    title: "Готовишься к беременности и родам",
+    text: "Много внимания спине, мобильности и подготовке тазобедренных суставов — чтобы выносить и родить было легче, а восстановиться потом — быстрее.",
+  },
+  {
+    title: "Много сидишь — устаёт спина и шея",
+    text: "Укрепляем глубокие мышцы, разгружаем поясницу и выравниваем осанку. По чуть-чуть каждую неделю, без «убойных» тренировок.",
+  },
+  {
+    title: "Пробовала заниматься сама, но бросала",
+    text: "Стабильное расписание и группа держат в ритме, а разбор техники не даёт делать упражнения через боль и «на автомате».",
+  },
+];
+
 const S = {
   page: { background: BG, minHeight: "100vh", fontFamily: FONT_S } as React.CSSProperties,
   nav: { background: BG, borderBottom: "1px solid rgba(0,0,0,0.08)", padding: "16px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", position: "sticky" as const, top: 0, zIndex: 100 },
@@ -359,6 +410,29 @@ export default function GroupPage() {
 
         <div style={{ height: 28 }} />
 
+        {/* Кому подходит */}
+        <FadeIn>
+          <p style={S.eyebrow}>Кому подходит</p>
+        </FadeIn>
+        <div style={{ marginBottom: 8 }}>
+          {AUDIENCE.map((a, i) => (
+            <RevealRow key={i} index={i}>
+              <div style={{ display: "flex", gap: 14, padding: "20px 0", borderTop: "1px solid rgba(0,0,0,0.12)" }}>
+                <div style={{ width: 24, height: 24, borderRadius: "50%", border: `1.5px solid ${GREEN}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2 }}>
+                  <span style={{ color: GREEN, fontSize: 12 }}>✓</span>
+                </div>
+                <div>
+                  <p style={{ fontFamily: FONT_S, fontWeight: 600, fontSize: 16, color: DARK, margin: "1px 0 6px", lineHeight: 1.35 }}>{a.title}</p>
+                  <p style={{ ...body, margin: 0 }}>{a.text}</p>
+                </div>
+              </div>
+            </RevealRow>
+          ))}
+          <div style={{ borderTop: "1px solid rgba(0,0,0,0.12)" }} />
+        </div>
+
+        <div style={S.divider} />
+
         {/* 01 — как проходит */}
         <FadeIn>
           <Block num="01" title="Как проходит">
@@ -405,35 +479,13 @@ export default function GroupPage() {
 
         <div style={S.divider} />
 
-        {/* Кому подходит */}
-        <FadeIn>
-          <p style={S.eyebrow}>Кому подходит</p>
-          <div>
-            {[
-              "Новичкам",
-              "Тем, кто готовится к беременности и родам",
-              "Тем, кто восстанавливается после родов",
-            ].map((t, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 0", borderTop: "1px solid rgba(0,0,0,0.12)" }}>
-                <div style={{ width: 24, height: 24, borderRadius: "50%", border: `1.5px solid ${GREEN}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <span style={{ color: GREEN, fontSize: 12 }}>✓</span>
-                </div>
-                <span style={{ fontFamily: FONT_S, fontSize: 15, color: DARK, lineHeight: 1.4 }}>{t}</span>
-              </div>
-            ))}
-            <div style={{ borderTop: "1px solid rgba(0,0,0,0.12)" }} />
-          </div>
-        </FadeIn>
-
-        <div style={S.divider} />
-
         {/* Стоимость */}
         <FadeIn>
           <h2 style={S.h2}>Стоимость</h2>
           <div style={{ marginBottom: 28 }}>
-            <PriceRow label="1 раз в неделю" rub="8 000 ₽ / месяц" usd="≈ $90 / месяц" />
-            <PriceRow label="2 раза в неделю" rub="16 000 ₽ / месяц" usd="≈ $180 / месяц" />
-            <PriceRow label="3 раза в неделю" rub="24 000 ₽ / месяц" usd="≈ $270 / месяц" />
+            <PriceRow label="1 раз в неделю" rub="8 000 ₽ / месяц" usd="$90 / месяц" />
+            <PriceRow label="2 раза в неделю" rub="16 000 ₽ / месяц" usd="$200 / месяц" />
+            <PriceRow label="3 раза в неделю" rub="24 000 ₽ / месяц" usd="$300 / месяц" />
             <div style={{ borderTop: "1px solid rgba(0,0,0,0.12)" }} />
           </div>
           <a href={TG_SOFIA} target="_blank" rel="noopener noreferrer" style={S.btn}>
