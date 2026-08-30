@@ -48,7 +48,7 @@ function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
 }
 
 /* ── Reveal (вылетает сбоку при скролле) ── */
-function RevealRow({ children, index = 0 }: { children: React.ReactNode; index?: number }) {
+function RevealRow({ children, index = 0, from = "left" }: { children: React.ReactNode; index?: number; from?: "left" | "right" }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = ref.current;
@@ -61,14 +61,15 @@ function RevealRow({ children, index = 0 }: { children: React.ReactNode; index?:
           obs.disconnect();
         }
       },
-      { threshold: 0.25 }
+      { threshold: 0.2 }
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
-  const d = Math.min(index, 4) * 80;
+  const d = Math.min(index, 4) * 70;
+  const start = from === "right" ? "translateX(44px)" : "translateX(-44px)";
   return (
-    <div ref={ref} style={{ opacity: 0, transform: "translateX(-32px)", transition: `opacity 0.55s cubic-bezier(0.22,1,0.36,1) ${d}ms, transform 0.55s cubic-bezier(0.22,1,0.36,1) ${d}ms` }}>
+    <div ref={ref} style={{ opacity: 0, transform: start, transition: `opacity 0.55s cubic-bezier(0.22,1,0.36,1) ${d}ms, transform 0.6s cubic-bezier(0.22,1,0.36,1) ${d}ms` }}>
       {children}
     </div>
   );
@@ -108,7 +109,7 @@ const S = {
   h2: { fontFamily: FONT_D, fontSize: "clamp(28px, 7vw, 44px)", textTransform: "uppercase" as const, lineHeight: 1, margin: "0 0 24px" },
   lead: { fontFamily: FONT_S, fontSize: "clamp(15px, 4vw, 17px)", lineHeight: 1.75, color: "#444", margin: "0 0 20px" } as React.CSSProperties,
   divider: { borderTop: "1px solid rgba(0,0,0,0.12)", margin: "48px 0" } as React.CSSProperties,
-  btn: { display: "block", textAlign: "center" as const, fontFamily: FONT_S, fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 28px", borderRadius: 100, color: "#fff", textDecoration: "none", background: "var(--coral)", boxShadow: "0 6px 16px rgba(224,120,86,0.25)" },
+  btn: { display: "block", textAlign: "center" as const, fontFamily: FONT_S, fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 24px", color: "#fff", textDecoration: "none", background: "#4a6b3a" },
 };
 
 /* ── Parallax hero ── */
@@ -396,21 +397,23 @@ export default function GroupPage() {
         <FadeIn>
           <p style={S.eyebrow}>Кому подходит</p>
         </FadeIn>
-        <div style={{ marginBottom: 8 }}>
-          {AUDIENCE.map((a, i) => (
-            <RevealRow key={i} index={i}>
-              <div style={{ display: "flex", gap: 14, padding: "20px 0", borderTop: "1px solid rgba(0,0,0,0.12)" }}>
-                <div style={{ width: 24, height: 24, borderRadius: "50%", border: `1.5px solid ${GREEN}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2 }}>
-                  <span style={{ color: GREEN, fontSize: 12 }}>✓</span>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 8 }}>
+          {AUDIENCE.map((a, i) => {
+            const dark = i % 2 === 0;
+            return (
+              <RevealRow key={i} index={i} from={dark ? "left" : "right"}>
+                <div style={{ display: "flex", gap: 14, padding: "22px 22px", background: dark ? "#1e2e1a" : "#E8EDE4" }}>
+                  <div style={{ width: 24, height: 24, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2, background: dark ? "rgba(255,255,255,0.14)" : "#fff", border: dark ? "none" : `1.5px solid ${GREEN}` }}>
+                    <span style={{ color: dark ? "#fff" : GREEN, fontSize: 12 }}>✓</span>
+                  </div>
+                  <div>
+                    <p style={{ fontFamily: FONT_S, fontWeight: 600, fontSize: 16, color: dark ? "#fff" : DARK, margin: "1px 0 6px", lineHeight: 1.35 }}>{a.title}</p>
+                    <p style={{ ...body, margin: 0, color: dark ? "rgba(255,255,255,0.75)" : "#555" }}>{a.text}</p>
+                  </div>
                 </div>
-                <div>
-                  <p style={{ fontFamily: FONT_S, fontWeight: 600, fontSize: 16, color: DARK, margin: "1px 0 6px", lineHeight: 1.35 }}>{a.title}</p>
-                  <p style={{ ...body, margin: 0 }}>{a.text}</p>
-                </div>
-              </div>
-            </RevealRow>
-          ))}
-          <div style={{ borderTop: "1px solid rgba(0,0,0,0.12)" }} />
+              </RevealRow>
+            );
+          })}
         </div>
 
         <div style={S.divider} />

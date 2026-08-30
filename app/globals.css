@@ -156,43 +156,36 @@
   .hero-video--desktop { display: block; }
 }
 
-/* ─── Design accents (coral CTA + sage highlights) ─── */
+/* ─── Design accents (green CTA + sage highlights, sharp corners) ─── */
 .pill-btn {
   display: block; text-align: center;
   font-family: var(--font-sans); font-size: 12px; font-weight: 600;
   letter-spacing: 2px; text-transform: uppercase;
-  padding: 16px 28px; border-radius: 100px;
-  background: var(--coral); color: #fff; text-decoration: none;
+  padding: 16px 28px; border-radius: 0;
+  background: #4a6b3a; color: #fff; text-decoration: none;
   border: none; cursor: pointer;
-  box-shadow: 0 6px 16px rgba(224,120,86,0.25);
-  transition: background .25s, box-shadow .25s, transform .25s;
+  transition: background .2s;
 }
-.pill-btn:hover { background: var(--coral-dark); box-shadow: 0 10px 26px rgba(224,120,86,0.35); transform: translateY(-2px); }
-
-.pill-btn--ghost {
-  background: transparent; color: var(--foreground);
-  border: 2px solid rgba(0,0,0,0.18); box-shadow: none;
-}
-.pill-btn--ghost:hover { border-color: var(--foreground); background: transparent; box-shadow: none; transform: translateY(-1px); }
+.pill-btn:hover { background: #3d5a30; }
 
 .pill-btn--light {
   background: transparent; color: #fff;
-  border: 2px solid rgba(255,255,255,0.55); box-shadow: none;
+  border: 2px solid rgba(255,255,255,0.55);
 }
-.pill-btn--light:hover { background: #fff; color: var(--coral-dark); border-color: #fff; box-shadow: none; transform: translateY(-1px); }
+.pill-btn--light:hover { background: #fff; color: #3d5a30; border-color: #fff; }
 
 .svc-card {
-  background: var(--card); border: 1px solid rgba(0,0,0,0.05);
-  border-radius: 16px;
-  transition: transform .25s, box-shadow .25s;
+  background: var(--card); border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 0;
+  transition: box-shadow .2s;
 }
-.svc-card:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(0,0,0,0.08); }
+.svc-card:hover { box-shadow: 0 10px 28px rgba(0,0,0,0.07); }
 
 .pill-tag {
   display: inline-block;
   font-family: var(--font-sans); font-size: 11px; font-weight: 600;
   letter-spacing: 1px; text-transform: uppercase;
-  padding: 6px 14px; border-radius: 100px;
+  padding: 5px 12px; border-radius: 0;
   background: var(--sage-light); color: var(--sage-dark);
 }
 .pill-tag--muted { background: rgba(0,0,0,0.06); color: #7a6a55; }
@@ -204,7 +197,7 @@
   font-size: 13px; font-weight: 700; flex-shrink: 0;
 }
 .icon-chip {
-  width: 46px; height: 46px; min-width: 46px; border-radius: 12px;
+  width: 46px; height: 46px; min-width: 46px; border-radius: 0;
   background: var(--sage-light);
   display: inline-flex; align-items: center; justify-content: center;
   font-size: 22px; line-height: 1;
