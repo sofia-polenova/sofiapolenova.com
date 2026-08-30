@@ -212,14 +212,14 @@ export default function PersonalPage() {
                 <p style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 16, margin: "0 0 6px" }}>Разовая тренировка</p>
                 <p style={{ fontSize: 13, color: "#666", margin: 0, lineHeight: 1.5 }}>60 минут онлайн, постановка техники, разбор вопросов по питанию</p>
               </div>
-              <span style={{ fontFamily: "'Anton', sans-serif", fontSize: 26, flexShrink: 0 }}>5 000 ₽</span>
+              <span style={{ fontFamily: "'Anton', sans-serif", fontSize: 15, flexShrink: 0, color: "#666" }}>По запросу</span>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "20px 0", borderTop: "1px solid rgba(0,0,0,0.1)", gap: 16 }}>
               <div>
                 <p style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 16, margin: "0 0 6px" }}>Месяц личного ведения</p>
                 <p style={{ fontSize: 13, color: "#666", margin: 0, lineHeight: 1.5 }}>Программа тренировок + сопровождение по питанию + ежедневная связь + корректировка плана</p>
               </div>
-              <span style={{ fontFamily: "'Anton', sans-serif", fontSize: 26, flexShrink: 0 }}>30 000 ₽</span>
+              <span style={{ fontFamily: "'Anton', sans-serif", fontSize: 15, flexShrink: 0, color: "#666" }}>По запросу</span>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "20px 24px", gap: 16, background: "#1e2e1a", margin: "0 -24px", borderRadius: 4 }}>
               <div>
@@ -227,7 +227,7 @@ export default function PersonalPage() {
                 <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase" as const, color: "rgba(255,255,255,0.45)", margin: "0 0 8px" }}>VIP-сопровождение с врачом</p>
                 <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0, lineHeight: 1.5 }}>Всё из базового ведения + онлайн-тренировки 1 на 1 + работа с врачом по анализам + подбор БАДов и препаратов + приоритетная поддержка</p>
               </div>
-              <span style={{ fontFamily: "'Anton', sans-serif", fontSize: 26, flexShrink: 0, color: "#fff" }}>от 24 990 ₽</span>
+              <span style={{ fontFamily: "'Anton', sans-serif", fontSize: 15, flexShrink: 0, color: "rgba(255,255,255,0.7)" }}>По запросу</span>
             </div>
           </div>
         </FadeIn>
