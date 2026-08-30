@@ -76,7 +76,7 @@ export default function ProgramsPage() {
 
         <div style={S.divider} />
 
-        <div style={S.price}>от 11 990 ₽</div>
+        <div style={S.price}>от 12 000 ₽</div>
         <div style={{ ...S.period, marginBottom: 32 }}>в месяц</div>
 
         <a href="https://t.me/sofiapolenova" target="_blank" rel="noopener noreferrer" style={S.btn}>
