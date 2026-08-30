@@ -94,11 +94,8 @@ function CaseMushcy() {
           <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 22, textTransform: "uppercase" as const, marginBottom: 20 }}>
             Такой результат можно сделать:
           </div>
-          <a href="/programs" style={{ display: "block", textAlign: "center" as const, fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 24px", color: "#F0EDE6", textDecoration: "none", background: "#0A0A0A", marginBottom: 10 }}>
-            На программе тренировок · от 20 000 ₽ →
-          </a>
-          <a href="/personal" style={{ display: "block", textAlign: "center" as const, fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 24px", color: "#0A0A0A", textDecoration: "none", border: "2px solid #0A0A0A", background: "transparent" }}>
-            На личном ведении →
+          <a href="https://t.me/sofiapolenova" target="_blank" rel="noopener noreferrer" style={{ display: "block", textAlign: "center" as const, fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 24px", color: "#F0EDE6", textDecoration: "none", background: "#0A0A0A" }}>
+            Хочу тренироваться с Софьей →
           </a>
         </div>
       </div>
@@ -149,16 +146,15 @@ function CaseBeremennost() {
         <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 22, textTransform: "uppercase" as const, marginBottom: 20 }}>
           Такой результат можно сделать:
         </div>
-        <a href="/personal" style={{ display: "block", textAlign: "center" as const, fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 24px", color: "#F0EDE6", textDecoration: "none", background: "#0A0A0A", marginBottom: 10 }}>
-          На личном ведении →
+        <a href="https://t.me/sofiapolenova" target="_blank" rel="noopener noreferrer" style={{ display: "block", textAlign: "center" as const, fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 24px", color: "#F0EDE6", textDecoration: "none", background: "#0A0A0A" }}>
+          Хочу тренироваться с Софьей →
         </a>
       </div>
     </main>
   );
 }
 
-const BTN_DARK = { display: "block", textAlign: "center" as const, fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 24px", color: "#F0EDE6", textDecoration: "none", background: "#0A0A0A", marginBottom: 10 };
-const BTN_OUT  = { display: "block", textAlign: "center" as const, fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 24px", color: "#0A0A0A", textDecoration: "none", border: "2px solid #0A0A0A", background: "transparent", marginBottom: 10 };
+const BTN_DARK = { display: "block", textAlign: "center" as const, fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 24px", color: "#F0EDE6", textDecoration: "none", background: "#0A0A0A" };
 
 function CasePlaceholder({ num, title, buttons }: { num: string; title: string; buttons?: React.ReactNode }) {
   return (
@@ -190,15 +186,14 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
   if (slug === "myshcy-yagodiczy") return <CaseMushcy />;
   if (slug === "beremennost") return <CaseBeremennost />;
   if (slug === "zhivot-osanka") return (
-    <CasePlaceholder num="03" title="Живот и осанка" buttons={<>
-      <a href="/programs" style={BTN_DARK}>На программе тренировок · от 20 000 ₽ →</a>
-      <a href="/personal" style={BTN_OUT}>На личном ведении →</a>
-    </>} />
+    <CasePlaceholder num="03" title="Живот и осанка" buttons={
+      <a href="https://t.me/sofiapolenova" target="_blank" rel="noopener noreferrer" style={BTN_DARK}>Хочу тренироваться с Софьей →</a>
+    } />
   );
   if (slug === "pitanie") return (
-    <CasePlaceholder num="04" title="Питание без срывов" buttons={<>
-      <a href="/personal" style={BTN_DARK}>На личном ведении →</a>
-    </>} />
+    <CasePlaceholder num="04" title="Питание без срывов" buttons={
+      <a href="https://t.me/sofiapolenova" target="_blank" rel="noopener noreferrer" style={BTN_DARK}>Хочу тренироваться с Софьей →</a>
+    } />
   );
   const c = CASES[slug];
   if (c) return <CasePlaceholder num={c.num} title={c.title} />;

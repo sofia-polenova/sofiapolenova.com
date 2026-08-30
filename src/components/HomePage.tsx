@@ -7,7 +7,7 @@ function Nav() {
       <div style={{ maxWidth: 600, margin: "0 auto", padding: "16px 20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <a href="/" style={{ fontFamily: "var(--font-display)", fontSize: 18, letterSpacing: 1, textDecoration: "none", color: "#0A0A0A" }}>SOFIA POLENOVA</a>
         <div style={{ display: "flex", gap: 20 }}>
-          <a href="/personal" style={{ fontFamily: "var(--font-sans)", fontSize: 12, textTransform: "uppercase", letterSpacing: 1, textDecoration: "none", color: "#666" }}>Личное ведение</a>
+          <a href="#services" style={{ fontFamily: "var(--font-sans)", fontSize: 12, textTransform: "uppercase", letterSpacing: 1, textDecoration: "none", color: "#666" }}>Тренировки</a>
         </div>
       </div>
     </nav>
@@ -178,9 +178,9 @@ const SERVICES: Service[] = [
       { label: "Другие форматы и график", usd: "По запросу", rub: "" },
     ],
     image: null,
-    btnText: "Узнать подробнее →",
-    href: "/personal",
-    external: false,
+    btnText: "Хочу тренироваться с Софьей",
+    href: "https://t.me/sofiapolenova",
+    external: true,
   },
   {
     num: "4",
@@ -191,9 +191,9 @@ const SERVICES: Service[] = [
     perMonth: false,
     prices: null,
     image: null,
-    btnText: "Узнать подробнее →",
-    href: "/programs",
-    external: false,
+    btnText: "Записаться →",
+    href: "https://t.me/sofiapolenova",
+    external: true,
   },
 ];
 
@@ -292,7 +292,7 @@ function Services() {
 /* ─── NUTRITION ─── */
 const NUTRITION_PRICES = [
   { label: "Разовая консультация · 55 минут", usd: "≈ $55", rub: "4 500 ₽" },
-  { label: "Ведение по питанию", usd: "≈ $175 / месяц", rub: "15 000 ₽ / месяц" },
+  { label: "Ведение по питанию", usd: "≈ $250 / месяц", rub: "20 000 ₽ / месяц" },
 ];
 
 function Nutrition() {
@@ -494,7 +494,7 @@ function PastFormats() {
     <section style={{ background: "#E3E0D8", padding: "60px 20px" }}>
       <div style={{ maxWidth: 600, margin: "0 auto" }}>
         <h2 style={{ ...SECTION_H2, margin: "0 0 8px" }}>
-          Прошлые форматы
+          Прошлые продукты
         </h2>
         <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 16, color: "#666", margin: "0 0 32px" }}>
           Сейчас нет в продаже — возможно, вернутся
