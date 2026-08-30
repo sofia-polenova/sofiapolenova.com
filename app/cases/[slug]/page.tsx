@@ -191,15 +191,13 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
   if (slug === "beremennost") return <CaseBeremennost />;
   if (slug === "zhivot-osanka") return (
     <CasePlaceholder num="03" title="Живот и осанка" buttons={<>
-      <a href="/club"     style={BTN_DARK}>В клубе · 4 990 ₽/мес →</a>
-      <a href="/programs" style={BTN_OUT}>На программе тренировок · от 11 990 ₽ →</a>
+      <a href="/programs" style={BTN_DARK}>На программе тренировок · от 11 990 ₽ →</a>
       <a href="/personal" style={BTN_OUT}>На личном ведении · от 24 990 ₽ →</a>
     </>} />
   );
   if (slug === "pitanie") return (
     <CasePlaceholder num="04" title="Питание без срывов" buttons={<>
-      <a href="/club"     style={BTN_DARK}>В клубе · 4 990 ₽/мес →</a>
-      <a href="/personal" style={BTN_OUT}>На личном ведении · от 24 990 ₽ →</a>
+      <a href="/personal" style={BTN_DARK}>На личном ведении · от 24 990 ₽ →</a>
     </>} />
   );
   const c = CASES[slug];

@@ -131,16 +131,6 @@ const SERVICES = [
   },
   {
     num: "2",
-    title: "В клубе — тренировка со мной раз в неделю",
-    desc: "Короткие комплексы на каждый день, суббота в Zoom со мной, подкасты про питание и тело, чат с обратной связью. Идеально для тех, кто хочет войти в мягкую дисциплину без надрыва.",
-    price: "4 990 ₽ / мес",
-    btnText: "Узнать подробнее →",
-    href: "/club",
-    external: false,
-    badge: "",
-  },
-  {
-    num: "3",
     title: "По моим программам",
     desc: "Индивидуальная программа тренировок под твою цель и образ жизни.",
     price: "от 11 990 ₽",
@@ -149,7 +139,7 @@ const SERVICES = [
     external: false,
   },
   {
-    num: "4",
+    num: "3",
     title: "Личная работа",
     desc: "Индивидуальные тренировки, работа с питанием, консультации дополнительных специалистов.",
     price: "от 24 990 ₽",
@@ -361,6 +351,57 @@ function CasesIndex() {
   );
 }
 
+/* ─── PAST / PAUSED FORMATS ─── */
+const PAST_FORMATS = [
+  {
+    title: "Move Club — клуб онлайн-тренировок",
+    desc: "Короткие комплексы на каждый день, живая суббота в Zoom, подкасты про питание и тело, чат с обратной связью.",
+    status: "Набор закрыт",
+    href: "/club",
+    linkText: "Посмотреть формат →",
+  },
+];
+
+function PastFormats() {
+  return (
+    <section style={{ background: "#E3E0D8", padding: "60px 20px" }}>
+      <div style={{ maxWidth: 600, margin: "0 auto" }}>
+        <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(28px, 7vw, 44px)", textTransform: "uppercase", lineHeight: 1.05, margin: "0 0 8px" }}>
+          Прошлые форматы
+        </h2>
+        <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 16, color: "#666", margin: "0 0 32px" }}>
+          Сейчас нет в продаже — возможно, вернутся
+        </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {PAST_FORMATS.map((f) => (
+            <div key={f.title} style={{ background: "#F0EDE6", padding: "28px 24px", opacity: 0.92 }}>
+              <div style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: "#8a5a2a", marginBottom: 10 }}>
+                {f.status}
+              </div>
+              <h3 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(18px, 4.5vw, 26px)", textTransform: "uppercase", margin: "0 0 10px", lineHeight: 1.1 }}>
+                {f.title}
+              </h3>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: 15, lineHeight: 1.6, color: "#555", margin: "0 0 16px" }}>
+                {f.desc}
+              </p>
+              <a
+                href={f.href}
+                style={{
+                  fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 600,
+                  letterSpacing: 2, textTransform: "uppercase",
+                  color: "#666", textDecoration: "underline", textUnderlineOffset: 4,
+                }}
+              >
+                {f.linkText}
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─── FOOTER ─── */
 function Footer() {
   return (
@@ -444,6 +485,7 @@ export default function HomePage() {
       <Education />
       <Services />
       <CasesIndex />
+      <PastFormats />
       <Footer />
     </main>
   );

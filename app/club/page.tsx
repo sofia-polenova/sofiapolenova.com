@@ -436,6 +436,9 @@ function ParallaxHero() {
         <p style={{ fontFamily: "'Anton', sans-serif", fontSize: "clamp(40px, 10vw, 72px)", textTransform: "uppercase", lineHeight: 1, color: "#fff", margin: 0, letterSpacing: 2, textShadow: "0 2px 12px rgba(0,0,0,0.4)" }}>
           Move Club
         </p>
+        <span style={{ display: "inline-block", marginTop: 16, padding: "7px 18px", border: "1.5px solid rgba(255,255,255,0.5)", borderRadius: 30, fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: "#fff", background: "rgba(0,0,0,0.25)" }}>
+          Набор временно закрыт
+        </span>
       </div>
       {/* Цитата снизу — уезжает при скролле */}
       <div ref={textRef} style={{ position: "absolute", bottom: 40, left: 40, right: 40, transition: "transform 0.05s linear, opacity 0.05s linear" }}>
@@ -646,15 +649,16 @@ export default function ClubPage() {
 
         <div style={{ height: 32 }} />
 
-        {/* CTA — следующий кейс */}
+        {/* CTA — набор закрыт */}
         <FadeIn>
           <div style={{ background: "#1e2e1a", borderRadius: 16, padding: "36px 28px", marginBottom: 0 }}>
-            <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: "clamp(22px, 5.5vw, 30px)", lineHeight: 1.3, color: "#fff", margin: "0 0 24px" }}>
-              Может быть следующим кейсом будешь ты?
+            <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: "clamp(22px, 5.5vw, 30px)", lineHeight: 1.3, color: "#fff", margin: "0 0 16px" }}>
+              Сейчас набор в клуб закрыт
             </p>
-            <a href="https://t.me/sofiap_fitness?text=%D0%A1%D0%BE%D1%84%D1%8C%D1%8F%2C%20%D0%BF%D1%80%D0%B8%D0%B2%D0%B5%D1%82!%20%D0%AF%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BF%D1%80%D0%B8%D1%81%D0%BE%D0%B5%D0%B4%D0%B8%D0%BD%D0%B8%D1%82%D1%8C%D1%81%D1%8F%20%D0%BA%20%D0%BA%D0%BB%D1%83%D0%B1%D1%83." target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", border: "1.5px solid rgba(255,255,255,0.35)", borderRadius: 30, padding: "10px 24px", color: "#fff", fontSize: 13, letterSpacing: 1, textDecoration: "none" }}>
-              Вступить в клуб →
-            </a>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, lineHeight: 1.6, color: "rgba(255,255,255,0.75)", margin: 0 }}>
+              Я открою его снова — следи за анонсами в{" "}
+              <a href="https://t.me/heath_is_wealth" target="_blank" rel="noopener noreferrer" style={{ color: "#fff", textDecoration: "underline", textUnderlineOffset: 3 }}>Telegram-канале</a>.
+            </p>
           </div>
         </FadeIn>
 
@@ -678,16 +682,19 @@ export default function ClubPage() {
           </div>
         </div>
 
-        <a
-          href="https://t.me/sofiap_fitness?text=%D0%A1%D0%BE%D1%84%D1%8C%D1%8F%2C%20%D0%BF%D1%80%D0%B8%D0%B2%D0%B5%D1%82!%20%D0%AF%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BF%D1%80%D0%B8%D1%81%D0%BE%D0%B5%D0%B4%D0%B8%D0%BD%D0%B8%D1%82%D1%8C%D1%81%D1%8F%20%D0%BA%20%D0%BA%D0%BB%D1%83%D0%B1%D1%83."
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ ...S.btn, marginTop: 16 }}
+        <div
+          style={{
+            marginTop: 16, padding: "18px 24px", textAlign: "center" as const,
+            border: "2px solid rgba(0,0,0,0.15)", background: "transparent",
+            fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600,
+            letterSpacing: 2, textTransform: "uppercase" as const, color: "#666",
+          }}
         >
-          Вступить в клуб →
-        </a>
+          Набор временно закрыт
+        </div>
         <div style={{ fontSize: 12, color: "#999", textAlign: "center", marginTop: 12 }}>
-          отменить можно в любой момент
+          скоро открою снова — анонсы в{" "}
+          <a href="https://t.me/heath_is_wealth" target="_blank" rel="noopener noreferrer" style={{ color: "#666", textDecoration: "underline", textUnderlineOffset: 3 }}>Telegram-канале</a>
         </div>
       </div>
 
