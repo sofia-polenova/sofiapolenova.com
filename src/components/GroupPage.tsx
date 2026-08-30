@@ -297,8 +297,19 @@ export default function GroupPage() {
         </p>
       </PhotoBlock>
 
+      {/* короткие комплексы — крупная строка на весь экран */}
+      <div style={{ padding: "64px 20px" }}>
+        <FadeIn>
+          <p style={{ fontFamily: FONT_D, fontSize: "clamp(26px, 7.5vw, 48px)", textTransform: "uppercase", lineHeight: 1.12, color: DARK, margin: 0, maxWidth: 860, marginLeft: "auto", marginRight: "auto" }}>
+            Между занятиями остаются короткие комплексы — их можно делать как{" "}
+            <span style={{ color: GREEN }}>домашнее задание</span> или как{" "}
+            <span style={{ color: GREEN }}>утреннюю зарядку</span>.
+          </p>
+        </FadeIn>
+      </div>
+
       <div style={S.wrap}>
-        <div style={{ height: 48 }} />
+        <div style={{ height: 16 }} />
 
         {/* Стоимость — отдельной светлой рамкой */}
         <FadeIn>
@@ -315,16 +326,6 @@ export default function GroupPage() {
             </a>
           </div>
         </FadeIn>
-
-        <div style={{ padding: "72px 0 24px" }}>
-          <FadeIn>
-            <p style={{ fontFamily: FONT_D, fontSize: "clamp(24px, 6.5vw, 40px)", textTransform: "uppercase", lineHeight: 1.15, color: DARK, margin: 0 }}>
-              Между занятиями остаются короткие комплексы — их можно делать как{" "}
-              <span style={{ color: GREEN }}>домашнее задание</span> или как{" "}
-              <span style={{ color: GREEN }}>утреннюю зарядку</span>.
-            </p>
-          </FadeIn>
-        </div>
       </div>
 
       <Footer />
