@@ -78,6 +78,8 @@
   --sage: #7B8F6B;
   --sage-light: #E8EDE4;
   --sage-dark: #4a5c3d;
+  --coral: #E07856;
+  --coral-dark: #c9603d;
   --shadow-soft: 0 4px 20px rgba(0,0,0,0.08);
   --shadow-card: 0 2px 8px rgba(0,0,0,0.06);
   --font-serif: 'Instrument Serif', serif;
@@ -152,4 +154,58 @@
 @media (min-width: 768px) {
   .hero-video--mobile { display: none; }
   .hero-video--desktop { display: block; }
+}
+
+/* ─── Design accents (coral CTA + sage highlights) ─── */
+.pill-btn {
+  display: block; text-align: center;
+  font-family: var(--font-sans); font-size: 12px; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 16px 28px; border-radius: 100px;
+  background: var(--coral); color: #fff; text-decoration: none;
+  border: none; cursor: pointer;
+  box-shadow: 0 6px 16px rgba(224,120,86,0.25);
+  transition: background .25s, box-shadow .25s, transform .25s;
+}
+.pill-btn:hover { background: var(--coral-dark); box-shadow: 0 10px 26px rgba(224,120,86,0.35); transform: translateY(-2px); }
+
+.pill-btn--ghost {
+  background: transparent; color: var(--foreground);
+  border: 2px solid rgba(0,0,0,0.18); box-shadow: none;
+}
+.pill-btn--ghost:hover { border-color: var(--foreground); background: transparent; box-shadow: none; transform: translateY(-1px); }
+
+.pill-btn--light {
+  background: transparent; color: #fff;
+  border: 2px solid rgba(255,255,255,0.55); box-shadow: none;
+}
+.pill-btn--light:hover { background: #fff; color: var(--coral-dark); border-color: #fff; box-shadow: none; transform: translateY(-1px); }
+
+.svc-card {
+  background: var(--card); border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 16px;
+  transition: transform .25s, box-shadow .25s;
+}
+.svc-card:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(0,0,0,0.08); }
+
+.pill-tag {
+  display: inline-block;
+  font-family: var(--font-sans); font-size: 11px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase;
+  padding: 6px 14px; border-radius: 100px;
+  background: var(--sage-light); color: var(--sage-dark);
+}
+.pill-tag--muted { background: rgba(0,0,0,0.06); color: #7a6a55; }
+
+.check-dot {
+  width: 24px; height: 24px; min-width: 24px; border-radius: 50%;
+  background: var(--sage-light); color: var(--sage-dark);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; flex-shrink: 0;
+}
+.icon-chip {
+  width: 46px; height: 46px; min-width: 46px; border-radius: 12px;
+  background: var(--sage-light);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 22px; line-height: 1;
 }

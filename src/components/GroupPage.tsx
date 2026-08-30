@@ -108,7 +108,7 @@ const S = {
   h2: { fontFamily: FONT_D, fontSize: "clamp(28px, 7vw, 44px)", textTransform: "uppercase" as const, lineHeight: 1, margin: "0 0 24px" },
   lead: { fontFamily: FONT_S, fontSize: "clamp(15px, 4vw, 17px)", lineHeight: 1.75, color: "#444", margin: "0 0 20px" } as React.CSSProperties,
   divider: { borderTop: "1px solid rgba(0,0,0,0.12)", margin: "48px 0" } as React.CSSProperties,
-  btn: { display: "block", textAlign: "center" as const, fontFamily: FONT_S, fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 24px", color: "#F0EDE6", textDecoration: "none", background: DARK },
+  btn: { display: "block", textAlign: "center" as const, fontFamily: FONT_S, fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 28px", borderRadius: 100, color: "#fff", textDecoration: "none", background: "var(--coral)", boxShadow: "0 6px 16px rgba(224,120,86,0.25)" },
 };
 
 /* ── Parallax hero ── */

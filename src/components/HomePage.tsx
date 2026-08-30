@@ -61,24 +61,11 @@ function Hero() {
             href="https://t.me/SofiaPolenova_bot?start=zhivot"
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              display: "block", textAlign: "center",
-              fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase",
-              padding: "18px 24px", border: "2px solid #fff", color: "#fff", textDecoration: "none",
-              background: "transparent", transition: "all 0.2s"
-            }}
+            className="pill-btn"
           >
             Попробовать бесплатную тренировку
           </a>
-          <a
-            href="#services"
-            style={{
-              display: "block", textAlign: "center",
-              fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase",
-              padding: "18px 24px", border: "2px solid rgba(255,255,255,0.5)", color: "rgba(255,255,255,0.85)", textDecoration: "none",
-              background: "transparent"
-            }}
-          >
+          <a href="#services" className="pill-btn pill-btn--light">
             Тренироваться со мной
           </a>
         </div>
@@ -122,6 +109,7 @@ function Story() {
 type PriceTier = { label: string; usd: string; rub: string };
 type Service = {
   num: string;
+  icon: string;
   title: string;
   desc: string;
   price: string | null;
@@ -137,6 +125,7 @@ type Service = {
 const SERVICES: Service[] = [
   {
     num: "1",
+    icon: "🫁",
     title: "Бесплатная тренировка на дыхание",
     desc: "Делаем плоский живот через работу с дыханием и глубокими мышцами. Формат «повторяй за мной» — без оборудования, дома.",
     price: null,
@@ -150,6 +139,7 @@ const SERVICES: Service[] = [
   },
   {
     num: "2",
+    icon: "👯",
     title: "Групповые тренировки",
     desc: "Онлайн-занятия в небольшой группе со стабильным расписанием. Заниматься можно от 1 до 3 раз в неделю. Подходит новичкам, тем, кто готовится к беременности и родам, и тем, кто восстанавливается после родов.",
     price: null,
@@ -167,6 +157,7 @@ const SERVICES: Service[] = [
   },
   {
     num: "3",
+    icon: "🎯",
     title: "Личное ведение и персональные тренировки",
     desc: "Для тех, кому нужен свой график и полностью индивидуальный подход. Занятия один на один — 2–3 раза в неделю или чаще и короче, под твоё тело и цель. Пакет можно расширить консультациями и сопровождением по питанию.",
     price: null,
@@ -184,6 +175,7 @@ const SERVICES: Service[] = [
   },
   {
     num: "4",
+    icon: "📋",
     title: "По готовой программе тренировок",
     desc: "Напишу индивидуальную программу тренировок и останусь на связи — проверяю технику по записи. Программа на 4 недели с прогрессией. Заниматься можно в зале или дома.",
     price: "15 000 ₽",
@@ -216,27 +208,35 @@ function Services() {
 
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {SERVICES.map((s) => (
-            <div key={s.num} style={{ background: "#E3E0D8", padding: "28px 24px" }}>
-              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12, marginBottom: 10 }}>
-                <h3 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(18px, 4.5vw, 26px)", textTransform: "uppercase", margin: 0, lineHeight: 1.1 }}>
+            <div key={s.num} className="svc-card" style={{ padding: "24px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
+                <span className="icon-chip">{s.icon}</span>
+                <h3 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(17px, 4.3vw, 24px)", textTransform: "uppercase", margin: 0, lineHeight: 1.15 }}>
                   <span style={{ color: "#4a6b3a" }}>{s.num}.</span> {s.title}
                 </h3>
-                {(s.priceUsd || s.price) && !s.prices && (
-                  <span style={{ textAlign: "right", flexShrink: 0, lineHeight: 1.15 }}>
-                    <span style={{ display: "block", fontFamily: "var(--font-display)", fontSize: 20, whiteSpace: "nowrap" }}>
-                      {s.priceUsd ?? s.price}{s.perMonth ? " / месяц" : ""}
-                    </span>
-                    {s.priceUsd && s.price && (
-                      <span style={{ display: "block", fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 13, color: "#666", whiteSpace: "nowrap", marginTop: 2 }}>
-                        {s.price}{s.perMonth ? " / месяц" : ""}
-                      </span>
-                    )}
-                  </span>
-                )}
               </div>
+
+              {s.href.includes("start=zhivot") && (
+                <span className="pill-tag" style={{ marginBottom: 12 }}>Бесплатно</span>
+              )}
+
+              {(s.priceUsd || s.price) && !s.prices && (
+                <div style={{ display: "flex", alignItems: "baseline", gap: 10, margin: "0 0 14px" }}>
+                  <span style={{ fontFamily: "var(--font-display)", fontSize: 24, lineHeight: 1 }}>
+                    {s.priceUsd ?? s.price}{s.perMonth ? " / месяц" : ""}
+                  </span>
+                  {s.priceUsd && s.price && (
+                    <span style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 14, color: "#666" }}>
+                      {s.price}{s.perMonth ? " / месяц" : ""}
+                    </span>
+                  )}
+                </div>
+              )}
+
               <p style={{ fontFamily: "var(--font-sans)", fontSize: 15, lineHeight: 1.6, color: "#333", margin: "0 0 16px" }}>
                 {s.desc}
               </p>
+
               {s.image && (
                 <a
                   href={s.href}
@@ -244,15 +244,12 @@ function Services() {
                   rel={s.external ? "noopener noreferrer" : undefined}
                   style={{ display: "block", marginBottom: 16 }}
                 >
-                  <img
-                    src={s.image}
-                    alt={s.title}
-                    style={{ width: "100%", display: "block", borderRadius: 4 }}
-                  />
+                  <img src={s.image} alt={s.title} style={{ width: "100%", display: "block", borderRadius: 10 }} />
                 </a>
               )}
+
               {s.prices && (
-                <div style={{ margin: "0 0 16px" }}>
+                <div style={{ margin: "0 0 18px" }}>
                   {s.prices.map((t) => (
                     <div key={t.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, padding: "12px 0", borderTop: "1px solid rgba(0,0,0,0.14)" }}>
                       <span style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "#333", paddingTop: 4 }}>{t.label}</span>
@@ -267,17 +264,12 @@ function Services() {
                   <div style={{ borderTop: "1px solid rgba(0,0,0,0.14)" }} />
                 </div>
               )}
+
               <a
                 href={s.href}
                 target={s.external ? "_blank" : undefined}
                 rel={s.external ? "noopener noreferrer" : undefined}
-                style={{
-                  display: "block", textAlign: "center",
-                  fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 600,
-                  letterSpacing: 2, textTransform: "uppercase",
-                  padding: "16px 24px", border: "2px solid #0A0A0A",
-                  color: "#0A0A0A", textDecoration: "none", background: "transparent"
-                }}
+                className="pill-btn"
               >
                 {s.btnText}
               </a>
@@ -302,14 +294,17 @@ function Nutrition() {
         <h2 style={SECTION_H2}>
           А если хочу поработать с питанием?
         </h2>
-        <div style={{ background: "#E3E0D8", padding: "28px 24px" }}>
-          <h3 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(18px, 4.5vw, 26px)", textTransform: "uppercase", margin: "0 0 10px", lineHeight: 1.1 }}>
-            <span style={{ color: "#4a6b3a" }}>1.</span> Сопровождение по питанию
-          </h3>
+        <div className="svc-card" style={{ padding: "24px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
+            <span className="icon-chip">🥗</span>
+            <h3 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(17px, 4.3vw, 24px)", textTransform: "uppercase", margin: 0, lineHeight: 1.15 }}>
+              <span style={{ color: "#4a6b3a" }}>1.</span> Сопровождение по питанию
+            </h3>
+          </div>
           <p style={{ fontFamily: "var(--font-sans)", fontSize: 15, lineHeight: 1.6, color: "#333", margin: "0 0 16px" }}>
             Не составляю меню — проверяю отчёты и работаю через изменение привычек.
           </p>
-          <div style={{ margin: "0 0 16px" }}>
+          <div style={{ margin: "0 0 18px" }}>
             {NUTRITION_PRICES.map((t) => (
               <div key={t.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, padding: "12px 0", borderTop: "1px solid rgba(0,0,0,0.14)" }}>
                 <span style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "#333", paddingTop: 4 }}>{t.label}</span>
@@ -321,18 +316,7 @@ function Nutrition() {
             ))}
             <div style={{ borderTop: "1px solid rgba(0,0,0,0.14)" }} />
           </div>
-          <a
-            href="https://t.me/sofiap_fitness"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: "block", textAlign: "center",
-              fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 600,
-              letterSpacing: 2, textTransform: "uppercase",
-              padding: "16px 24px", border: "2px solid #0A0A0A",
-              color: "#0A0A0A", textDecoration: "none", background: "transparent"
-            }}
-          >
+          <a href="https://t.me/sofiap_fitness" target="_blank" rel="noopener noreferrer" className="pill-btn">
             Написать Софье →
           </a>
         </div>
@@ -357,11 +341,12 @@ function Reviews() {
         </h2>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {REVIEWS.map((r, i) => (
-            <div key={i} style={{ background: "#E3E0D8" }}>
+            <div key={i} className="svc-card" style={{ overflow: "hidden" }}>
               <img src={r.img} alt={r.name} style={{ width: "100%", aspectRatio: "4/3", objectFit: "cover", display: "block" }} />
               <div style={{ padding: "20px 20px 24px" }}>
-                <div style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: "#666", marginBottom: 8 }}>
-                  {r.name} · {r.tag}
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                  <span style={{ fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 600, color: "#0A0A0A" }}>{r.name}</span>
+                  <span className="pill-tag">{r.tag}</span>
                 </div>
                 <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 17, lineHeight: 1.55, margin: 0 }}>«{r.text}»</p>
               </div>
@@ -501,10 +486,8 @@ function PastFormats() {
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {PAST_FORMATS.map((f) => (
-            <div key={f.title} style={{ background: "#F0EDE6", padding: "28px 24px", opacity: 0.92 }}>
-              <div style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: "#8a5a2a", marginBottom: 10 }}>
-                {f.status}
-              </div>
+            <div key={f.title} className="svc-card" style={{ background: "#F0EDE6", padding: "24px", opacity: 0.94 }}>
+              <span className="pill-tag pill-tag--muted" style={{ marginBottom: 12 }}>{f.status}</span>
               <h3 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(18px, 4.5vw, 26px)", textTransform: "uppercase", margin: "0 0 10px", lineHeight: 1.1 }}>
                 {f.title}
               </h3>

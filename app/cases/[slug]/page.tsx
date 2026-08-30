@@ -94,7 +94,7 @@ function CaseMushcy() {
           <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 22, textTransform: "uppercase" as const, marginBottom: 20 }}>
             Такой результат можно сделать:
           </div>
-          <a href="https://t.me/sofiap_fitness" target="_blank" rel="noopener noreferrer" style={{ display: "block", textAlign: "center" as const, fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 24px", color: "#F0EDE6", textDecoration: "none", background: "#0A0A0A" }}>
+          <a href="https://t.me/sofiap_fitness" target="_blank" rel="noopener noreferrer" className="pill-btn">
             Хочу тренироваться с Софьей →
           </a>
         </div>
@@ -146,7 +146,7 @@ function CaseBeremennost() {
         <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 22, textTransform: "uppercase" as const, marginBottom: 20 }}>
           Такой результат можно сделать:
         </div>
-        <a href="https://t.me/sofiap_fitness" target="_blank" rel="noopener noreferrer" style={{ display: "block", textAlign: "center" as const, fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 24px", color: "#F0EDE6", textDecoration: "none", background: "#0A0A0A" }}>
+        <a href="https://t.me/sofiap_fitness" target="_blank" rel="noopener noreferrer" className="pill-btn">
           Хочу тренироваться с Софьей →
         </a>
       </div>
@@ -154,7 +154,6 @@ function CaseBeremennost() {
   );
 }
 
-const BTN_DARK = { display: "block", textAlign: "center" as const, fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, padding: "18px 24px", color: "#F0EDE6", textDecoration: "none", background: "#0A0A0A" };
 
 function CasePlaceholder({ num, title, buttons }: { num: string; title: string; buttons?: React.ReactNode }) {
   return (
@@ -187,12 +186,12 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
   if (slug === "beremennost") return <CaseBeremennost />;
   if (slug === "zhivot-osanka") return (
     <CasePlaceholder num="03" title="Живот и осанка" buttons={
-      <a href="https://t.me/sofiap_fitness" target="_blank" rel="noopener noreferrer" style={BTN_DARK}>Хочу тренироваться с Софьей →</a>
+      <a href="https://t.me/sofiap_fitness" target="_blank" rel="noopener noreferrer" className="pill-btn">Хочу тренироваться с Софьей →</a>
     } />
   );
   if (slug === "pitanie") return (
     <CasePlaceholder num="04" title="Питание без срывов" buttons={
-      <a href="https://t.me/sofiap_fitness" target="_blank" rel="noopener noreferrer" style={BTN_DARK}>Хочу тренироваться с Софьей →</a>
+      <a href="https://t.me/sofiap_fitness" target="_blank" rel="noopener noreferrer" className="pill-btn">Хочу тренироваться с Софьей →</a>
     } />
   );
   const c = CASES[slug];
