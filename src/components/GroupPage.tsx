@@ -483,7 +483,7 @@ export default function GroupPage() {
         <FadeIn>
           <h2 style={S.h2}>Стоимость</h2>
           <div style={{ marginBottom: 28 }}>
-            <PriceRow label="1 раз в неделю" rub="8 000 ₽ / месяц" usd="$90 / месяц" />
+            <PriceRow label="1 раз в неделю" rub="8 000 ₽ / месяц" usd="$100 / месяц" />
             <PriceRow label="2 раза в неделю" rub="16 000 ₽ / месяц" usd="$200 / месяц" />
             <PriceRow label="3 раза в неделю" rub="24 000 ₽ / месяц" usd="$300 / месяц" />
             <div style={{ borderTop: "1px solid rgba(0,0,0,0.12)" }} />
