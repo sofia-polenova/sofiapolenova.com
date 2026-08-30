@@ -8,9 +8,9 @@ function Nav() {
     <nav style={{ background: "#F0EDE6", borderBottom: "1px solid rgba(0,0,0,0.08)", position: "sticky", top: 0, zIndex: 100 }}>
       <div style={{ maxWidth: 600, margin: "0 auto", padding: "14px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
         <a href="/" style={{ fontFamily: "var(--font-display)", fontSize: 16, letterSpacing: 1, textDecoration: "none", color: "#0A0A0A", whiteSpace: "nowrap" }}>SOFIA POLENOVA</a>
-        <div style={{ display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "flex-end" }}>
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "flex-end" }}>
           {[["Образование", "#education"], ["Цены", "#services"], ["Кейсы", "#cases"]].map(([label, href]) => (
-            <a key={href} href={href} style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5, textDecoration: "none", color: "#666", whiteSpace: "nowrap" }}>{label}</a>
+            <a key={href} href={href} style={{ fontFamily: "var(--font-display)", fontSize: 12, textTransform: "uppercase", letterSpacing: 0.5, textDecoration: "none", color: "#666", whiteSpace: "nowrap" }}>{label}</a>
           ))}
         </div>
       </div>
@@ -196,10 +196,10 @@ const SERVICES: Service[] = [
     icon: "📋",
     title: "По готовой программе тренировок",
     desc: "Напишу индивидуальную программу тренировок и останусь на связи — проверяю технику по записи. Программа на 4 недели с прогрессией. Заниматься можно в зале или дома.",
-    price: "15 000 ₽",
-    priceUsd: "≈ $175",
+    price: null,
+    priceUsd: null,
     perMonth: false,
-    prices: null,
+    prices: [{ label: "Программа на 4 недели", usd: "≈ $175", rub: "15 000 ₽" }],
     image: null,
     btnText: "Записаться →",
     href: "https://t.me/sofiap_fitness",

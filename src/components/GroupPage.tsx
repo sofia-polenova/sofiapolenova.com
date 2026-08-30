@@ -311,7 +311,7 @@ export default function GroupPage() {
 
         {/* 03 — короткие комплексы */}
         <FadeIn>
-          <Block num="03" title="🧩 Короткие комплексы">
+          <Block num="03" title="Короткие комплексы">
             <p style={{ ...body, margin: 0 }}>
               Между занятиями остаются короткие комплексы упражнений — их можно делать как{" "}
               <span style={HL}>домашнее задание</span> или как <span style={HL}>утреннюю зарядку</span>.
@@ -321,7 +321,7 @@ export default function GroupPage() {
 
         {/* 04 — оборудование */}
         <FadeIn>
-          <Block num="04" title="🧰 Оборудование">
+          <Block num="04" title="Оборудование">
             <p style={{ ...body, margin: "0 0 8px" }}>
               Понадобится <span style={HL}>МФР-мяч, коврик и фитнес-резинки</span>.
             </p>
