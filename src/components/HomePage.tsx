@@ -126,6 +126,7 @@ type Service = {
   price: string | null;
   priceUsd: string | null;
   perMonth: boolean;
+  image: string | null;
   btnText: string;
   href: string;
   external: boolean;
@@ -139,6 +140,7 @@ const SERVICES: Service[] = [
     price: null,
     priceUsd: null,
     perMonth: false,
+    image: "/assets/yt-ploskiy-zhivot.png",
     btnText: "Попробовать бесплатно",
     href: "https://t.me/SofiaPolenova_bot?start=zhivot",
     external: true,
@@ -150,6 +152,7 @@ const SERVICES: Service[] = [
     price: "от 8 000 ₽",
     priceUsd: "$100",
     perMonth: true,
+    image: null,
     btnText: "Узнать подробнее →",
     href: "/group",
     external: false,
@@ -161,6 +164,7 @@ const SERVICES: Service[] = [
     price: "от 15 000 ₽",
     priceUsd: "от $175",
     perMonth: true,
+    image: null,
     btnText: "Узнать подробнее →",
     href: "/programs",
     external: false,
@@ -172,6 +176,7 @@ const SERVICES: Service[] = [
     price: "от 32 000 ₽",
     priceUsd: "от $400",
     perMonth: true,
+    image: null,
     btnText: "Узнать подробнее →",
     href: "/personal",
     external: false,
@@ -218,6 +223,20 @@ function Services() {
               <p style={{ fontFamily: "var(--font-sans)", fontSize: 15, lineHeight: 1.6, color: "#333", margin: "0 0 16px" }}>
                 {s.desc}
               </p>
+              {s.image && (
+                <a
+                  href={s.href}
+                  target={s.external ? "_blank" : undefined}
+                  rel={s.external ? "noopener noreferrer" : undefined}
+                  style={{ display: "block", marginBottom: 16 }}
+                >
+                  <img
+                    src={s.image}
+                    alt={s.title}
+                    style={{ width: "100%", display: "block", borderRadius: 4 }}
+                  />
+                </a>
+              )}
               <a
                 href={s.href}
                 target={s.external ? "_blank" : undefined}
