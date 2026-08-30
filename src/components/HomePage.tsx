@@ -119,6 +119,7 @@ function Story() {
 }
 
 /* ─── SERVICES ─── */
+type PriceTier = { label: string; usd: string; rub: string };
 type Service = {
   num: string;
   title: string;
@@ -126,6 +127,7 @@ type Service = {
   price: string | null;
   priceUsd: string | null;
   perMonth: boolean;
+  prices: PriceTier[] | null;
   image: string | null;
   btnText: string;
   href: string;
@@ -140,6 +142,7 @@ const SERVICES: Service[] = [
     price: null,
     priceUsd: null,
     perMonth: false,
+    prices: null,
     image: "/assets/yt-ploskiy-zhivot.png",
     btnText: "Попробовать бесплатно",
     href: "https://t.me/SofiaPolenova_bot?start=zhivot",
@@ -149,9 +152,14 @@ const SERVICES: Service[] = [
     num: "2",
     title: "Групповые тренировки",
     desc: "Онлайн-занятия в небольшой группе со стабильным расписанием. Заниматься можно от 1 до 3 раз в неделю. Подходит новичкам, тем, кто готовится к беременности и родам, и тем, кто восстанавливается после родов.",
-    price: "от 8 000 ₽",
-    priceUsd: "$100",
+    price: null,
+    priceUsd: null,
     perMonth: true,
+    prices: [
+      { label: "1 раз в неделю", usd: "$100 / месяц", rub: "8 000 ₽ / месяц" },
+      { label: "2 раза в неделю", usd: "$200 / месяц", rub: "16 000 ₽ / месяц" },
+      { label: "3 раза в неделю", usd: "$300 / месяц", rub: "24 000 ₽ / месяц" },
+    ],
     image: null,
     btnText: "Узнать подробнее →",
     href: "/group",
@@ -159,26 +167,28 @@ const SERVICES: Service[] = [
   },
   {
     num: "3",
-    title: "Сопровождение по тренировкам и питанию",
-    desc: "Тренируешься по готовой индивидуальной программе — в зале или дома — и остаёшься со мной на связи. Можно взять только питание: разбираем на консультации, дальше ты присылаешь отчёты в чат, а я контролирую и корректирую.",
-    price: "от 15 000 ₽",
-    priceUsd: "от $175",
-    perMonth: true,
-    image: null,
-    btnText: "Узнать подробнее →",
-    href: "/programs",
-    external: false,
-  },
-  {
-    num: "4",
     title: "Личное ведение и персональные тренировки",
     desc: "Персональные тренировки один на один — акцент на осанку, дома или в зале. Полное сопровождение по тренировкам и питанию, консультации и регулярные созвоны. Беру ограниченное число человек.",
     price: "от 32 000 ₽",
     priceUsd: "от $400",
     perMonth: true,
+    prices: null,
     image: null,
     btnText: "Узнать подробнее →",
     href: "/personal",
+    external: false,
+  },
+  {
+    num: "4",
+    title: "Сопровождение по тренировкам и питанию",
+    desc: "Тренируешься по готовой индивидуальной программе — в зале или дома — и остаёшься со мной на связи. Можно взять только питание: разбираем на консультации, дальше ты присылаешь отчёты в чат, а я контролирую и корректирую.",
+    price: "от 15 000 ₽",
+    priceUsd: "от $175",
+    perMonth: true,
+    prices: null,
+    image: null,
+    btnText: "Узнать подробнее →",
+    href: "/programs",
     external: false,
   },
 ];
@@ -207,7 +217,7 @@ function Services() {
                 <h3 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(18px, 4.5vw, 26px)", textTransform: "uppercase", margin: 0, lineHeight: 1.1 }}>
                   <span style={{ color: "#4a6b3a" }}>{s.num}.</span> {s.title}
                 </h3>
-                {(s.priceUsd || s.price) && (
+                {(s.priceUsd || s.price) && !s.prices && (
                   <span style={{ textAlign: "right", flexShrink: 0, lineHeight: 1.15 }}>
                     <span style={{ display: "block", fontFamily: "var(--font-display)", fontSize: 20, whiteSpace: "nowrap" }}>
                       {s.priceUsd ?? s.price}{s.perMonth ? " / месяц" : ""}
@@ -236,6 +246,20 @@ function Services() {
                     style={{ width: "100%", display: "block", borderRadius: 4 }}
                   />
                 </a>
+              )}
+              {s.prices && (
+                <div style={{ margin: "0 0 16px" }}>
+                  {s.prices.map((t) => (
+                    <div key={t.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, padding: "12px 0", borderTop: "1px solid rgba(0,0,0,0.14)" }}>
+                      <span style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "#333", paddingTop: 4 }}>{t.label}</span>
+                      <span style={{ textAlign: "right", flexShrink: 0 }}>
+                        <span style={{ display: "block", fontFamily: "var(--font-display)", fontSize: 18, lineHeight: 1, whiteSpace: "nowrap" }}>{t.usd}</span>
+                        <span style={{ display: "block", fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 12, color: "#666", whiteSpace: "nowrap", marginTop: 2 }}>{t.rub}</span>
+                      </span>
+                    </div>
+                  ))}
+                  <div style={{ borderTop: "1px solid rgba(0,0,0,0.14)" }} />
+                </div>
               )}
               <a
                 href={s.href}

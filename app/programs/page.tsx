@@ -28,7 +28,7 @@ export default function ProgramsPage() {
       </nav>
       <div style={S.wrap}>
         <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, color: "#666", marginBottom: 12 }}>
-          3. По программам
+          4. Сопровождение
         </div>
         <h1 style={S.h1}>Сопровождение по тренировкам и питанию</h1>
         <p style={{ ...S.lead, marginBottom: 16 }}>

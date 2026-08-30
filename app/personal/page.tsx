@@ -83,7 +83,7 @@ export default function PersonalPage() {
         {/* Hero */}
         <FadeIn>
           <div style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, color: "#666", marginBottom: 16 }}>
-            4. Личное ведение
+            3. Личное ведение
           </div>
           <h1 style={S.h1}>Личное ведение и персональные тренировки</h1>
           <p style={S.lead}>
