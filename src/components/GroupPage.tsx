@@ -19,7 +19,7 @@ const FONT_D = "var(--font-display)"; // Anton
 const FONT_S = "var(--font-sans)";    // Inter
 const FONT_SERIF = "var(--font-serif)"; // Instrument Serif
 
-const TG_SOFIA = "https://t.me/sofiapolenova";
+const TG_SOFIA = "https://t.me/sofiap_fitness";
 
 /* ── Fade-in on scroll ── */
 function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {

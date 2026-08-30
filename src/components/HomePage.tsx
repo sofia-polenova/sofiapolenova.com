@@ -179,7 +179,7 @@ const SERVICES: Service[] = [
     ],
     image: null,
     btnText: "Хочу тренироваться с Софьей",
-    href: "https://t.me/sofiapolenova",
+    href: "https://t.me/sofiap_fitness",
     external: true,
   },
   {
@@ -192,7 +192,7 @@ const SERVICES: Service[] = [
     prices: null,
     image: null,
     btnText: "Записаться →",
-    href: "https://t.me/sofiapolenova",
+    href: "https://t.me/sofiap_fitness",
     external: true,
   },
 ];
@@ -322,7 +322,7 @@ function Nutrition() {
             <div style={{ borderTop: "1px solid rgba(0,0,0,0.14)" }} />
           </div>
           <a
-            href="https://t.me/sofiapolenova"
+            href="https://t.me/sofiap_fitness"
             target="_blank"
             rel="noopener noreferrer"
             style={{
