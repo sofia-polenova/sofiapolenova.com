@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 /* ─────────────────────────────────────────────
    ГРУППОВЫЕ ТРЕНИРОВКИ
@@ -218,154 +218,6 @@ function PriceRow({ label, rub, usd }: { label: string; rub: string; usd: string
   );
 }
 
-/* ─────────────────────────────────────────────
-   ТЕСТ НА ФОРМАТ ТРЕНИРОВОК
-   ───────────────────────────────────────────── */
-
-type Q = { key: string; q: string; options: { icon: string; label: string }[] };
-
-const QUESTIONS: Q[] = [
-  {
-    key: "Цель",
-    q: "Какая у тебя главная цель?",
-    options: [
-      { icon: "⚖️", label: "Похудеть и избавиться от лишнего веса" },
-      { icon: "💪", label: "Набрать мышечную массу и улучшить рельеф" },
-      { icon: "❤️", label: "Улучшить здоровье, убрать боли, больше энергии" },
-      { icon: "🤰", label: "Подготовка к беременности или восстановление после родов" },
-    ],
-  },
-  {
-    key: "Формат",
-    q: "Как тебе комфортнее заниматься?",
-    options: [
-      { icon: "🧑‍🏫", label: "1 на 1 с тренером" },
-      { icon: "📝", label: "Самостоятельно, но с обратной связью" },
-      { icon: "👯", label: "Онлайн в группе" },
-      { icon: "🤔", label: "Пока не знаю" },
-    ],
-  },
-  {
-    key: "Опыт",
-    q: "Какой у тебя опыт тренировок?",
-    options: [
-      { icon: "🌱", label: "Новичок — почти не занималась" },
-      { icon: "🔁", label: "Занималась раньше, был перерыв" },
-      { icon: "🏃‍♀️", label: "Занимаюсь регулярно" },
-    ],
-  },
-  {
-    key: "Питание",
-    q: "Нужны консультации по питанию?",
-    options: [
-      { icon: "🥗", label: "Да, это важно" },
-      { icon: "🙂", label: "Было бы плюсом" },
-      { icon: "🙅‍♀️", label: "Нет, только тренировки" },
-    ],
-  },
-  {
-    key: "Частота",
-    q: "Сколько раз в неделю готова заниматься?",
-    options: [
-      { icon: "1️⃣", label: "1–2 раза" },
-      { icon: "3️⃣", label: "3–4 раза" },
-      { icon: "🔥", label: "Почти каждый день" },
-    ],
-  },
-];
-
-function buildTelegramLink(answers: Record<string, string>) {
-  const lines = QUESTIONS.map((q) => `• ${q.key}: ${answers[q.key] ?? "—"}`).join("\n");
-  const msg = `Привет, Софья! Прошла тест на формат тренировок.\n${lines}`;
-  return `${TG_SOFIA}?text=${encodeURIComponent(msg)}`;
-}
-
-function Quiz() {
-  const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [done, setDone] = useState(false);
-  const [link, setLink] = useState("");
-  const total = QUESTIONS.length;
-
-  function choose(label: string) {
-    const q = QUESTIONS[step];
-    const next = { ...answers, [q.key]: label };
-    setAnswers(next);
-    if (step < total - 1) {
-      setStep(step + 1);
-    } else {
-      const tg = buildTelegramLink(next);
-      setLink(tg);
-      setDone(true);
-      window.open(tg, "_blank", "noopener,noreferrer");
-    }
-  }
-
-  if (done) {
-    return (
-      <div style={{ textAlign: "center", padding: "12px 0 8px" }}>
-        <div style={{ fontSize: 34, marginBottom: 12 }}>✅</div>
-        <p style={{ fontFamily: FONT_S, fontSize: 16, lineHeight: 1.6, color: "#333", margin: "0 0 20px" }}>
-          Спасибо! Открываю Telegram с твоими ответами.<br />
-          Если чат не открылся — нажми кнопку.
-        </p>
-        <a href={link} target="_blank" rel="noopener noreferrer" style={{ ...S.btn, display: "inline-block", padding: "16px 32px" }}>
-          Открыть чат с Софьей →
-        </a>
-      </div>
-    );
-  }
-
-  const q = QUESTIONS[step];
-
-  return (
-    <div>
-      <div style={{ display: "flex", gap: 8, justifyContent: "center", margin: "0 0 32px" }}>
-        {QUESTIONS.map((_, i) => (
-          <span
-            key={i}
-            style={{
-              width: i === step ? 26 : 9,
-              height: 9,
-              borderRadius: 5,
-              background: i === step ? "#c0603d" : i < step ? GREEN : "rgba(0,0,0,0.15)",
-              transition: "all 0.2s",
-            }}
-          />
-        ))}
-      </div>
-
-      <p style={{ fontFamily: FONT_S, fontSize: 12, color: GRAY, textAlign: "center", margin: "0 0 12px" }}>
-        Вопрос {step + 1} из {total}
-      </p>
-      <p style={{ fontFamily: FONT_D, fontSize: "clamp(22px, 6vw, 32px)", textTransform: "uppercase", textAlign: "center", lineHeight: 1.15, margin: "0 0 28px" }}>
-        {q.q}
-      </p>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        {q.options.map((opt) => (
-          <button
-            key={opt.label}
-            onClick={() => choose(opt.label)}
-            style={{ display: "flex", alignItems: "center", gap: 16, width: "100%", textAlign: "left", background: "#fff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 14, padding: "18px 20px", cursor: "pointer", fontFamily: FONT_S }}
-          >
-            <span style={{ width: 44, height: 44, borderRadius: 10, background: "#EFEODF", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>
-              {opt.icon}
-            </span>
-            <span style={{ fontSize: 15, color: DARK, lineHeight: 1.4 }}>{opt.label}</span>
-          </button>
-        ))}
-      </div>
-
-      {step > 0 && (
-        <button onClick={() => setStep(step - 1)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: FONT_S, fontSize: 13, color: GRAY, marginTop: 20, padding: 4 }}>
-          ‹ Назад
-        </button>
-      )}
-    </div>
-  );
-}
-
 /* ── Footer (документы, как на странице клуба) ── */
 function Footer() {
   return (
@@ -395,7 +247,7 @@ export default function GroupPage() {
 
         {/* Кому подходит */}
         <FadeIn>
-          <p style={S.eyebrow}>Кому подходит</p>
+          <p style={S.eyebrow}>Кому подходит?</p>
         </FadeIn>
         <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 8 }}>
           {AUDIENCE.map((a, i) => {
@@ -476,18 +328,6 @@ export default function GroupPage() {
           <a href={TG_SOFIA} target="_blank" rel="noopener noreferrer" style={S.btn}>
             Написать Софье →
           </a>
-        </FadeIn>
-
-        <div style={S.divider} />
-
-        {/* Тест */}
-        <FadeIn>
-          <p style={{ ...S.eyebrow, textAlign: "center", color: GREEN }}>Подберём формат</p>
-          <h2 style={{ ...S.h2, textAlign: "center", margin: "0 0 12px" }}>Не уверена, что выбрать?</h2>
-          <p style={{ fontFamily: FONT_S, fontSize: 15, color: GRAY, textAlign: "center", margin: "0 0 40px", lineHeight: 1.6 }}>
-            Ответь на 5 вопросов — я пойму твой формат и напишу тебе в Telegram.
-          </p>
-          <Quiz />
         </FadeIn>
       </div>
 

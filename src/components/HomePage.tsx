@@ -1,5 +1,7 @@
 "use client";
 
+import FormatQuiz from "@/components/FormatQuiz";
+
 /* ─── SHARED NAV ─── */
 function Nav() {
   return (
@@ -572,6 +574,7 @@ export default function HomePage() {
       <Education />
       <Services />
       <Nutrition />
+      <FormatQuiz />
       <CasesIndex />
       <PastFormats />
       <Footer />
