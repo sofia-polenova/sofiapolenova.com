@@ -112,11 +112,11 @@ export default function PersonalPage() {
         {/* Hero */}
         <FadeIn>
           <div style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, color: "#666", marginBottom: 16 }}>
-            4. Личная работа
+            4. Личное ведение
           </div>
-          <h1 style={S.h1}>Личная<br />работа</h1>
+          <h1 style={S.h1}>Личное ведение и персональные тренировки</h1>
           <p style={{ ...S.lead, marginBottom: 0 }}>
-            Персональное ведение онлайн или офлайн — для тех, кто хочет устойчивых изменений с индивидуальным подходом.
+            Персональные тренировки один на один — акцент на осанку, дома или в зале. Полное сопровождение по тренировкам и питанию, консультации и регулярные созвоны. Беру ограниченное число человек.
           </p>
         </FadeIn>
 
@@ -209,26 +209,37 @@ export default function PersonalPage() {
           <div style={{ marginBottom: 32 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "20px 0", borderTop: "1px solid rgba(0,0,0,0.1)", gap: 16 }}>
               <div>
-                <p style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 16, margin: "0 0 6px" }}>Разовая тренировка</p>
-                <p style={{ fontSize: 13, color: "#666", margin: 0, lineHeight: 1.5 }}>60 минут онлайн, постановка техники, разбор вопросов по питанию</p>
+                <p style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 16, margin: "0 0 4px" }}>2 тренировки в неделю</p>
+                <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase" as const, color: "#4a6b3a", margin: "0 0 6px" }}>Осталось 1 место</p>
+                <p style={{ fontSize: 13, color: "#666", margin: 0, lineHeight: 1.5 }}>Программа тренировок + сопровождение по питанию + консультации + регулярные созвоны</p>
               </div>
-              <span style={{ fontFamily: "'Anton', sans-serif", fontSize: 15, flexShrink: 0, color: "#666" }}>По запросу</span>
+              <span style={{ textAlign: "right" as const, flexShrink: 0 }}>
+                <span style={{ display: "block", fontFamily: "'Anton', sans-serif", fontSize: 22, lineHeight: 1 }}>~$400 / месяц</span>
+                <span style={{ display: "block", fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontSize: 13, color: "#666", marginTop: 2 }}>32 000 ₽ / месяц</span>
+              </span>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "20px 0", borderTop: "1px solid rgba(0,0,0,0.1)", gap: 16 }}>
               <div>
-                <p style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 16, margin: "0 0 6px" }}>Месяц личного ведения</p>
-                <p style={{ fontSize: 13, color: "#666", margin: 0, lineHeight: 1.5 }}>Программа тренировок + сопровождение по питанию + ежедневная связь + корректировка плана</p>
+                <p style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 16, margin: "0 0 4px" }}>3 тренировки в неделю</p>
+                <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase" as const, color: "#4a6b3a", margin: "0 0 6px" }}>Осталось 1 место</p>
+                <p style={{ fontSize: 13, color: "#666", margin: 0, lineHeight: 1.5 }}>То же самое, но с большей нагрузкой и более быстрым прогрессом</p>
               </div>
-              <span style={{ fontFamily: "'Anton', sans-serif", fontSize: 15, flexShrink: 0, color: "#666" }}>По запросу</span>
+              <span style={{ textAlign: "right" as const, flexShrink: 0 }}>
+                <span style={{ display: "block", fontFamily: "'Anton', sans-serif", fontSize: 22, lineHeight: 1 }}>~$540 / месяц</span>
+                <span style={{ display: "block", fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontSize: 13, color: "#666", marginTop: 2 }}>42 000 ₽ / месяц</span>
+              </span>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "20px 24px", gap: 16, background: "#1e2e1a", margin: "0 -24px", borderRadius: 4 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "20px 0", borderTop: "1px solid rgba(0,0,0,0.1)", gap: 16 }}>
               <div>
-                <p style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 16, margin: "0 0 4px", color: "#fff" }}>Максимальный результат</p>
-                <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase" as const, color: "rgba(255,255,255,0.45)", margin: "0 0 8px" }}>VIP-сопровождение с врачом</p>
-                <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0, lineHeight: 1.5 }}>Всё из базового ведения + онлайн-тренировки 1 на 1 + работа с врачом по анализам + подбор БАДов и препаратов + приоритетная поддержка</p>
+                <p style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 16, margin: "0 0 6px" }}>Разовое занятие</p>
+                <p style={{ fontSize: 13, color: "#666", margin: 0, lineHeight: 1.5 }}>60 минут онлайн: постановка техники, разбор вопросов по тренировкам и питанию</p>
               </div>
-              <span style={{ fontFamily: "'Anton', sans-serif", fontSize: 15, flexShrink: 0, color: "rgba(255,255,255,0.7)" }}>По запросу</span>
+              <span style={{ textAlign: "right" as const, flexShrink: 0 }}>
+                <span style={{ display: "block", fontFamily: "'Anton', sans-serif", fontSize: 22, lineHeight: 1 }}>~$55</span>
+                <span style={{ display: "block", fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontSize: 13, color: "#666", marginTop: 2 }}>4 500 ₽</span>
+              </span>
             </div>
+            <div style={{ borderTop: "1px solid rgba(0,0,0,0.12)" }} />
           </div>
         </FadeIn>
 

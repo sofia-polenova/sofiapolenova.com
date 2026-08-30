@@ -119,7 +119,19 @@ function Story() {
 }
 
 /* ─── SERVICES ─── */
-const SERVICES = [
+type Service = {
+  num: string;
+  title: string;
+  desc: string;
+  price: string | null;
+  priceUsd: string | null;
+  perMonth: boolean;
+  btnText: string;
+  href: string;
+  external: boolean;
+};
+
+const SERVICES: Service[] = [
   {
     num: "1",
     title: "Бесплатная тренировка на дыхание",
@@ -155,11 +167,11 @@ const SERVICES = [
   },
   {
     num: "4",
-    title: "Личная работа",
-    desc: "Индивидуальные тренировки, работа с питанием, консультации дополнительных специалистов.",
-    price: "По запросу",
-    priceUsd: null,
-    perMonth: false,
+    title: "Личное ведение и персональные тренировки",
+    desc: "Персональные тренировки один на один — акцент на осанку, дома или в зале. Полное сопровождение по тренировкам и питанию, консультации и регулярные созвоны. Беру ограниченное число человек.",
+    price: "от 32 000 ₽",
+    priceUsd: "от $400",
+    perMonth: true,
     btnText: "Узнать подробнее →",
     href: "/personal",
     external: false,
