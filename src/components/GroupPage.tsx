@@ -165,47 +165,6 @@ function ParallaxHero() {
   );
 }
 
-/* ── Media carousel (фото и видео с тренировок) ── */
-const MEDIA: { type: "img" | "video"; src: string }[] = [
-  { type: "video", src: "/assets/trenirovka.mov" },
-  { type: "video", src: "/assets/trenirovka2.mov" },
-  { type: "img", src: "/assets/training-4.jpg" },
-];
-
-function MediaCarousel() {
-  return (
-    <div style={{ margin: "0 -20px", overflowX: "auto", WebkitOverflowScrolling: "touch", scrollbarWidth: "none" } as React.CSSProperties}>
-      <div style={{ display: "flex", gap: 10, padding: "0 20px", width: "max-content" }}>
-        {MEDIA.map((m, i) => (
-          <div key={i} style={{ width: 220, height: 300, borderRadius: 8, overflow: "hidden", flexShrink: 0, background: "#111" }}>
-            {m.type === "video" ? (
-              <video src={m.src} style={{ width: "100%", height: "100%", objectFit: "cover" }} autoPlay muted loop playsInline />
-            ) : (
-              <img src={m.src} alt="Тренировка" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-            )}
-          </div>
-        ))}
-        <div style={{ flexShrink: 0, width: 8 }} />
-      </div>
-    </div>
-  );
-}
-
-/* ── Numbered block ── */
-function Block({ num, title, children }: { num: string; title: string; children: React.ReactNode }) {
-  return (
-    <div style={{ padding: "28px 0", borderTop: "1px solid rgba(0,0,0,0.1)" }}>
-      <div style={{ display: "flex", gap: 20 }}>
-        <span style={{ fontFamily: FONT_D, fontSize: 13, color: GREEN, letterSpacing: 1, flexShrink: 0, marginTop: 3 }}>{num}</span>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontFamily: FONT_D, fontSize: "clamp(20px, 5vw, 28px)", textTransform: "uppercase", lineHeight: 1, margin: "0 0 12px", color: DARK }}>{title}</p>
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /* just the numbered heading, same look as Block */
 function SectionHead({ num, title }: { num: string; title: string }) {
   return (
@@ -216,7 +175,33 @@ function SectionHead({ num, title }: { num: string; title: string }) {
   );
 }
 
-const HL: React.CSSProperties = { color: "#4a6b3a", fontWeight: 700 };
+const HL: React.CSSProperties = { color: "#a8d18a", fontWeight: 700 };
+const bodyLight: React.CSSProperties = { fontFamily: FONT_S, fontSize: 15, lineHeight: 1.7, color: "rgba(255,255,255,0.85)", margin: "0 0 12px" };
+
+/* текстовый блок поверх фото/видео */
+function PhotoBlock({ src, video, num, title, children }: { src: string; video?: boolean; num: string; title: string; children: React.ReactNode }) {
+  return (
+    <div style={{ position: "relative", overflow: "hidden", background: "#161616" }}>
+      {video ? (
+        <video autoPlay muted loop playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.5 }}>
+          <source src={src} />
+        </video>
+      ) : (
+        <img src={src} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.5 }} />
+      )}
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0.8))" }} />
+      <FadeIn>
+        <div style={{ position: "relative", padding: "52px 24px", color: "#fff" }}>
+          <div style={{ display: "flex", gap: 18, marginBottom: 20 }}>
+            <span style={{ fontFamily: FONT_D, fontSize: 13, color: "#a8d18a", letterSpacing: 1, marginTop: 4, flexShrink: 0 }}>{num}</span>
+            <p style={{ fontFamily: FONT_D, fontSize: "clamp(22px, 6.5vw, 34px)", textTransform: "uppercase", lineHeight: 1, margin: 0 }}>{title}</p>
+          </div>
+          {children}
+        </div>
+      </FadeIn>
+    </div>
+  );
+}
 
 const body: React.CSSProperties = { fontFamily: FONT_S, fontSize: 15, lineHeight: 1.65, color: "#555", margin: "0 0 12px" };
 
@@ -283,56 +268,52 @@ export default function GroupPage() {
           })}
         </div>
 
-        {/* 02 — как проходит */}
-        <FadeIn>
-          <Block num="02" title="Как проходит">
-            <div style={{ marginBottom: 18 }}>
-              {([
-                ["📅", "Дни", <><span style={HL}>Вт · Чт · Сб</span></>],
-                ["⏰", "Время", <><span style={HL}>10:00</span> по МСК</>],
-                ["⏱️", "Длительность", <><span style={HL}>55–75</span> минут</>],
-                ["👥", "В группе", <>одновременно <span style={HL}>2–8</span> человек</>],
-                ["🎥", "Где", <>онлайн в Zoom, <span style={HL}>из дома</span></>],
-              ] as [string, string, React.ReactNode][]).map(([emoji, label, value], i) => (
-                <RevealRow key={label} index={i} from="left">
-                  <div style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "12px 0", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
-                    <span style={{ fontSize: 20, lineHeight: 1.3, flexShrink: 0 }}>{emoji}</span>
-                    <div>
-                      <span style={{ display: "block", fontFamily: FONT_S, fontSize: 11, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase", color: GREEN, marginBottom: 2 }}>{label}</span>
-                      <span style={{ fontFamily: FONT_S, fontSize: 15, color: "#333", lineHeight: 1.5 }}>{value}</span>
-                    </div>
-                  </div>
-                </RevealRow>
-              ))}
-            </div>
-            <MediaCarousel />
-          </Block>
-        </FadeIn>
+      </div>
 
-        {/* 03 — короткие комплексы */}
-        <FadeIn>
-          <Block num="03" title="Короткие комплексы">
-            <p style={{ ...body, margin: 0 }}>
-              Между занятиями остаются короткие комплексы упражнений — их можно делать как{" "}
-              <span style={HL}>домашнее задание</span> или как <span style={HL}>утреннюю зарядку</span>.
-            </p>
-          </Block>
-        </FadeIn>
+      <div style={{ maxWidth: 600, margin: "0 auto" }}>
+      {/* 02 — как проходит (текст поверх видео) */}
+      <PhotoBlock src="/assets/trenirovka.mov" video num="02" title="Как проходит">
+        <div>
+          {([
+            ["📅", "Дни", <><span style={HL}>Вт · Чт · Сб</span></>],
+            ["⏰", "Время", <><span style={HL}>10:00</span> по МСК</>],
+            ["⏱️", "Длительность", <><span style={HL}>55–75</span> минут</>],
+            ["👥", "В группе", <>одновременно <span style={HL}>2–8</span> человек</>],
+            ["🎥", "Где", <>онлайн в Zoom, <span style={HL}>из дома</span></>],
+          ] as [string, string, React.ReactNode][]).map(([emoji, label, value], i) => (
+            <RevealRow key={label} index={i} from="left">
+              <div style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "11px 0", borderBottom: "1px solid rgba(255,255,255,0.15)" }}>
+                <span style={{ fontSize: 20, lineHeight: 1.3, flexShrink: 0 }}>{emoji}</span>
+                <div>
+                  <span style={{ display: "block", fontFamily: FONT_S, fontSize: 11, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase", color: "#a8d18a", marginBottom: 2 }}>{label}</span>
+                  <span style={{ fontFamily: FONT_S, fontSize: 15, color: "rgba(255,255,255,0.9)", lineHeight: 1.5 }}>{value}</span>
+                </div>
+              </div>
+            </RevealRow>
+          ))}
+        </div>
+      </PhotoBlock>
 
-        {/* 04 — оборудование */}
-        <FadeIn>
-          <Block num="04" title="Оборудование">
-            <p style={{ ...body, margin: "0 0 8px" }}>
-              Понадобится <span style={HL}>МФР-мяч, коврик и фитнес-резинки</span>.
-            </p>
-            <p style={{ ...body, margin: 0 }}>
-              Полное описание оборудования — в чате группы.
-            </p>
-          </Block>
-        </FadeIn>
+      {/* 03 — короткие комплексы */}
+      <PhotoBlock src="/assets/training-2.jpg" num="03" title="Короткие комплексы">
+        <p style={{ ...bodyLight, margin: 0 }}>
+          Между занятиями остаются короткие комплексы упражнений — их можно делать как{" "}
+          <span style={HL}>домашнее задание</span> или как <span style={HL}>утреннюю зарядку</span>.
+        </p>
+      </PhotoBlock>
 
-        <div style={{ borderTop: "1px solid rgba(0,0,0,0.1)" }} />
+      {/* 04 — оборудование */}
+      <PhotoBlock src="/assets/training-3.jpg" num="04" title="Оборудование">
+        <p style={{ ...bodyLight, margin: "0 0 8px" }}>
+          Понадобится <span style={HL}>МФР-мяч, коврик и фитнес-резинки</span>.
+        </p>
+        <p style={{ ...bodyLight, margin: 0 }}>
+          Полное описание оборудования — в чате группы.
+        </p>
+      </PhotoBlock>
+      </div>
 
+      <div style={S.wrap}>
         <div style={{ height: 40 }} />
 
         {/* Стоимость */}
