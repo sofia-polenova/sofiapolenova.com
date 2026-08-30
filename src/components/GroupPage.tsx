@@ -191,7 +191,7 @@ function PhotoBlock({ src, video, num, title, children }: { src: string; video?:
       )}
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0.8))" }} />
       <FadeIn>
-        <div style={{ position: "relative", padding: "52px 24px", color: "#fff" }}>
+        <div style={{ position: "relative", padding: "56px 24px", color: "#fff", maxWidth: 560, margin: "0 auto" }}>
           <div style={{ display: "flex", gap: 18, marginBottom: 20 }}>
             <span style={{ fontFamily: FONT_D, fontSize: 13, color: "#a8d18a", letterSpacing: 1, marginTop: 4, flexShrink: 0 }}>{num}</span>
             <p style={{ fontFamily: FONT_D, fontSize: "clamp(22px, 6.5vw, 34px)", textTransform: "uppercase", lineHeight: 1, margin: 0 }}>{title}</p>
@@ -208,11 +208,11 @@ const body: React.CSSProperties = { fontFamily: FONT_S, fontSize: 15, lineHeight
 /* ── Pricing row ── */
 function PriceRow({ label, rub, usd }: { label: string; rub: string; usd: string }) {
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "18px 0", borderTop: "1px solid rgba(0,0,0,0.12)", gap: 16 }}>
-      <span style={{ fontFamily: FONT_S, fontSize: 15, color: DARK, lineHeight: 1.4, paddingTop: 6 }}>{label}</span>
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "16px 0", borderTop: "1px solid rgba(0,0,0,0.12)", gap: 12 }}>
+      <span style={{ fontFamily: FONT_S, fontSize: 14, color: DARK, lineHeight: 1.4, paddingTop: 4 }}>{label}</span>
       <span style={{ textAlign: "right", flexShrink: 0 }}>
-        <span style={{ display: "block", fontFamily: FONT_D, fontSize: 26, lineHeight: 1 }}>{usd}</span>
-        <span style={{ display: "block", fontFamily: FONT_SERIF, fontStyle: "italic", fontSize: 14, color: GRAY, marginTop: 2 }}>{rub}</span>
+        <span style={{ display: "block", fontFamily: FONT_D, fontSize: 21, lineHeight: 1, whiteSpace: "nowrap" }}>{usd}</span>
+        <span style={{ display: "block", fontFamily: FONT_SERIF, fontStyle: "italic", fontSize: 12, color: GRAY, marginTop: 2, whiteSpace: "nowrap" }}>{rub}</span>
       </span>
     </div>
   );
@@ -270,7 +270,6 @@ export default function GroupPage() {
 
       </div>
 
-      <div style={{ maxWidth: 600, margin: "0 auto" }}>
       {/* 02 — как проходит (текст поверх видео) */}
       <PhotoBlock src="/assets/trenirovka.mov" video num="02" title="Как проходит">
         <div>
@@ -311,23 +310,24 @@ export default function GroupPage() {
           Полное описание оборудования — в чате группы.
         </p>
       </PhotoBlock>
-      </div>
 
       <div style={S.wrap}>
-        <div style={{ height: 40 }} />
+        <div style={{ height: 48 }} />
 
-        {/* Стоимость */}
+        {/* Стоимость — отдельной светлой рамкой */}
         <FadeIn>
-          <h2 style={S.h2}>Стоимость</h2>
-          <div style={{ marginBottom: 28 }}>
-            <PriceRow label="1 раз в неделю" rub="8 000 ₽ / месяц" usd="$100 / месяц" />
-            <PriceRow label="2 раза в неделю" rub="16 000 ₽ / месяц" usd="$200 / месяц" />
-            <PriceRow label="3 раза в неделю" rub="24 000 ₽ / месяц" usd="$300 / месяц" />
-            <div style={{ borderTop: "1px solid rgba(0,0,0,0.12)" }} />
+          <div style={{ background: "#FAFAF7", border: "1px solid rgba(0,0,0,0.12)", padding: "26px 20px 22px" }}>
+            <h2 style={{ ...S.h2, margin: "0 0 12px" }}>Стоимость</h2>
+            <div style={{ marginBottom: 24 }}>
+              <PriceRow label="1 раз в неделю" rub="8 000 ₽ / месяц" usd="$100 / месяц" />
+              <PriceRow label="2 раза в неделю" rub="16 000 ₽ / месяц" usd="$200 / месяц" />
+              <PriceRow label="3 раза в неделю" rub="24 000 ₽ / месяц" usd="$300 / месяц" />
+              <div style={{ borderTop: "1px solid rgba(0,0,0,0.12)" }} />
+            </div>
+            <a href={TG_GROUP} target="_blank" rel="noopener noreferrer" style={S.btn}>
+              Написать Софье →
+            </a>
           </div>
-          <a href={TG_GROUP} target="_blank" rel="noopener noreferrer" style={S.btn}>
-            Написать Софье →
-          </a>
         </FadeIn>
       </div>
 
