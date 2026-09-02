@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import ConsentAnalytics from "@/components/ConsentAnalytics";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -55,6 +57,8 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         {children}
+        <ConsentAnalytics />
+        <Analytics />
       </body>
     </html>
   );
