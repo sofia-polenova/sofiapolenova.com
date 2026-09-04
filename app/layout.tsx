@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import ConsentAnalytics from "@/components/ConsentAnalytics";
+import CtaTracker from "@/components/CtaTracker";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -58,6 +59,7 @@ export default function RootLayout({
         />
         {children}
         <ConsentAnalytics />
+        <CtaTracker />
         <Analytics />
       </body>
     </html>
