@@ -51,17 +51,17 @@ const QUESTIONS: Q[] = [
   },
 ];
 
-function buildTelegramLink(answers: Record<string, string>) {
+function buildSummary(answers: Record<string, string>) {
   const lines = QUESTIONS.map((q) => `• ${q.key}: ${answers[q.key] ?? "—"}`).join("\n");
-  const msg = `Привет, Софья! Прошла тест на формат тренировок.\n${lines}`;
-  return `${TG}?text=${encodeURIComponent(msg)}`;
+  return `Привет, Софья! Прошла тест на формат тренировок.\n${lines}`;
 }
 
 function Quiz() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [done, setDone] = useState(false);
-  const [link, setLink] = useState("");
+  const [summary, setSummary] = useState("");
+  const [copied, setCopied] = useState(false);
   const total = QUESTIONS.length;
 
   function choose(label: string) {
@@ -71,10 +71,19 @@ function Quiz() {
     if (step < total - 1) {
       setStep(step + 1);
     } else {
-      const tg = buildTelegramLink(next);
-      setLink(tg);
+      setSummary(buildSummary(next));
       setDone(true);
-      window.open(tg, "_blank", "noopener,noreferrer");
+      window.open(TG, "_blank", "noopener,noreferrer");
+    }
+  }
+
+  async function copySummary() {
+    try {
+      await navigator.clipboard.writeText(summary);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard unavailable — текст всё равно виден и его можно выделить */
     }
   }
 
@@ -82,18 +91,33 @@ function Quiz() {
     return (
       <div style={{ textAlign: "center", padding: "12px 0 8px" }}>
         <div style={{ fontSize: 34, marginBottom: 12 }}>✅</div>
-        <p style={{ fontFamily: FONT_S, fontSize: 16, lineHeight: 1.6, color: "#333", margin: "0 0 20px" }}>
-          Спасибо! Открываю Telegram с твоими ответами.<br />
-          Если чат не открылся — нажми кнопку.
+        <p style={{ fontFamily: FONT_S, fontSize: 16, lineHeight: 1.6, color: "#333", margin: "0 0 18px" }}>
+          Спасибо! Открываю Telegram.<br />
+          Скопируй ответы и отправь их мне в чат.
         </p>
-        <a
-          href={link}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ display: "inline-block", fontFamily: FONT_S, fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", padding: "16px 32px", background: GREEN, color: "#fff", textDecoration: "none" }}
-        >
-          Открыть чат с Софьей →
-        </a>
+        <textarea
+          readOnly
+          value={summary}
+          onFocus={(e) => e.currentTarget.select()}
+          rows={6}
+          style={{ width: "100%", maxWidth: 420, resize: "none", fontFamily: FONT_S, fontSize: 13, lineHeight: 1.6, color: "#333", background: "#fff", border: "1px solid rgba(0,0,0,0.12)", padding: "12px 14px", margin: "0 auto 16px", display: "block" }}
+        />
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <button
+            onClick={copySummary}
+            style={{ fontFamily: FONT_S, fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", padding: "16px 24px", background: "transparent", color: GREEN, border: `1px solid ${GREEN}`, cursor: "pointer" }}
+          >
+            {copied ? "Скопировано ✓" : "Скопировать ответы"}
+          </button>
+          <a
+            href={TG}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ display: "inline-block", fontFamily: FONT_S, fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", padding: "16px 24px", background: GREEN, color: "#fff", textDecoration: "none" }}
+          >
+            Открыть чат с Софьей →
+          </a>
+        </div>
       </div>
     );
   }
