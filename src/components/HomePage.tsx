@@ -199,7 +199,7 @@ const SERVICES: Service[] = [
     price: null,
     priceUsd: null,
     perMonth: false,
-    prices: [{ label: "Программа на 4 недели", usd: "≈ $175", rub: "15 000 ₽" }],
+    prices: [{ label: "Программа на 4 недели", usd: "≈ $250", rub: "20 000 ₽" }],
     image: null,
     btnText: "Записаться →",
     href: "https://t.me/sofiap_fitness",
