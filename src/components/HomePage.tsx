@@ -127,7 +127,7 @@ type Service = {
   tgText: string | null;
 };
 
-const TG = "https://t.me/sofiap_fitness";
+const TG = "https://t.me/some_sofiasupport";
 const tgLink = (text: string) => `${TG}?text=${encodeURIComponent(text)}`;
 
 const MSG_PERSONAL =
@@ -187,7 +187,7 @@ const SERVICES: Service[] = [
     ],
     image: null,
     btnText: "Хочу тренироваться с Софьей",
-    href: "https://t.me/sofiap_fitness",
+    href: "https://t.me/some_sofiasupport",
     external: true,
     tgText: MSG_PERSONAL,
   },
@@ -202,7 +202,7 @@ const SERVICES: Service[] = [
     prices: [{ label: "Программа на 4 недели", usd: "$250", rub: "≈ 20 000 ₽" }],
     image: null,
     btnText: "Записаться →",
-    href: "https://t.me/sofiap_fitness",
+    href: "https://t.me/some_sofiasupport",
     external: true,
     tgText: MSG_PROGRAM,
   },

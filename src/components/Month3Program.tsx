@@ -283,7 +283,7 @@ export function Month3Program() {
 
         <div style={S.divider} />
         <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: "#999", lineHeight: 1.6 }}>
-          Вопросы по технике — пиши в Telegram: <a href="https://t.me/sofiap_fitness" target="_blank" rel="noopener noreferrer" style={{ color: "#666" }}>@sofiap_fitness</a>
+          Вопросы по технике — пиши в Telegram: <a href="https://t.me/some_sofiasupport" target="_blank" rel="noopener noreferrer" style={{ color: "#666" }}>@some_sofiasupport</a>
         </p>
       </div>
     </main>

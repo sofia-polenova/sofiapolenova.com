@@ -19,7 +19,7 @@ const FONT_D = "var(--font-display)"; // Anton
 const FONT_S = "var(--font-sans)";    // Inter
 const FONT_SERIF = "var(--font-serif)"; // Instrument Serif
 
-const TG_SOFIA = "https://t.me/sofiap_fitness";
+const TG_SOFIA = "https://t.me/some_sofiasupport";
 const MSG_GROUP =
   "Привет, Софья! Хочу тренироваться в групповом формате.\n\nЦели:\nМои ограничения:\nСколько раз в неделю:\nВопросы:";
 const TG_GROUP = `${TG_SOFIA}?text=${encodeURIComponent(MSG_GROUP)}`;

@@ -7,7 +7,7 @@ const GRAY = "#666";
 const FONT_D = "var(--font-display)";
 const FONT_S = "var(--font-sans)";
 
-const TG = "https://t.me/sofiap_fitness";
+const TG = "https://t.me/some_sofiasupport";
 
 type Q = { key: string; q: string; options: { icon: string; label: string }[] };
 

@@ -15,7 +15,7 @@ import { track } from "@vercel/analytics";
  */
 function classify(href: string): string | null {
   if (href.includes("SofiaPolenova_bot")) return "bot_free_training";
-  if (href.includes("sofiap_fitness")) return "tg_channel_fitness";
+  if (href.includes("some_sofiasupport")) return "tg_channel_fitness";
   if (href.includes("heath_is_wealth")) return "tg_channel_club";
   if (href.includes("t.me/")) return "tg_other";
   if (href.includes("youtube.com/@some_sofia")) return "youtube_channel";
