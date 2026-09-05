@@ -343,9 +343,9 @@ export default function GroupPage() {
           <div style={{ background: "#FAFAF7", border: "1px solid rgba(0,0,0,0.12)", padding: "26px 20px 22px" }}>
             <h2 style={{ ...S.h2, margin: "0 0 12px" }}>Стоимость</h2>
             <div style={{ marginBottom: 24 }}>
-              <PriceRow label="1 раз в неделю" rub="8 000 ₽ / месяц" usd="$100 / месяц" />
-              <PriceRow label="2 раза в неделю" rub="16 000 ₽ / месяц" usd="$200 / месяц" />
-              <PriceRow label="3 раза в неделю" rub="24 000 ₽ / месяц" usd="$300 / месяц" />
+              <PriceRow label="1 раз в неделю" rub="≈ 8 000 ₽ / месяц" usd="$100 / месяц" />
+              <PriceRow label="2 раза в неделю" rub="≈ 16 000 ₽ / месяц" usd="$200 / месяц" />
+              <PriceRow label="3 раза в неделю" rub="≈ 24 000 ₽ / месяц" usd="$300 / месяц" />
               <div style={{ borderTop: "1px solid rgba(0,0,0,0.12)" }} />
             </div>
             <a href={TG_GROUP} target="_blank" rel="noopener noreferrer" style={S.btn}>
