@@ -9,9 +9,10 @@ import { track } from "@vercel/analytics";
  * Один делегированный обработчик на весь документ — новые ссылки той же
  * природы подхватываются автоматически, точечно менять компоненты не нужно.
  *
- * Смотреть: Vercel → проект → Analytics → Events (событие "cta_click",
- * свойство target). В Clarity — как Smart Event с тем же именем, если
- * посетитель принял cookie (Clarity подключается только после согласия).
+ * Событие "cta_click" (свойство target) уходит в:
+ *  - Google Analytics 4 — виден в Reports → Engagement → Events (free-тариф);
+ *  - Vercel Analytics — раздел Events (только на тарифе Pro);
+ *  - Microsoft Clarity — как Smart Event, только у принявших cookie.
  */
 function classify(href: string): string | null {
   if (href.includes("SofiaPolenova_bot")) return "bot_free_training";
@@ -32,10 +33,21 @@ export default function CtaTracker() {
       const label = classify(link.href);
       if (!label) return;
 
+      const path = window.location.pathname;
+
       try {
-        track("cta_click", { target: label, path: window.location.pathname });
+        track("cta_click", { target: label, path });
       } catch {
         /* аналитика не должна ломать клик */
+      }
+      try {
+        (window as { gtag?: (...a: unknown[]) => void }).gtag?.(
+          "event",
+          "cta_click",
+          { target: label, page_path: path }
+        );
+      } catch {
+        /* GA мог не подгрузиться */
       }
       try {
         (window as { clarity?: (...a: unknown[]) => void }).clarity?.(
