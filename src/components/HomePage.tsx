@@ -162,9 +162,9 @@ const SERVICES: Service[] = [
     priceUsd: null,
     perMonth: true,
     prices: [
-      { label: "1 раз в неделю", usd: "$100 / месяц", rub: "≈ 8 500 ₽ / месяц" },
-      { label: "2 раза в неделю", usd: "$200 / месяц", rub: "≈ 16 000 ₽ / месяц" },
-      { label: "3 раза в неделю", usd: "$300 / месяц", rub: "≈ 24 000 ₽ / месяц" },
+      { label: "1 раз в неделю", usd: "$100 / месяц", rub: "≈ 8 400 ₽ / месяц" },
+      { label: "2 раза в неделю", usd: "$200 / месяц", rub: "≈ 16 800 ₽ / месяц" },
+      { label: "3 раза в неделю", usd: "$300 / месяц", rub: "≈ 25 300 ₽ / месяц" },
     ],
     image: "/assets/gruppovye.jpg",
     btnText: "Узнать подробнее →",
@@ -181,7 +181,7 @@ const SERVICES: Service[] = [
     priceUsd: null,
     perMonth: true,
     prices: [
-      { label: "Разовое занятие", usd: "$65", rub: "≈ 5 000 ₽" },
+      { label: "Разовое занятие", usd: "$65", rub: "≈ 5 500 ₽" },
       { label: "Абонемент на 8 тренировок", usd: "$550", rub: "≈ 46 300 ₽" },
       { label: "Другие форматы и график", usd: "По запросу", rub: "" },
     ],
@@ -199,7 +199,7 @@ const SERVICES: Service[] = [
     price: null,
     priceUsd: null,
     perMonth: false,
-    prices: [{ label: "Программа на 4 недели", usd: "$250", rub: "≈ 20 000 ₽" }],
+    prices: [{ label: "Программа на 4 недели", usd: "$250", rub: "≈ 21 000 ₽" }],
     image: null,
     btnText: "Записаться →",
     href: "https://t.me/some_sofiasupport",
@@ -302,8 +302,8 @@ function Services() {
 
 /* ─── NUTRITION ─── */
 const NUTRITION_PRICES = [
-  { label: "Разовая консультация · 55 минут", usd: "$65", rub: "≈ 5 000 ₽" },
-  { label: "Ведение по питанию", usd: "$250 / месяц", rub: "≈ 20 000 ₽ / месяц" },
+  { label: "Разовая консультация · 55 минут", usd: "$65", rub: "≈ 5 500 ₽" },
+  { label: "Ведение по питанию", usd: "$250 / месяц", rub: "≈ 21 000 ₽ / месяц" },
 ];
 
 function Nutrition() {
