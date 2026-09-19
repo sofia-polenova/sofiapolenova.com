@@ -182,7 +182,7 @@ const SERVICES: Service[] = [
     perMonth: true,
     prices: [
       { label: "Разовое занятие", usd: "$65", rub: "≈ 5 000 ₽" },
-      { label: "Абонемент на 8 тренировок", usd: "$450", rub: "≈ 36 000 ₽" },
+      { label: "Абонемент на 8 тренировок", usd: "$550", rub: "≈ 44 000 ₽" },
       { label: "Другие форматы и график", usd: "По запросу", rub: "" },
     ],
     image: null,
