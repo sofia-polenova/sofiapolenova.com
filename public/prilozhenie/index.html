@@ -75,6 +75,8 @@
 </main>
 <script>
 (function () {
+  var cab = document.getElementById('cabinet');
+  cab.href = '/kabinet-demo' + (location.search ? location.search + '&from=app' : '?from=app');
   var tg = window.Telegram && window.Telegram.WebApp;
   if (!tg || !tg.initData) return;
   try { tg.ready(); tg.expand(); } catch (e) {}

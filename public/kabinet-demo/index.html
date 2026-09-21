@@ -257,43 +257,45 @@
     <section class="screen" id="v-home">
       <div class="hello">
         <span class="eyebrow">Личный кабинет</span>
-        <h1>Привет, Софья</h1>
+        <h1 id="cGreet">Привет, Софья</h1>
       </div>
 
       <div class="pass">
         <div class="pass-top">
-          <span class="pass-name">Абонемент · 8 занятий</span>
-          <span class="pill">Активен</span>
+          <span class="pass-name" id="cPassName">Абонемент · 8 занятий</span>
+          <span class="pill" id="cPill">Активен</span>
         </div>
 
         <div class="left">
-          <span class="num">3</span>
-          <span class="of">занятия осталось из <b>8</b></span>
+          <span class="num" id="cNum">3</span>
+          <span class="of" id="cOf">занятия осталось из <b>8</b></span>
         </div>
 
         <div>
-          <div class="segments" role="img" aria-label="Использовано 5 занятий из 8, осталось 3">
+          <div class="segments" id="cSeg" role="img" aria-label="Использовано 5 занятий из 8, осталось 3">
             <i></i><i></i><i></i><i></i><i></i><i class="left-seg"></i><i class="left-seg"></i><i class="left-seg"></i>
           </div>
         </div>
-        <div class="seg-legend"><span>5 проведено</span><span>3 впереди</span></div>
+        <div class="seg-legend" id="cLegend"><span>5 проведено</span><span>3 впереди</span></div>
 
         <div class="facts">
-          <div class="fact"><div class="k">Действует до</div><div class="v">10 октября</div></div>
-          <div class="fact"><div class="k">Осталось дней</div><div class="v">19</div></div>
-          <div class="fact"><div class="k">Стоимость абонемента</div><div class="v">$550 · ≈ 46 300 ₽</div></div>
-          <div class="fact"><div class="k">Обычное расписание</div><div class="v">Пн и Чт · 18:00</div></div>
+          <div class="fact"><div class="k">Действует до</div><div class="v" id="cUntil">10 октября</div></div>
+          <div class="fact"><div class="k">Осталось дней</div><div class="v" id="cDays">19</div></div>
+          <div class="fact"><div class="k">Стоимость абонемента</div><div class="v" id="cPrice">$550 · ≈ 46 300 ₽</div></div>
+          <div class="fact" id="cRegular"><div class="k">Обычное расписание</div><div class="v">Пн и Чт · 18:00</div></div>
         </div>
       </div>
 
-      <h2>Ближайшие занятия</h2>
+      <div class="nudge" id="cNudge" hidden></div>
+
+      <h2 id="cLessonsH">Ближайшие занятия</h2>
       <div class="lessons" id="lessons"></div>
       <p class="regular" id="regularNote" hidden></p>
 
       <button class="btn" id="toPay" type="button">Продлить абонемент</button>
 
-      <h2>Проведено</h2>
-      <div class="visits">
+      <h2 id="cVisitsH">Проведено</h2>
+      <div class="visits" id="cVisits">
         <div class="visit"><span class="d">чт, 17 сентября</span><span class="n">занятие 5 из 8</span></div>
         <div class="visit"><span class="d">пн, 14 сентября</span><span class="n">занятие 4 из 8</span></div>
         <div class="visit"><span class="d">чт, 10 сентября</span><span class="n">занятие 3 из 8</span></div>
@@ -301,7 +303,7 @@
         <div class="visit"><span class="d">чт, 3 сентября</span><span class="n">занятие 1 из 8</span></div>
       </div>
 
-      <p class="demo-note">Пробная версия: цена, время и даты для примера</p>
+      <p class="demo-note" id="cDemo">Пробная версия: цена, время и даты для примера</p>
     </section>
 
     <!-- 2. Способы оплаты -->
@@ -310,10 +312,10 @@
 
       <div class="price-card">
         <div>
-          <div class="what">8 занятий</div>
-          <div class="sub">≈ 46 300 ₽ по курсу</div>
+          <div class="what" id="pWhat">8 занятий</div>
+          <div class="sub" id="pSub">≈ 46 300 ₽ по курсу</div>
         </div>
-        <div class="sum">$550</div>
+        <div class="sum" id="pSum">$550</div>
       </div>
 
       <p class="lead">Выберите удобный способ оплаты.</p>
@@ -613,6 +615,7 @@
     }
 
     /* ---------- способы оплаты (реквизиты — заглушки) ---------- */
+    var currentMethod = '';
     var methods = {
       crypto: {
         title: 'Криптовалюта',
@@ -676,6 +679,20 @@
 
     function openMethod(key) {
       var m = methods[key];
+      currentMethod = m.title;
+      if (window.__client) {
+        m = {
+          title: m.title,
+          lead: 'Реквизиты для этого способа пришлёт Софья: напишите ей, и она сразу отправит их в чат.',
+          rows: [
+            { k: 'Стоимость', v: window.__client.priceText + ' (в рублях — по курсу на день оплаты)' },
+            { k: 'Способ', v: m.title }
+          ],
+          steps: ['Нажмите «Написать Софье»', 'Софья пришлёт реквизиты', 'После оплаты пришлите чек — абонемент продлится'],
+          main: 'Написать Софье'
+        };
+      }
+      $('dPaid').hidden = !!window.__client;
       $('dTitle').textContent = m.title;
       $('dLead').textContent = m.lead;
 
@@ -715,7 +732,15 @@
     Array.prototype.forEach.call(document.querySelectorAll('.method'), function (b) {
       b.addEventListener('click', function () { openMethod(b.getAttribute('data-method')); });
     });
-    $('dMain').addEventListener('click', function () { toast('В боте откроется ссылка Продамус'); });
+    $('dMain').addEventListener('click', function () {
+      if (window.__client) {
+        var link = 'https://t.me/sofia_fit01?text=' + encodeURIComponent('Здравствуйте! Хочу продлить абонемент. Способ оплаты: ' + currentMethod + '.');
+        var tgw = window.Telegram && window.Telegram.WebApp;
+        if (tgw && tgw.initData && tgw.openTelegramLink) tgw.openTelegramLink(link); else window.open(link, '_blank');
+        return;
+      }
+      toast('В боте откроется ссылка Продамус');
+    });
     $('dPaid').addEventListener('click', function () { toast('Спасибо! Софья проверит оплату и продлит абонемент'); });
 
     window.__cabinetBack = back;
@@ -723,6 +748,71 @@
     resetChat();
     show('home');
   })();
+</script>
+<script>
+(function () {
+  var m = location.search.match(/[?&]d=([^&]+)/);
+  if (!m) return;
+  var d;
+  try {
+    var b = decodeURIComponent(m[1]).replace(/-/g, '+').replace(/_/g, '/');
+    while (b.length % 4) b += '=';
+    d = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(b), function (c) { return c.charCodeAt(0); })));
+  } catch (e) { return; }
+  if (!d || !d.t) return;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var MONTHS = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  function plural(n, a, b, c) {
+    var m10 = n % 10, m100 = n % 100;
+    if (m10 === 1 && m100 !== 11) return a;
+    if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return b;
+    return c;
+  }
+  var total = d.t, left = d.l, used = total - left;
+  window.__client = { priceText: d.p };
+
+  $('cGreet').textContent = 'Привет, ' + d.n;
+  $('cPassName').textContent = 'Абонемент · ' + total + ' ' + plural(total, 'занятие', 'занятия', 'занятий');
+  $('cNum').textContent = left;
+  $('cOf').innerHTML = plural(left, 'занятие осталось', 'занятия осталось', 'занятий осталось') + ' из <b>' + total + '</b>';
+
+  var seg = $('cSeg');
+  seg.innerHTML = '';
+  seg.style.gridTemplateColumns = 'repeat(' + total + ', 1fr)';
+  for (var i = 0; i < total; i++) {
+    var el = document.createElement('i');
+    if (i >= used) el.className = 'left-seg';
+    seg.appendChild(el);
+  }
+  seg.setAttribute('aria-label', 'Проведено ' + used + ' из ' + total + ', осталось ' + left);
+  $('cLegend').innerHTML = '<span>' + used + ' проведено</span><span>' + left + ' впереди</span>';
+
+  var days = null;
+  if (d.u) {
+    var p = d.u.split('-');
+    var end = new Date(+p[0], +p[1] - 1, +p[2]);
+    var now = new Date();
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    days = Math.max(Math.round((end - today) / 86400000), 0);
+    $('cUntil').textContent = end.getDate() + ' ' + MONTHS[end.getMonth()];
+    $('cDays').textContent = days;
+  }
+  $('cPrice').textContent = d.p;
+  if (left === 0 || days === 0) $('cPill').textContent = 'Завершён';
+
+  // расписание и историю показываем, только когда они есть в данных
+  ['cRegular', 'cLessonsH', 'lessons', 'regularNote', 'cVisitsH', 'cVisits', 'cDemo'].forEach(function (id) { $(id).hidden = true; });
+
+  if (left > 0 && left <= 3) {
+    $('cNudge').textContent = 'Осталось ' + left + ' ' + plural(left, 'занятие', 'занятия', 'занятий') + '. Продлить можно заранее — оставшиеся занятия сохранятся.';
+    $('cNudge').hidden = false;
+  }
+
+  $('pWhat').textContent = total + ' ' + plural(total, 'занятие', 'занятия', 'занятий');
+  $('pSub').textContent = 'В рублях — по курсу на день оплаты';
+  $('pSum').textContent = d.p;
+})();
 </script>
 <script>
 (function () {
