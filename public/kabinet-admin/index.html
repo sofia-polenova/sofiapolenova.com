@@ -361,7 +361,6 @@
       var left = el('div');
       var name = el('div', 'name', c.n);
       if (healthNote(c)) name.appendChild(tag('здоровье', 'warn'));
-      if (!c.b) name.appendChild(tag('не в боте', 'warn'));
       if (c.pd) name.appendChild(tag('ждёт даты', 'warn'));
       left.appendChild(name);
       left.appendChild(el('div', 'sub', subText(c)));
@@ -382,7 +381,7 @@
 
   function subText(c) {
     if (c.l != null) return 'осталось ' + c.l + ' из ' + c.t + ' · до ' + shortDate(c.u);
-    return (c.f || 'абонемент') + (c.u ? ' · до ' + shortDate(c.u) : '');
+    return c.f || 'абонемент';
   }
   function renderSegs(searching) {
     var box = $('segs'); box.innerHTML = '';
