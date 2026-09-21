@@ -878,7 +878,7 @@
   try {
     tg.BackButton.onClick(function () {
       if (canBack && window.__cabinetBack) window.__cabinetBack();
-      else if (fromApp) location.href = '/prilozhenie';
+      else if (fromApp) history.back();
     });
     window.__cabinetNav = function (c) {
       canBack = c;

@@ -90,6 +90,9 @@
   if (tg && tg.initData) {
     try { tg.ready(); tg.expand(); } catch (e) {}
     if (tg.colorScheme) document.documentElement.setAttribute('data-theme', tg.colorScheme);
+    if (/[?&]from=app/.test(location.search)) {
+      try { tg.BackButton.show(); tg.BackButton.onClick(function () { history.back(); }); } catch (e) {}
+    }
   }
 
   function b64bytes(s) {
