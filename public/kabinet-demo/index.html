@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Личный кабинет</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@500;600&display=swap">
+<style>
+  :root {
+    --bg: #eef2f3;
+    --surface: #ffffff;
+    --surface-2: #e4ebec;
+    --ink: #14232b;
+    --ink-2: #566871;
+    --line: #d5dee0;
+    --accent: #0e6b63;
+    --accent-ink: #ffffff;
+    --accent-soft: #d6ece8;
+    --used: #c2cfd2;
+    --warn: #9a5b00;
+    --warn-soft: #fbecd0;
+    --ok: #0e6b63;
+    --frame: #cfd9db;
+    --bubble-me: #d6ece8;
+    --font-body: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-display: "Unbounded", "Onest", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1a1f;
+      --surface: #172730;
+      --surface-2: #1f343e;
+      --ink: #e8f0f1;
+      --ink-2: #93a9b1;
+      --line: #27404b;
+      --accent: #4cc9b8;
+      --accent-ink: #062521;
+      --accent-soft: #163b3a;
+      --used: #35505b;
+      --warn: #f0b95a;
+      --warn-soft: #3a2f16;
+      --ok: #4cc9b8;
+      --frame: #0a1215;
+      --bubble-me: #1c4a48;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1a1f;
+    --surface: #172730;
+    --surface-2: #1f343e;
+    --ink: #e8f0f1;
+    --ink-2: #93a9b1;
+    --line: #27404b;
+    --accent: #4cc9b8;
+    --accent-ink: #062521;
+    --accent-soft: #163b3a;
+    --used: #35505b;
+    --warn: #f0b95a;
+    --warn-soft: #3a2f16;
+    --ok: #4cc9b8;
+    --frame: #0a1215;
+    --bubble-me: #1c4a48;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { min-height: 100%; }
+  body {
+    background: var(--frame);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.45;
+    padding-inline: 16px;
+    padding-block: 16px;
+  }
+  button, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .stage { max-width: 420px; margin-inline: auto; display: flex; flex-direction: column; gap: 12px; }
+
+  /* переключатель демо: клиент / админ */
+  .mode { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: var(--surface-2); border-radius: 14px; }
+  .mode button { border: 0; background: none; border-radius: 10px; padding: 9px 10px; font-weight: 500; color: var(--ink-2); }
+  .mode button[aria-pressed="true"] { background: var(--surface); color: var(--ink); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+
+  .app {
+    background: var(--bg);
+    border-radius: 22px;
+    overflow: hidden;
+    min-height: 720px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  @media (max-width: 460px) {
+    body { padding-inline: 0; padding-block: 0; }
+    .mode { margin: 12px 16px 0; }
+    .stage { gap: 12px; }
+    .app { border-radius: 0; min-height: 100vh; }
+  }
+
+  /* имитация шапки Telegram */
+  .tg-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+  .tg-bar .close, .tg-bar .back { background: none; border: 0; padding: 4px 0; color: var(--accent); font-weight: 500; min-width: 64px; text-align: left; }
+  .tg-bar .title { font-weight: 600; }
+  .tg-bar .spacer { min-width: 64px; text-align: right; color: var(--ink-2); font-size: 20px; line-height: 1; }
+
+  .screen { padding: 20px 16px 28px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
+
+  .hello { display: flex; flex-direction: column; gap: 2px; }
+  .hello .eyebrow { color: var(--ink-2); font-size: 13px; letter-spacing: .04em; text-transform: uppercase; }
+  .hello h1 { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: 22px; line-height: 1.2; text-wrap: balance; }
+
+  /* карточка абонемента */
+  .pass {
+    background: var(--surface);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex; flex-direction: column; gap: 18px;
+    box-shadow: 0 1px 0 var(--line), 0 12px 28px -18px rgba(14, 60, 66, .35);
+  }
+  .pass-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .pass-name { font-weight: 600; }
+  .pill { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--ok); white-space: nowrap; }
+  .left { display: flex; align-items: baseline; gap: 10px; }
+  .left .num { font-family: var(--font-display); font-weight: 600; font-size: 64px; line-height: 1; color: var(--accent); }
+  .left .of { color: var(--ink-2); font-size: 15px; }
+  .left .of b { color: var(--ink); font-weight: 600; }
+
+  .segments { display: grid; grid-template-columns: repeat(8, 1fr); gap: 5px; }
+  .segments i { height: 10px; border-radius: 4px; background: var(--used); }
+  .segments i.left-seg { background: var(--accent); }
+  .seg-legend { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-2); margin-top: -8px; }
+
+  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 12px; border-top: 1px solid var(--line); padding-top: 16px; }
+  .fact .k { font-size: 12px; color: var(--ink-2); }
+  .fact .v { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  .nudge { background: var(--warn-soft); color: var(--warn); border-radius: 14px; padding: 12px 14px; font-size: 14px; }
+
+  .btn {
+    width: 100%; border: 0; border-radius: 14px; padding: 15px 18px;
+    background: var(--accent); color: var(--accent-ink);
+    font-weight: 600; font-size: 16px;
+    transition: transform .12s ease, filter .12s ease;
+  }
+  .btn:hover { filter: brightness(1.06); }
+  .btn:active { transform: scale(.985); }
+  .btn.ghost { background: var(--surface-2); color: var(--ink); }
+
+  h2 { margin: 4px 0 0; font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); }
+
+  /* расписание */
+  .lessons { display: flex; flex-direction: column; gap: 8px; }
+  .lesson {
+    background: var(--surface); border-radius: 16px; padding: 14px 16px;
+    display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 12px;
+  }
+  .lesson.next { border: 1.5px solid var(--accent); padding: 13px 15px; }
+  .lesson .when { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .lesson .meta { font-size: 13px; color: var(--ink-2); grid-column: 1; }
+  .lesson .tag { grid-row: 1 / span 2; grid-column: 2; align-self: center; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--ok); white-space: nowrap; }
+  .lesson.moved .tag, .lesson.cancelled .tag { background: var(--warn-soft); color: var(--warn); }
+  .lesson .was { text-decoration: line-through; }
+  .lesson.cancelled .when { color: var(--ink-2); }
+  .regular { font-size: 13px; color: var(--ink-2); margin: -6px 0 0; }
+
+  .visits { background: var(--surface); border-radius: 16px; overflow: hidden; }
+  .visit { display: flex; justify-content: space-between; align-items: center; padding: 13px 16px; }
+  .visit + .visit { border-top: 1px solid var(--line); }
+  .visit .d { font-variant-numeric: tabular-nums; }
+  .visit .n { color: var(--ink-2); font-size: 13px; }
+
+  .demo-note { text-align: center; font-size: 12px; color: var(--ink-2); margin: 0; }
+
+  /* оплата */
+  .lead { margin: 0; color: var(--ink-2); }
+  .lead b { color: var(--ink); font-weight: 600; }
+  .price-card { background: var(--surface); border-radius: 18px; padding: 16px 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .price-card .what { font-weight: 600; }
+  .price-card .sub { font-size: 13px; color: var(--ink-2); }
+  .price-card .sum { font-family: var(--font-display); font-weight: 600; font-size: 24px; color: var(--accent); white-space: nowrap; }
+  .methods { display: flex; flex-direction: column; gap: 10px; }
+  .method {
+    display: flex; align-items: center; gap: 14px; width: 100%; text-align: left;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px;
+    transition: border-color .12s ease, transform .12s ease;
+  }
+  .method:hover { border-color: var(--accent); }
+  .method:active { transform: scale(.99); }
+  .glyph { flex: none; width: 44px; height: 44px; border-radius: 12px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-family: var(--font-display); font-weight: 600; font-size: 18px; }
+  .glyph svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .method .t { font-weight: 600; }
+  .method .s { font-size: 13px; color: var(--ink-2); }
+  .method .chev { margin-left: auto; color: var(--ink-2); font-size: 20px; }
+
+  .details { background: var(--surface); border-radius: 16px; padding: 4px 16px; }
+  .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 13px 0; }
+  .row + .row { border-top: 1px solid var(--line); }
+  .row .k { font-size: 13px; color: var(--ink-2); }
+  .row .v { font-weight: 600; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+  .copy { flex: none; border: 0; background: var(--accent-soft); color: var(--accent); font-size: 13px; font-weight: 600; border-radius: 10px; padding: 7px 11px; }
+  .steps { margin: 0; padding-left: 20px; color: var(--ink-2); display: flex; flex-direction: column; gap: 6px; }
+  .steps b { color: var(--ink); font-weight: 600; }
+
+  /* чат с ботом (сторона Софьи) */
+  .chat { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+  .bubble { max-width: 88%; padding: 10px 14px; border-radius: 16px; white-space: pre-line; overflow-wrap: anywhere; }
+  .bubble.bot { background: var(--surface); align-self: flex-start; border-bottom-left-radius: 5px; }
+  .bubble.me { background: var(--bubble-me); align-self: flex-end; border-bottom-right-radius: 5px; }
+  .bubble .quote { display: block; margin-top: 8px; padding-left: 10px; border-left: 3px solid var(--accent); color: var(--ink-2); font-size: 14px; }
+  .bubble .label { display: block; font-size: 12px; color: var(--ink-2); margin-top: 8px; }
+  .composer { display: flex; gap: 8px; align-items: flex-end; }
+  .composer textarea {
+    flex: 1; resize: none; min-height: 48px; padding: 12px 14px; border-radius: 14px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  }
+  .composer .send { flex: none; border: 0; border-radius: 14px; background: var(--accent); color: var(--accent-ink); font-weight: 600; padding: 0 16px; height: 48px; }
+  .linkish { background: none; border: 0; color: var(--accent); font-weight: 500; padding: 4px 0; text-align: left; }
+
+  .toast { position: absolute; left: 16px; right: 16px; bottom: 20px; background: var(--ink); color: var(--bg); border-radius: 14px; padding: 13px 16px; font-weight: 500; text-align: center; animation: rise .2s ease; }
+  @keyframes rise { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .toast { animation: none; } .btn, .method { transition: none; } }
+
+  [hidden] { display: none !important; }
+  html.in-tg body { padding: 0; }
+  html.in-tg .tg-bar { display: none; }
+  html.in-tg .stage { max-width: none; }
+  html.in-tg .app { border-radius: 0; min-height: 100vh; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="mode" role="group" aria-label="Режим демонстрации" hidden>
+    <button type="button" id="modeClient" aria-pressed="true">Кабинет клиента</button>
+    <button type="button" id="modeAdmin" aria-pressed="false">Чат Софьи с ботом</button>
+  </div>
+
+  <main class="app">
+    <div class="tg-bar">
+      <button class="close" id="barLeft" type="button">Закрыть</button>
+      <span class="title" id="barTitle">Мой кабинет</span>
+      <span class="spacer" aria-hidden="true">⋯</span>
+    </div>
+
+    <!-- 1. Кабинет -->
+    <section class="screen" id="v-home">
+      <div class="hello">
+        <span class="eyebrow">Личный кабинет</span>
+        <h1>Привет, Софья</h1>
+      </div>
+
+      <div class="pass">
+        <div class="pass-top">
+          <span class="pass-name">Абонемент · 8 занятий</span>
+          <span class="pill">Активен</span>
+        </div>
+
+        <div class="left">
+          <span class="num">3</span>
+          <span class="of">занятия осталось из <b>8</b></span>
+        </div>
+
+        <div>
+          <div class="segments" role="img" aria-label="Использовано 5 занятий из 8, осталось 3">
+            <i></i><i></i><i></i><i></i><i></i><i class="left-seg"></i><i class="left-seg"></i><i class="left-seg"></i>
+          </div>
+        </div>
+        <div class="seg-legend"><span>5 проведено</span><span>3 впереди</span></div>
+
+        <div class="facts">
+          <div class="fact"><div class="k">Действует до</div><div class="v">10 октября</div></div>
+          <div class="fact"><div class="k">Осталось дней</div><div class="v">19</div></div>
+          <div class="fact"><div class="k">Стоимость абонемента</div><div class="v">20 000 ₽</div></div>
+          <div class="fact"><div class="k">Обычное расписание</div><div class="v">Пн и Чт · 18:00</div></div>
+        </div>
+      </div>
+
+      <h2>Ближайшие занятия</h2>
+      <div class="lessons" id="lessons"></div>
+      <p class="regular" id="regularNote" hidden></p>
+
+      <button class="btn" id="toPay" type="button">Продлить абонемент</button>
+
+      <h2>Проведено</h2>
+      <div class="visits">
+        <div class="visit"><span class="d">чт, 17 сентября</span><span class="n">занятие 5 из 8</span></div>
+        <div class="visit"><span class="d">пн, 14 сентября</span><span class="n">занятие 4 из 8</span></div>
+        <div class="visit"><span class="d">чт, 10 сентября</span><span class="n">занятие 3 из 8</span></div>
+        <div class="visit"><span class="d">пн, 7 сентября</span><span class="n">занятие 2 из 8</span></div>
+        <div class="visit"><span class="d">чт, 3 сентября</span><span class="n">занятие 1 из 8</span></div>
+      </div>
+
+      <p class="demo-note">Пробная версия: цена, время и даты для примера</p>
+    </section>
+
+    <!-- 2. Способы оплаты -->
+    <section class="screen" id="v-pay" hidden>
+      <div class="hello"><h1>Продление абонемента</h1></div>
+
+      <div class="price-card">
+        <div>
+          <div class="what">8 занятий</div>
+          <div class="sub">2 500 ₽ за занятие</div>
+        </div>
+        <div class="sum">20 000 ₽</div>
+      </div>
+
+      <p class="lead">Выберите удобный способ оплаты.</p>
+
+      <div class="methods">
+        <button class="method" type="button" data-method="crypto">
+          <span class="glyph">₮</span>
+          <span><div class="t">Криптовалюта</div><div class="s">USDT и другие монеты</div></span>
+          <span class="chev">›</span>
+        </button>
+        <button class="method" type="button" data-method="usd">
+          <span class="glyph">$</span>
+          <span><div class="t">Перевод в долларах</div><div class="s">Международный перевод</div></span>
+          <span class="chev">›</span>
+        </button>
+        <button class="method" type="button" data-method="prodamus">
+          <span class="glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></span>
+          <span><div class="t">Ссылка Продамус</div><div class="s">Оплата банковской картой</div></span>
+          <span class="chev">›</span>
+        </button>
+        <button class="method" type="button" data-method="card">
+          <span class="glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18"/></svg></span>
+          <span><div class="t">Перевод на карту</div><div class="s">На личную карту</div></span>
+          <span class="chev">›</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 3. Реквизиты выбранного способа -->
+    <section class="screen" id="v-detail" hidden>
+      <div class="hello"><h1 id="dTitle"></h1></div>
+      <p class="lead" id="dLead"></p>
+      <div class="details" id="dRows"></div>
+      <ol class="steps" id="dSteps"></ol>
+      <button class="btn" id="dMain" type="button"></button>
+      <button class="btn ghost" id="dPaid" type="button">Я оплатил(а)</button>
+    </section>
+
+    <!-- 4. Чат Софьи с ботом -->
+    <section class="screen" id="v-chat" hidden>
+      <div class="chat" id="chatLog"></div>
+      <button class="linkish" id="seeCabinet" type="button" hidden>Посмотреть, что увидит клиент →</button>
+      <div class="composer">
+        <textarea id="msg" rows="2" aria-label="Сообщение боту">Софья, сегодня отмена по болезни, перенос на среду 10:00</textarea>
+        <button class="send" id="send" type="button">Отправить</button>
+      </div>
+      <button class="linkish" id="reset" type="button">Сбросить демо</button>
+    </section>
+
+    <div class="toast" id="toast" role="status" hidden></div>
+  </main>
+</div>
+
+
+<script>
+  (function () {
+    var $ = function (id) { return document.getElementById(id); };
+
+    /* ---------- дата и расписание ---------- */
+    var TODAY = new Date(2026, 8, 21); // пн, 21 сентября 2026 — «сегодня» в демо
+    var MONTHS = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+    var DOW = ['вс','пн','вт','ср','чт','пт','сб'];
+    var DOW_FULL = ['воскресенье','понедельник','вторник','среду','четверг','пятницу','субботу'];
+
+    function mk(d, h, m) { return new Date(2026, 8, d, h, m); }
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function hm(d) { return pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+    function dayLabel(d) { return DOW[d.getDay()] + ', ' + d.getDate() + ' ' + MONTHS[d.getMonth()]; }
+    function sameDay(a, b) { return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
+    function daysBetween(a, b) { return Math.round((new Date(b.getFullYear(), b.getMonth(), b.getDate()) - new Date(a.getFullYear(), a.getMonth(), a.getDate())) / 86400000); }
+    function relative(d) {
+      var n = daysBetween(TODAY, d);
+      if (n === 0) return 'Сегодня';
+      if (n === 1) return 'Завтра';
+      return null;
+    }
+
+    function initialLessons() {
+      return [
+        { n: 6, date: mk(21, 18, 0), status: 'planned', from: null, reason: '' },
+        { n: 7, date: mk(24, 18, 0), status: 'planned', from: null, reason: '' },
+        { n: 8, date: mk(28, 18, 0), status: 'planned', from: null, reason: '' }
+      ];
+    }
+    var lessons = initialLessons();
+
+    function renderLessons() {
+      var box = $('lessons');
+      box.innerHTML = '';
+      var sorted = lessons.slice().sort(function (a, b) { return a.date - b.date; });
+      var changed = false;
+      sorted.forEach(function (l, i) {
+        changed = changed || l.status !== 'planned';
+        var el = document.createElement('div');
+        el.className = 'lesson ' + l.status + (i === 0 && l.status !== 'cancelled' ? ' next' : '');
+
+        var when = document.createElement('div');
+        when.className = 'when';
+        var rel = relative(l.date);
+        when.textContent = (rel ? rel + ' · ' : '') + dayLabel(l.date) + ' · ' + hm(l.date);
+        if (l.status === 'cancelled') when.classList.add('was');
+
+        var meta = document.createElement('div');
+        meta.className = 'meta';
+        if (l.status === 'moved') {
+          var was = document.createElement('span');
+          was.className = 'was';
+          was.textContent = dayLabel(l.from) + ' · ' + hm(l.from);
+          meta.appendChild(document.createTextNode('Занятие ' + l.n + ' из 8 · было '));
+          meta.appendChild(was);
+          if (l.reason) meta.appendChild(document.createTextNode(' · ' + l.reason));
+        } else if (l.status === 'cancelled') {
+          meta.textContent = 'Занятие ' + l.n + ' из 8' + (l.reason ? ' · ' + l.reason : '') + ' · сохраняется в абонементе';
+        } else {
+          meta.textContent = 'Занятие ' + l.n + ' из 8';
+        }
+
+        var tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.textContent = l.status === 'moved' ? 'Перенос' : (l.status === 'cancelled' ? 'Новая дата позже' : (i === 0 ? 'Ближайшее' : 'По расписанию'));
+
+        el.appendChild(when); el.appendChild(tag); el.appendChild(meta);
+        box.appendChild(el);
+      });
+      var note = $('regularNote');
+      note.hidden = !changed;
+      note.textContent = 'Перенесённое занятие входит в ваш абонемент, доплачивать не нужно.';
+    }
+
+    /* ---------- разбор сообщения Софьи боту ---------- */
+    var WEEKDAY_RX = [
+      [1, /понедельник|(^|[\s,.])пн(?=$|[\s,.])/],
+      [2, /вторник|(^|[\s,.])вт(?=$|[\s,.])/],
+      [3, /сред[ауы]|(^|[\s,.])ср(?=$|[\s,.])/],
+      [4, /четверг|(^|[\s,.])чт(?=$|[\s,.])/],
+      [5, /пятниц[ауы]|(^|[\s,.])пт(?=$|[\s,.])/],
+      [6, /суббот[ауы]|(^|[\s,.])сб(?=$|[\s,.])/],
+      [0, /воскресень[еяю]|(^|[\s,.])вс(?=$|[\s,.])/]
+    ];
+
+    function parseMessage(raw) {
+      var text = raw.trim();
+      var low = text.toLowerCase();
+      if (!/отмен|перен/.test(low)) return null;
+
+      var name = 'клиент';
+      var comma = text.indexOf(',');
+      if (comma > 0) {
+        var head = text.slice(0, comma).trim();
+        if (head.split(/\s+/).length <= 2 && !/\d/.test(head) && !/отмен|перен|сегодня|завтра/i.test(head)) {
+          name = head.charAt(0).toUpperCase() + head.slice(1);
+        }
+      }
+
+      var reason = /болезн|заболел|болеет|заболела/.test(low) ? 'по болезни' : '';
+
+      var afterMove = low;
+      var pIdx = low.search(/перенос|перенест|перенос[иь]/);
+      if (pIdx >= 0) afterMove = low.slice(pIdx);
+
+      var target = null;
+      if (pIdx >= 0) {
+        var i;
+        if (/послезавтра/.test(afterMove)) target = 2;
+        else if (/завтра/.test(afterMove)) target = 1;
+        else {
+          for (i = 0; i < WEEKDAY_RX.length; i++) {
+            if (WEEKDAY_RX[i][1].test(afterMove)) {
+              var diff = (WEEKDAY_RX[i][0] - TODAY.getDay() + 7) % 7;
+              target = diff === 0 ? 7 : diff;
+              break;
+            }
+          }
+        }
+      }
+
+      var h = null, m = 0, t;
+      if ((t = afterMove.match(/(\d{1,2})[:.\s](\d{2})(?!\d)/)) && +t[1] <= 23 && +t[2] <= 59) { h = +t[1]; m = +t[2]; }
+      else if ((t = afterMove.match(/(?:^|\s)в\s*(\d{1,2})(?!\d)/)) && +t[1] <= 23) { h = +t[1]; }
+
+      return { name: name, reason: reason, targetDays: target, h: h, m: m };
+    }
+
+    function applyMove(cmd) {
+      var l = lessons.filter(function (x) { return x.status === 'planned'; }).sort(function (a, b) { return a.date - b.date; })[0];
+      if (!l) return null;
+      var from = l.date;
+      if (cmd.targetDays === null) {
+        l.status = 'cancelled';
+        l.reason = cmd.reason;
+        return { lesson: l, from: from, to: null };
+      }
+      var to = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate() + cmd.targetDays, cmd.h === null ? from.getHours() : cmd.h, cmd.h === null ? from.getMinutes() : cmd.m);
+      l.status = 'moved';
+      l.from = from;
+      l.date = to;
+      l.reason = cmd.reason;
+      return { lesson: l, from: from, to: to };
+    }
+
+    /* ---------- чат ---------- */
+    var chatLog = $('chatLog');
+    function bubble(kind, text, extra) {
+      var b = document.createElement('div');
+      b.className = 'bubble ' + kind;
+      b.appendChild(document.createTextNode(text));
+      if (extra) {
+        var lab = document.createElement('span');
+        lab.className = 'label'; lab.textContent = extra.label;
+        var q = document.createElement('span');
+        q.className = 'quote'; q.textContent = extra.quote;
+        b.appendChild(lab); b.appendChild(q);
+      }
+      chatLog.appendChild(b);
+    }
+    function resetChat() {
+      chatLog.innerHTML = '';
+      bubble('bot', 'Напишите мне, что случилось с занятием, в свободной форме. Например:\n«Лиза, сегодня отмена, перенос на среду 10:00»\n\nЯ обновлю расписание клиента и отправлю ему уведомление.');
+      $('seeCabinet').hidden = true;
+    }
+
+    $('send').addEventListener('click', function () {
+      var raw = $('msg').value;
+      if (!raw.trim()) return;
+      bubble('me', raw.trim());
+      var cmd = parseMessage(raw);
+      if (!cmd) {
+        bubble('bot', 'Не поняла. Напишите, например: «Лиза, сегодня отмена, перенос на среду 10:00».');
+        return;
+      }
+      var res = applyMove(cmd);
+      if (!res) {
+        bubble('bot', 'Не нашла запланированных занятий, которые можно изменить.');
+        return;
+      }
+      var who = cmd.name;
+      var n = res.lesson.n;
+      var msg, notice;
+      if (res.to) {
+        msg = 'Готово. У клиента ' + who + ' занятие ' + n + ' из 8 (' + dayLabel(res.from) + ', ' + hm(res.from) + ') перенесено на ' + dayLabel(res.to) + ', ' + hm(res.to) + '.';
+        var dayWord = DOW_FULL[res.to.getDay()];
+        notice = 'Здравствуйте! Занятие ' + res.from.getDate() + ' ' + MONTHS[res.from.getMonth()] + ' переносится' + (cmd.reason ? ' ' + cmd.reason : '') + ' на ' + dayWord + ', ' + res.to.getDate() + ' ' + MONTHS[res.to.getMonth()] + ', в ' + hm(res.to) + '. Расписание уже обновлено в кабинете.';
+      } else {
+        msg = 'Готово. У клиента ' + who + ' занятие ' + n + ' из 8 (' + dayLabel(res.from) + ', ' + hm(res.from) + ') отменено без переноса. Занятие остаётся в абонементе.';
+        notice = 'Здравствуйте! Занятие ' + res.from.getDate() + ' ' + MONTHS[res.from.getMonth()] + ' отменяется' + (cmd.reason ? ' ' + cmd.reason : '') + '. Новую дату согласуем, занятие сохраняется в абонементе.';
+      }
+      if (who !== 'Софья' && who !== 'клиент') msg += '\nВ этой демо-версии изменение показано в кабинете Софьи.';
+      bubble('bot', msg, { label: 'Клиенту отправлено:', quote: notice });
+      renderLessons();
+      $('seeCabinet').hidden = false;
+      $('msg').value = '';
+    });
+
+    $('reset').addEventListener('click', function () {
+      lessons = initialLessons();
+      renderLessons();
+      resetChat();
+      $('msg').value = 'Софья, сегодня отмена по болезни, перенос на среду 10:00';
+      toast('Демо сброшено');
+    });
+    $('seeCabinet').addEventListener('click', function () { setMode('client'); });
+
+    /* ---------- навигация ---------- */
+    var views = { home: 'v-home', pay: 'v-pay', detail: 'v-detail', chat: 'v-chat' };
+    var titles = { home: 'Мой кабинет', pay: 'Оплата', detail: 'Оплата', chat: 'Чат с ботом' };
+    var stack = ['home'];
+    var mode = 'client';
+    var barLeft = $('barLeft'), barTitle = $('barTitle'), toastEl = $('toast'), toastTimer;
+
+    function show(name) {
+      Object.keys(views).forEach(function (k) { $(views[k]).hidden = (k !== name); });
+      barTitle.textContent = titles[name];
+      var root = name === 'home' || name === 'chat';
+      barLeft.textContent = root ? 'Закрыть' : '‹ Назад';
+      barLeft.className = root ? 'close' : 'back';
+      window.scrollTo(0, 0);
+      if (window.__cabinetNav) window.__cabinetNav(stack.length > 1);
+    }
+    function go(name) { stack.push(name); show(name); }
+    function back() { if (stack.length > 1) stack.pop(); show(stack[stack.length - 1]); }
+
+    function setMode(m) {
+      mode = m;
+      $('modeClient').setAttribute('aria-pressed', String(m === 'client'));
+      $('modeAdmin').setAttribute('aria-pressed', String(m === 'admin'));
+      stack = [m === 'client' ? 'home' : 'chat'];
+      show(stack[0]);
+    }
+    $('modeClient').addEventListener('click', function () { setMode('client'); });
+    $('modeAdmin').addEventListener('click', function () { setMode('admin'); });
+
+    function toast(msg) {
+      toastEl.textContent = msg;
+      toastEl.hidden = false;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toastEl.hidden = true; }, 2600);
+    }
+
+    /* ---------- способы оплаты (реквизиты — заглушки) ---------- */
+    var methods = {
+      crypto: {
+        title: 'Криптовалюта',
+        lead: 'Отправьте USDT на адрес ниже и проверьте сеть перед отправкой.',
+        rows: [
+          { k: 'Сумма', v: '20 000 ₽ по курсу на день оплаты' },
+          { k: 'Монета', v: 'USDT' },
+          { k: 'Сеть', v: 'TRC-20' },
+          { k: 'Адрес кошелька', v: 'TXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', copy: true }
+        ],
+        steps: ['Скопируйте адрес кошелька', 'Отправьте <b>сумму абонемента</b> в USDT', 'Нажмите «Я оплатил(а)», Софья проверит поступление'],
+        main: null
+      },
+      usd: {
+        title: 'Перевод в долларах',
+        lead: 'Реквизиты для перевода в долларах США.',
+        rows: [
+          { k: 'Сумма', v: '20 000 ₽ по курсу на день оплаты' },
+          { k: 'Получатель', v: 'Имя Фамилия' },
+          { k: 'Счёт / IBAN', v: 'XX00 0000 0000 0000', copy: true },
+          { k: 'SWIFT / BIC', v: 'XXXXXXXX', copy: true },
+          { k: 'Назначение', v: 'Абонемент, Софья' }
+        ],
+        steps: ['Сделайте перевод по реквизитам', 'Сохраните чек или скриншот', 'Нажмите «Я оплатил(а)» и пришлите чек в чат'],
+        main: null
+      },
+      prodamus: {
+        title: 'Оплата через Продамус',
+        lead: 'Откроется защищённая страница оплаты банковской картой.',
+        rows: [
+          { k: 'Услуга', v: 'Абонемент · 8 занятий' },
+          { k: 'Сумма', v: '20 000 ₽' },
+          { k: 'Способ', v: 'Банковская карта' }
+        ],
+        steps: ['Нажмите «Перейти к оплате»', 'Оплатите на странице Продамус', 'Абонемент продлится после подтверждения'],
+        main: 'Перейти к оплате'
+      },
+      card: {
+        title: 'Перевод на карту',
+        lead: 'Перевод на личную карту. Комиссия зависит от вашего банка.',
+        rows: [
+          { k: 'Сумма', v: '20 000 ₽' },
+          { k: 'Номер карты', v: '0000 0000 0000 0000', copy: true },
+          { k: 'Получатель', v: 'Имя Ф.' },
+          { k: 'Комментарий', v: 'Абонемент, Софья' }
+        ],
+        steps: ['Скопируйте номер карты', 'Переведите сумму абонемента', 'Нажмите «Я оплатил(а)» и пришлите чек в чат'],
+        main: null
+      }
+    };
+
+    function copyText(text) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { toast('Скопировано'); }, function () { toast('Скопировано'); });
+          return;
+        }
+      } catch (e) {}
+      toast('Скопировано');
+    }
+
+    function openMethod(key) {
+      var m = methods[key];
+      $('dTitle').textContent = m.title;
+      $('dLead').textContent = m.lead;
+
+      var rows = $('dRows');
+      rows.innerHTML = '';
+      m.rows.forEach(function (r) {
+        var row = document.createElement('div');
+        row.className = 'row';
+        var left = document.createElement('div');
+        var k = document.createElement('div'); k.className = 'k'; k.textContent = r.k;
+        var v = document.createElement('div'); v.className = 'v'; v.textContent = r.v;
+        left.appendChild(k); left.appendChild(v);
+        row.appendChild(left);
+        if (r.copy) {
+          var b = document.createElement('button');
+          b.type = 'button'; b.className = 'copy'; b.textContent = 'Копировать';
+          b.addEventListener('click', function () { copyText(r.v); });
+          row.appendChild(b);
+        }
+        rows.appendChild(row);
+      });
+
+      var steps = $('dSteps');
+      steps.innerHTML = '';
+      m.steps.forEach(function (s) { var li = document.createElement('li'); li.innerHTML = s; steps.appendChild(li); });
+
+      var main = $('dMain');
+      main.hidden = !m.main;
+      if (m.main) main.textContent = m.main;
+      go('detail');
+    }
+
+    $('toPay').addEventListener('click', function () { go('pay'); });
+    barLeft.addEventListener('click', function () {
+      if (stack.length > 1) back(); else toast('В Telegram здесь закроется окно');
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.method'), function (b) {
+      b.addEventListener('click', function () { openMethod(b.getAttribute('data-method')); });
+    });
+    $('dMain').addEventListener('click', function () { toast('В боте откроется ссылка Продамус'); });
+    $('dPaid').addEventListener('click', function () { toast('Спасибо! Софья проверит оплату и продлит абонемент'); });
+
+    window.__cabinetBack = back;
+    renderLessons();
+    resetChat();
+    show('home');
+  })();
+</script>
+<script>
+(function () {
+  var tg = window.Telegram && window.Telegram.WebApp;
+  if (!tg || !tg.initData) return; // в обычном браузере остаётся демо-рамка
+  document.documentElement.classList.add('in-tg');
+  try { tg.ready(); tg.expand(); } catch (e) {}
+  if (tg.colorScheme) document.documentElement.setAttribute('data-theme', tg.colorScheme);
+  try {
+    tg.BackButton.onClick(function () { if (window.__cabinetBack) window.__cabinetBack(); });
+    window.__cabinetNav = function (canGoBack) {
+      if (canGoBack) tg.BackButton.show(); else tg.BackButton.hide();
+    };
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>
