@@ -731,11 +731,18 @@
   document.documentElement.classList.add('in-tg');
   try { tg.ready(); tg.expand(); } catch (e) {}
   if (tg.colorScheme) document.documentElement.setAttribute('data-theme', tg.colorScheme);
+  var fromApp = /[?&]from=app/.test(location.search);
+  var canBack = false;
   try {
-    tg.BackButton.onClick(function () { if (window.__cabinetBack) window.__cabinetBack(); });
-    window.__cabinetNav = function (canGoBack) {
-      if (canGoBack) tg.BackButton.show(); else tg.BackButton.hide();
+    tg.BackButton.onClick(function () {
+      if (canBack && window.__cabinetBack) window.__cabinetBack();
+      else if (fromApp) location.href = '/prilozhenie';
+    });
+    window.__cabinetNav = function (c) {
+      canBack = c;
+      if (c || fromApp) tg.BackButton.show(); else tg.BackButton.hide();
     };
+    if (fromApp) tg.BackButton.show();
   } catch (e) {}
 })();
 </script>
