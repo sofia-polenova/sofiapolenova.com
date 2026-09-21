@@ -858,6 +858,12 @@
     note.textContent = TZ ? 'Время указано по вашему часовому поясу: ' + TZ + '.' : '';
     note.hidden = !TZ;
   }
+  if (d.pd) {
+    $('cLessonsH').hidden = false;
+    var pdNote = $('regularNote');
+    pdNote.textContent = (pdNote.hidden ? '' : pdNote.textContent + ' ') + 'Занятий ждут новой даты: ' + d.pd + '. Они сохраняются в абонементе.';
+    pdNote.hidden = false;
+  }
 })();
 </script>
 <script>
