@@ -340,7 +340,7 @@
     var lastGroup = null;
     shown.forEach(function (c) {
       var d = c.e ? daysTo(c.e) : null;
-      var group = d === null ? 'Срок не задан' : d <= 7 ? 'Ближайшие 7 дней' : d <= 31 ? 'В течение месяца' : 'Позже';
+      var group = d === null ? 'Срок не задан' : d < 0 ? 'Просрочено' : d <= 7 ? 'Ближайшие 7 дней' : d <= 31 ? 'В течение месяца' : 'Позже';
       if (group !== lastGroup) { allBox.appendChild(el('div', 'grp', group)); lastGroup = group; }
       var wrap = el('div', 'client' + (d !== null && d < 0 ? ' late' : d !== null && d <= 7 ? ' urgent' : ''));
       var btn = el('button'); btn.type = 'button';
