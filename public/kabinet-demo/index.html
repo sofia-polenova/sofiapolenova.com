@@ -281,8 +281,8 @@
         <div class="facts">
           <div class="fact"><div class="k">Действует до</div><div class="v" id="cUntil">10 октября</div></div>
           <div class="fact"><div class="k">Осталось дней</div><div class="v" id="cDays">19</div></div>
-          <div class="fact"><div class="k">Стоимость абонемента</div><div class="v" id="cPrice">$550 · ≈ 46 300 ₽</div></div>
-          <div class="fact" id="cRegular"><div class="k">Обычное расписание</div><div class="v">Пн и Чт · 18:00</div></div>
+          <div class="fact"><div class="k">Стоимость абонемента</div><div class="v" id="cPrice">$550</div></div>
+          <div class="fact" id="cRegular"><div class="k">Обычное расписание</div><div class="v">Пн и Чт · 18:00 МСК</div></div>
         </div>
       </div>
 
@@ -313,7 +313,7 @@
       <div class="price-card">
         <div>
           <div class="what" id="pWhat">8 занятий</div>
-          <div class="sub" id="pSub">≈ 46 300 ₽ по курсу</div>
+          <div class="sub" id="pSub">Стоимость абонемента</div>
         </div>
         <div class="sum" id="pSum">$550</div>
       </div>
@@ -375,6 +375,7 @@
     var $ = function (id) { return document.getElementById(id); };
 
     /* ---------- дата и расписание ---------- */
+    var TZ = 'МСК';
     var TODAY = new Date(2026, 8, 21); // пн, 21 сентября 2026 — «сегодня» в демо
     var MONTHS = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
     var DOW = ['вс','пн','вт','ср','чт','пт','сб'];
@@ -415,7 +416,7 @@
         var when = document.createElement('div');
         when.className = 'when';
         var rel = relative(l.date);
-        when.textContent = (rel ? rel + ' · ' : '') + dayLabel(l.date) + ' · ' + hm(l.date);
+        when.textContent = (rel ? rel + ' · ' : '') + dayLabel(l.date) + ' · ' + hm(l.date) + ' ' + TZ;
         if (l.status === 'cancelled') when.classList.add('was');
 
         var meta = document.createElement('div');
@@ -423,7 +424,7 @@
         if (l.status === 'moved') {
           var was = document.createElement('span');
           was.className = 'was';
-          was.textContent = dayLabel(l.from) + ' · ' + hm(l.from);
+          was.textContent = dayLabel(l.from) + ' · ' + hm(l.from) + ' ' + TZ;
           meta.appendChild(document.createTextNode('Занятие ' + l.n + ' из 8 · было '));
           meta.appendChild(was);
           if (l.reason) meta.appendChild(document.createTextNode(' · ' + l.reason));
@@ -441,8 +442,8 @@
         box.appendChild(el);
       });
       var note = $('regularNote');
-      note.hidden = !changed;
-      note.textContent = 'Перенесённое занятие входит в ваш абонемент, доплачивать не нужно.';
+      note.hidden = false;
+      note.textContent = 'Время указано по вашему часовому поясу: ' + TZ + '.' + (changed ? ' Перенесённое занятие входит в абонемент, доплачивать не нужно.' : '');
     }
 
     /* ---------- разбор сообщения Софьи боту ---------- */
@@ -621,7 +622,7 @@
         title: 'Криптовалюта',
         lead: 'Отправьте USDT на адрес ниже и проверьте сеть перед отправкой.',
         rows: [
-          { k: 'Сумма', v: '$550 (≈ 46 300 ₽ по курсу на день оплаты)' },
+          { k: 'Сумма', v: '$550' },
           { k: 'Монета', v: 'USDT' },
           { k: 'Сеть', v: 'TRC-20' },
           { k: 'Адрес кошелька', v: 'TXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', copy: true }
@@ -633,7 +634,7 @@
         title: 'Перевод в долларах',
         lead: 'Реквизиты для перевода в долларах США.',
         rows: [
-          { k: 'Сумма', v: '$550 (≈ 46 300 ₽ по курсу на день оплаты)' },
+          { k: 'Сумма', v: '$550' },
           { k: 'Получатель', v: 'Имя Фамилия' },
           { k: 'Счёт / IBAN', v: 'XX00 0000 0000 0000', copy: true },
           { k: 'SWIFT / BIC', v: 'XXXXXXXX', copy: true },
@@ -647,7 +648,7 @@
         lead: 'Откроется защищённая страница оплаты банковской картой.',
         rows: [
           { k: 'Услуга', v: 'Абонемент · 8 занятий' },
-          { k: 'Сумма', v: '≈ 46 300 ₽' },
+          { k: 'Сумма', v: '$550' },
           { k: 'Способ', v: 'Банковская карта' }
         ],
         steps: ['Нажмите «Перейти к оплате»', 'Оплатите на странице Продамус', 'Абонемент продлится после подтверждения'],
@@ -657,7 +658,7 @@
         title: 'Перевод на карту',
         lead: 'Перевод на личную карту. Комиссия зависит от вашего банка.',
         rows: [
-          { k: 'Сумма', v: '≈ 46 300 ₽' },
+          { k: 'Сумма', v: '$550' },
           { k: 'Номер карты', v: '0000 0000 0000 0000', copy: true },
           { k: 'Получатель', v: 'Имя Ф.' },
           { k: 'Комментарий', v: 'Абонемент, Софья' }
@@ -685,7 +686,7 @@
           title: m.title,
           lead: 'Реквизиты для этого способа пришлёт Софья: напишите ей, и она сразу отправит их в чат.',
           rows: [
-            { k: 'Стоимость', v: window.__client.priceText + ' (в рублях — по курсу на день оплаты)' },
+            { k: 'Стоимость', v: window.__client.priceText },
             { k: 'Способ', v: m.title }
           ],
           steps: ['Нажмите «Написать Софье»', 'Софья пришлёт реквизиты', 'После оплаты пришлите чек — абонемент продлится'],
@@ -810,8 +811,53 @@
   }
 
   $('pWhat').textContent = total + ' ' + plural(total, 'занятие', 'занятия', 'занятий');
-  $('pSub').textContent = 'В рублях — по курсу на день оплаты';
+  $('pSub').textContent = 'Стоимость продления';
   $('pSum').textContent = d.p;
+
+  // расписание клиента: d.z — часовой пояс, d.ls — занятия (время в поясе клиента)
+  if (d.ls && d.ls.length) {
+    var TZ = d.z || '';
+    var DOW = ['вс','пн','вт','ср','чт','пт','сб'];
+    var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+    var parse = function (str) { var q = str.match(/(\d+)-(\d+)-(\d+)T(\d+):(\d+)/); return new Date(+q[1], +q[2] - 1, +q[3], +q[4], +q[5]); };
+    var dayText = function (dt) { return DOW[dt.getDay()] + ', ' + dt.getDate() + ' ' + MONTHS[dt.getMonth()]; };
+    var timeText = function (dt) { return pad(dt.getHours()) + ':' + pad(dt.getMinutes()) + (TZ ? ' ' + TZ : ''); };
+    var nowD = new Date();
+    var today0 = new Date(nowD.getFullYear(), nowD.getMonth(), nowD.getDate());
+    var box = $('lessons');
+    box.innerHTML = '';
+    d.ls.forEach(function (it, i) {
+      var item = typeof it === 'string' ? { d: it } : it;
+      var dt = parse(item.d), from = item.f ? parse(item.f) : null;
+      var diff = Math.round((new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()) - today0) / 86400000);
+      var el = document.createElement('div');
+      el.className = 'lesson' + (from ? ' moved' : '') + (i === 0 ? ' next' : '');
+      var when = document.createElement('div');
+      when.className = 'when';
+      when.textContent = (diff === 0 ? 'Сегодня · ' : diff === 1 ? 'Завтра · ' : '') + dayText(dt) + ' · ' + timeText(dt);
+      var meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.appendChild(document.createTextNode('Занятие ' + (used + i + 1) + ' из ' + total));
+      if (from) {
+        var was = document.createElement('span');
+        was.className = 'was';
+        was.textContent = dayText(from) + ' · ' + timeText(from);
+        meta.appendChild(document.createTextNode(' · было '));
+        meta.appendChild(was);
+        if (item.r) meta.appendChild(document.createTextNode(' · ' + item.r));
+      }
+      var tag = document.createElement('span');
+      tag.className = 'tag';
+      tag.textContent = from ? 'Перенос' : (i === 0 ? 'Ближайшее' : 'По расписанию');
+      el.appendChild(when); el.appendChild(tag); el.appendChild(meta);
+      box.appendChild(el);
+    });
+    $('cLessonsH').hidden = false;
+    box.hidden = false;
+    var note = $('regularNote');
+    note.textContent = TZ ? 'Время указано по вашему часовому поясу: ' + TZ + '.' : '';
+    note.hidden = !TZ;
+  }
 })();
 </script>
 <script>
