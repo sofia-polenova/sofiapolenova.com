@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Клиенты</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@500;600&display=swap">
+<style>
+  :root {
+    --bg: #eef2f3; --surface: #ffffff; --surface-2: #e4ebec; --ink: #14232b; --ink-2: #566871; --line: #d5dee0;
+    --accent: #0e6b63; --accent-soft: #d6ece8; --used: #c2cfd2; --warn: #9a5b00; --warn-soft: #fbecd0;
+    --font-body: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-display: "Unbounded", "Onest", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1a1f; --surface: #172730; --surface-2: #1f343e; --ink: #e8f0f1; --ink-2: #93a9b1; --line: #27404b;
+      --accent: #4cc9b8; --accent-soft: #163b3a; --used: #35505b; --warn: #f0b95a; --warn-soft: #3a2f16;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1a1f; --surface: #172730; --surface-2: #1f343e; --ink: #e8f0f1; --ink-2: #93a9b1; --line: #27404b;
+    --accent: #4cc9b8; --accent-soft: #163b3a; --used: #35505b; --warn: #f0b95a; --warn-soft: #3a2f16;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.45; padding: 24px 16px 40px; }
+  main { max-width: 480px; margin-inline: auto; display: flex; flex-direction: column; gap: 26px; }
+  .eyebrow { color: var(--ink-2); font-size: 13px; letter-spacing: .04em; text-transform: uppercase; }
+  h1 { margin: 2px 0 0; font-family: var(--font-display); font-weight: 500; font-size: 24px; line-height: 1.2; }
+  .stamp { color: var(--ink-2); font-size: 13px; margin-top: 4px; }
+  h2 { margin: 0 0 8px; font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); }
+
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--surface); border-radius: 18px; }
+  .tile { padding: 16px 14px; display: flex; flex-direction: column; gap: 2px; }
+  .tile + .tile { border-left: 1px solid var(--line); }
+  .tile .n { font-family: var(--font-display); font-weight: 600; font-size: 26px; line-height: 1.1; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .tile.warn .n { color: var(--warn); }
+  .tile .l { font-size: 12px; color: var(--ink-2); }
+
+  .list { background: var(--surface); border-radius: 16px; overflow: hidden; }
+  .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 13px 16px; }
+  .row + .row { border-top: 1px solid var(--line); }
+  .row .t { font-weight: 600; }
+  .row .s { font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .row .r { text-align: right; flex: none; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .bar { display: flex; gap: 3px; margin-top: 7px; }
+  .bar i { width: 14px; height: 6px; border-radius: 3px; background: var(--used); }
+  .bar i.on { background: var(--accent); }
+  .tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); margin-left: 6px; vertical-align: 1px; }
+  .tag.warn { background: var(--warn-soft); color: var(--warn); }
+  .empty { padding: 16px; color: var(--ink-2); }
+  .today { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">Софья Поленова</div>
+    <h1>Клиенты</h1>
+    <div class="stamp" id="stamp"></div>
+  </header>
+
+  <div id="noData" class="list" hidden><div class="empty">Данных нет. Откройте этот экран из бота: команда /clients.</div></div>
+
+  <div id="content" hidden>
+    <div class="tiles">
+      <div class="tile"><span class="n" id="tClients">0</span><span class="l">клиентов</span></div>
+      <div class="tile"><span class="n" id="tToday">0</span><span class="l">занятий сегодня</span></div>
+      <div class="tile" id="tDueBox"><span class="n" id="tDue">0</span><span class="l" id="tDueL">ждут оплаты</span></div>
+    </div>
+
+    <section style="margin-top:26px"><h2>Ожидаются оплаты</h2><div class="list" id="due"></div></section>
+    <section style="margin-top:26px"><h2>Ближайшие занятия · МСК</h2><div class="list" id="next"></div></section>
+    <section style="margin-top:26px"><h2>Все клиенты</h2><div class="list" id="all"></div></section>
+    <section style="margin-top:26px"><h2>Последние оплаты</h2><div class="list" id="pays"></div></section>
+  </div>
+</main>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var MONTHS = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  var DOW = ['вс','пн','вт','ср','чт','пт','сб'];
+
+  var tg = window.Telegram && window.Telegram.WebApp;
+  if (tg && tg.initData) {
+    try { tg.ready(); tg.expand(); } catch (e) {}
+    if (tg.colorScheme) document.documentElement.setAttribute('data-theme', tg.colorScheme);
+  }
+
+  function b64bytes(s) {
+    s = s.replace(/-/g, '+').replace(/_/g, '/');
+    while (s.length % 4) s += '=';
+    return Uint8Array.from(atob(s), function (c) { return c.charCodeAt(0); });
+  }
+  async function load() {
+    var q = new URLSearchParams(location.search);
+    try {
+      if (q.get('z')) {
+        var stream = new Blob([b64bytes(q.get('z'))]).stream().pipeThrough(new DecompressionStream('deflate'));
+        return JSON.parse(await new Response(stream).text());
+      }
+      if (q.get('d')) return JSON.parse(new TextDecoder().decode(b64bytes(q.get('d'))));
+    } catch (e) {}
+    return null;
+  }
+
+  function plural(n, a, b, c) {
+    var m10 = n % 10, m100 = n % 100;
+    if (m10 === 1 && m100 !== 11) return a;
+    if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return b;
+    return c;
+  }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function dateOf(iso) { var p = iso.slice(0, 10).split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function longDate(iso) { var d = dateOf(iso); return d.getDate() + ' ' + MONTHS[d.getMonth()]; }
+  function money(p) { var m = String(p || '').match(/[\d.]+/); return m ? parseFloat(m[0]) : 0; }
+  function row(title, sub, right, extra) {
+    var r = el('div', 'row'), l = el('div');
+    var t = el('div', 't', title);
+    if (extra) t.appendChild(extra);
+    l.appendChild(t);
+    if (sub) l.appendChild(el('div', 's', sub));
+    r.appendChild(l);
+    if (right != null) r.appendChild(el('div', 'r', right));
+    return r;
+  }
+  function tag(text, warn) { return el('span', 'tag' + (warn ? ' warn' : ''), text); }
+  function empty(box, text) { box.appendChild(el('div', 'empty', text)); }
+
+  load().then(function (data) {
+    if (!data || !data.c) { $('noData').hidden = false; return; }
+    $('content').hidden = false;
+    var today = dateOf(data.g);
+    $('stamp').textContent = 'Обновлено ' + longDate(data.g);
+    var daysTo = function (iso) { return Math.round((dateOf(iso) - today) / 864e5); };
+
+    // ожидаются оплаты: осталось ≤ 2 занятий или срок кончается в ближайшие 14 дней
+    var due = data.c.filter(function (c) { return c.l <= 2 || daysTo(c.u) <= 14; })
+      .sort(function (a, b) { return daysTo(a.u) - daysTo(b.u) || a.l - b.l; });
+    var dueSum = due.reduce(function (s, c) { return s + money(c.p); }, 0);
+
+    var todayCount = 0, upcoming = [];
+    data.c.forEach(function (c) {
+      (c.x || []).forEach(function (iso) {
+        var diff = daysTo(iso);
+        if (diff === 0) todayCount++;
+        upcoming.push({ iso: iso, name: c.n, diff: diff });
+      });
+    });
+    upcoming.sort(function (a, b) { return a.iso < b.iso ? -1 : 1; });
+
+    $('tClients').textContent = data.c.length;
+    $('tToday').textContent = todayCount;
+    $('tDue').textContent = dueSum ? '$' + dueSum : due.length;
+    $('tDueL').textContent = 'ждём оплат';
+    if (due.length) $('tDueBox').classList.add('warn');
+
+    var dueBox = $('due');
+    if (!due.length) empty(dueBox, 'Пока никто не заканчивает абонемент.');
+    due.forEach(function (c) {
+      var d = daysTo(c.u);
+      var when = d < 0 ? 'срок истёк' : d === 0 ? 'срок сегодня' : 'через ' + d + ' ' + plural(d, 'день', 'дня', 'дней');
+      var urgent = d <= 7 || c.l <= 1;
+      dueBox.appendChild(row(c.n,
+        'осталось ' + c.l + ' из ' + c.t + ' · до ' + longDate(c.u) + ' (' + when + ')',
+        c.p || '', tag(urgent ? 'срочно' : 'скоро', urgent)));
+    });
+
+    var nextBox = $('next');
+    if (!upcoming.length) empty(nextBox, 'Расписание клиентов ещё не задано: /schedule.');
+    upcoming.slice(0, 10).forEach(function (u) {
+      var d = dateOf(u.iso);
+      var label = u.diff === 0 ? 'Сегодня' : u.diff === 1 ? 'Завтра' : DOW[d.getDay()] + ', ' + d.getDate() + ' ' + MONTHS[d.getMonth()];
+      var r = row(u.name, label, u.iso.slice(11, 16));
+      if (u.diff === 0) r.querySelector('.s').classList.add('today');
+      nextBox.appendChild(r);
+    });
+
+    var allBox = $('all');
+    data.c.slice().sort(function (a, b) { return daysTo(a.u) - daysTo(b.u); }).forEach(function (c) {
+      var sub = 'осталось ' + c.l + ' из ' + c.t + ' · до ' + longDate(c.u) + ' · ' + (c.z || 'МСК');
+      var r = row(c.n, sub, c.p || '', c.b ? null : tag('не в боте', true));
+      var bar = el('div', 'bar');
+      for (var i = 0; i < c.t; i++) bar.appendChild(el('i', i >= c.t - c.l ? 'on' : ''));
+      r.firstChild.appendChild(bar);
+      if (c.pd) r.firstChild.appendChild(el('div', 's', 'Ждёт новой даты занятий: ' + c.pd));
+      allBox.appendChild(r);
+    });
+
+    var paysBox = $('pays');
+    if (!data.h || !data.h.length) empty(paysBox, 'Оплат через бота пока нет.');
+    (data.h || []).forEach(function (h) {
+      paysBox.appendChild(row(h.n, longDate(h.d) + ' · +' + h.a + ' ' + plural(h.a, 'занятие', 'занятия', 'занятий') + ' · до ' + longDate(h.u), h.p || ''));
+    });
+  });
+})();
+</script>
+</body>
+</html>
