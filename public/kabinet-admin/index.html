@@ -12,82 +12,126 @@
 <style>
   :root {
     --bg: #eef2f3; --surface: #ffffff; --surface-2: #e4ebec; --ink: #14232b; --ink-2: #566871; --line: #d5dee0;
-    --accent: #0e6b63; --accent-soft: #d6ece8; --used: #c2cfd2; --warn: #9a5b00; --warn-soft: #fbecd0;
+    --accent: #0e6b63; --accent-ink: #ffffff; --accent-soft: #d6ece8; --used: #c2cfd2; --warn: #9a5b00; --warn-soft: #fbecd0;
+    --bad: #a3322b; --bad-soft: #f8dcd9;
     --font-body: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
     --font-display: "Unbounded", "Onest", system-ui, sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #0f1a1f; --surface: #172730; --surface-2: #1f343e; --ink: #e8f0f1; --ink-2: #93a9b1; --line: #27404b;
-      --accent: #4cc9b8; --accent-soft: #163b3a; --used: #35505b; --warn: #f0b95a; --warn-soft: #3a2f16;
+      --accent: #4cc9b8; --accent-ink: #062521; --accent-soft: #163b3a; --used: #35505b; --warn: #f0b95a; --warn-soft: #3a2f16;
+      --bad: #f19a92; --bad-soft: #43201d;
     }
   }
   :root[data-theme="dark"] {
     --bg: #0f1a1f; --surface: #172730; --surface-2: #1f343e; --ink: #e8f0f1; --ink-2: #93a9b1; --line: #27404b;
-    --accent: #4cc9b8; --accent-soft: #163b3a; --used: #35505b; --warn: #f0b95a; --warn-soft: #3a2f16;
+    --accent: #4cc9b8; --accent-ink: #062521; --accent-soft: #163b3a; --used: #35505b; --warn: #f0b95a; --warn-soft: #3a2f16;
+    --bad: #f19a92; --bad-soft: #43201d;
   }
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
   body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.45; padding: 24px 16px 40px; }
+  button, input { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   main { max-width: 480px; margin-inline: auto; display: flex; flex-direction: column; gap: 26px; }
   .eyebrow { color: var(--ink-2); font-size: 13px; letter-spacing: .04em; text-transform: uppercase; }
-  h1 { margin: 2px 0 0; font-family: var(--font-display); font-weight: 500; font-size: 24px; line-height: 1.2; }
-  .stamp { color: var(--ink-2); font-size: 13px; margin-top: 4px; }
+  h1 { margin: 2px 0 0; font-family: var(--font-display); font-weight: 500; font-size: 26px; line-height: 1.2; }
+  .stamp { color: var(--ink-2); font-size: 14px; margin-top: 4px; }
+  .sum { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 10px; font-size: 14px; }
+  .sum b { font-variant-numeric: tabular-nums; }
   h2 { margin: 0 0 8px; font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); }
-
-  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--surface); border-radius: 18px; }
-  .tile { padding: 16px 14px; display: flex; flex-direction: column; gap: 2px; }
-  .tile + .tile { border-left: 1px solid var(--line); }
-  .tile .n { font-family: var(--font-display); font-weight: 600; font-size: 26px; line-height: 1.1; color: var(--accent); font-variant-numeric: tabular-nums; }
-  .tile.warn .n { color: var(--warn); }
-  .tile .l { font-size: 12px; color: var(--ink-2); }
+  h2 .cnt { color: var(--ink); }
 
   .list { background: var(--surface); border-radius: 16px; overflow: hidden; }
-  .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 13px 16px; }
-  .row + .row { border-top: 1px solid var(--line); }
-  .row .t { font-weight: 600; }
-  .row .s { font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
-  .row .r { text-align: right; flex: none; font-weight: 600; font-variant-numeric: tabular-nums; }
-  .bar { display: flex; gap: 3px; margin-top: 7px; }
+  .empty { padding: 16px; color: var(--ink-2); }
+
+  /* сегодня */
+  .lesson { display: grid; grid-template-columns: 64px 1fr auto; align-items: center; gap: 12px; padding: 14px 16px; }
+  .lesson + .lesson { border-top: 1px solid var(--line); }
+  .lesson .time { font-family: var(--font-display); font-weight: 600; font-size: 18px; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .lesson .who { font-weight: 600; }
+  .lesson .meta { font-size: 13px; color: var(--ink-2); }
+  .lesson.compact { padding: 10px 16px; }
+  .lesson.compact .time { font-size: 15px; }
+  .tomorrow { margin-top: 12px; }
+  .btn { width: 100%; margin-top: 12px; border: 0; border-radius: 14px; padding: 14px 18px; background: var(--accent); color: var(--accent-ink); font-weight: 600; cursor: pointer; }
+  .btn:active { transform: scale(.985); }
+
+  /* клиенты */
+  .search { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); margin-bottom: 10px; }
+  .grp { padding: 10px 16px 6px; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); background: var(--surface-2); }
+  .client { border-top: 1px solid var(--line); }
+  .grp + .client { border-top: 0; }
+  .client > button { display: grid; grid-template-columns: 1fr auto; gap: 12px; width: 100%; text-align: left; background: none; border: 0; padding: 13px 16px; cursor: pointer; }
+  .client .name { font-weight: 600; }
+  .client .sub { font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .client .due { text-align: right; font-variant-numeric: tabular-nums; }
+  .client .due .d { font-weight: 600; }
+  .client .due .rel { font-size: 13px; color: var(--ink-2); }
+  .client.urgent .due .d { color: var(--warn); }
+  .client.late .due .d { color: var(--bad); }
+  .bar { display: flex; gap: 3px; margin-top: 7px; flex-wrap: wrap; }
   .bar i { width: 14px; height: 6px; border-radius: 3px; background: var(--used); }
   .bar i.on { background: var(--accent); }
   .tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); margin-left: 6px; vertical-align: 1px; }
   .tag.warn { background: var(--warn-soft); color: var(--warn); }
-  .empty { padding: 16px; color: var(--ink-2); }
-  .today { color: var(--accent); }
+  .tag.bad { background: var(--bad-soft); color: var(--bad); }
+  .detail { padding: 0 16px 14px; display: grid; gap: 6px; font-size: 14px; }
+  .detail .k { color: var(--ink-2); }
+  .detail div { display: flex; justify-content: space-between; gap: 12px; }
+  .detail div span:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+  .pay { display: flex; justify-content: space-between; gap: 12px; padding: 13px 16px; }
+  .pay + .pay { border-top: 1px solid var(--line); }
+  .pay .s { font-size: 13px; color: var(--ink-2); }
+  .pay .r { font-weight: 600; }
 </style>
 </head>
 <body>
 <main>
   <header>
     <div class="eyebrow">Софья Поленова</div>
-    <h1>Клиенты</h1>
+    <h1>Сегодня</h1>
     <div class="stamp" id="stamp"></div>
+    <div class="sum" id="sum"></div>
   </header>
 
-  <div id="noData" class="list" hidden><div class="empty">Данных нет. Откройте этот экран из бота: команда /clients.</div></div>
+  <div id="noData" class="list" hidden><div class="empty">Данных нет. Откройте этот экран из бота: меню «Приложение» или команда /clients.</div></div>
 
-  <div id="content" hidden>
-    <div class="tiles">
-      <div class="tile"><span class="n" id="tClients">0</span><span class="l">клиентов</span></div>
-      <div class="tile"><span class="n" id="tToday">0</span><span class="l">занятий сегодня</span></div>
-      <div class="tile" id="tDueBox"><span class="n" id="tDue">0</span><span class="l" id="tDueL">ждут оплаты</span></div>
-    </div>
+  <div id="content" hidden style="display:flex;flex-direction:column;gap:26px">
+    <section>
+      <h2>Занятия сегодня · МСК <span class="cnt" id="todayCnt"></span></h2>
+      <div class="list" id="today"></div>
+      <button class="btn" id="mark" type="button">Отметить проведённые занятия</button>
+      <div class="tomorrow" id="tomorrowBox" hidden>
+        <h2>Завтра</h2>
+        <div class="list" id="tomorrow"></div>
+      </div>
+    </section>
 
-    <section style="margin-top:26px"><h2>Ожидаются оплаты</h2><div class="list" id="due"></div></section>
-    <section style="margin-top:26px"><h2>Ближайшие занятия · МСК</h2><div class="list" id="next"></div></section>
-    <section style="margin-top:26px"><h2>Все клиенты</h2><div class="list" id="all"></div></section>
-    <section style="margin-top:26px"><h2>Последние оплаты</h2><div class="list" id="pays"></div></section>
+    <section>
+      <h2>Клиенты · по дате ожидаемой оплаты <span class="cnt" id="clientsCnt"></span></h2>
+      <input class="search" id="q" type="search" placeholder="Найти клиента" aria-label="Найти клиента">
+      <div class="list" id="all"></div>
+    </section>
+
+    <section>
+      <h2>Последние оплаты</h2>
+      <div class="list" id="pays"></div>
+    </section>
   </div>
 </main>
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
   var MONTHS = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  var MON_SHORT = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
   var DOW = ['вс','пн','вт','ср','чт','пт','сб'];
+  var DOW_FULL = ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
 
   var tg = window.Telegram && window.Telegram.WebApp;
-  if (tg && tg.initData) {
+  var inTg = !!(tg && tg.initData);
+  if (inTg) {
     try { tg.ready(); tg.expand(); } catch (e) {}
     if (tg.colorScheme) document.documentElement.setAttribute('data-theme', tg.colorScheme);
     if (/[?&]from=app/.test(location.search)) {
@@ -121,84 +165,133 @@
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function dateOf(iso) { var p = iso.slice(0, 10).split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
   function longDate(iso) { var d = dateOf(iso); return d.getDate() + ' ' + MONTHS[d.getMonth()]; }
+  function shortDate(iso) { var d = dateOf(iso); return d.getDate() + ' ' + MON_SHORT[d.getMonth()]; }
   function money(p) { var m = String(p || '').match(/[\d.]+/); return m ? parseFloat(m[0]) : 0; }
-  function row(title, sub, right, extra) {
-    var r = el('div', 'row'), l = el('div');
-    var t = el('div', 't', title);
-    if (extra) t.appendChild(extra);
-    l.appendChild(t);
-    if (sub) l.appendChild(el('div', 's', sub));
-    r.appendChild(l);
-    if (right != null) r.appendChild(el('div', 'r', right));
-    return r;
+  function tag(text, kind) { return el('span', 'tag' + (kind ? ' ' + kind : ''), text); }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function clientTime(iso, c) {
+    var off = typeof c.o === 'number' ? c.o : 3;
+    if (off === 3) return '';
+    var d = new Date(+iso.slice(0, 4), +iso.slice(5, 7) - 1, +iso.slice(8, 10), +iso.slice(11, 13) + (off - 3), +iso.slice(14, 16));
+    return 'у клиента ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ' ' + (c.z || '');
   }
-  function tag(text, warn) { return el('span', 'tag' + (warn ? ' warn' : ''), text); }
-  function empty(box, text) { box.appendChild(el('div', 'empty', text)); }
 
   load().then(function (data) {
     if (!data || !data.c) { $('noData').hidden = false; return; }
     $('content').hidden = false;
     var today = dateOf(data.g);
-    $('stamp').textContent = 'Обновлено ' + longDate(data.g);
     var daysTo = function (iso) { return Math.round((dateOf(iso) - today) / 864e5); };
 
-    // ожидаются оплаты: осталось ≤ 2 занятий или срок кончается в ближайшие 14 дней
-    var due = data.c.filter(function (c) { return c.l <= 2 || daysTo(c.u) <= 14; })
-      .sort(function (a, b) { return daysTo(a.u) - daysTo(b.u) || a.l - b.l; });
-    var dueSum = due.reduce(function (s, c) { return s + money(c.p); }, 0);
+    $('stamp').textContent = DOW_FULL[today.getDay()] + ', ' + today.getDate() + ' ' + MONTHS[today.getMonth()];
 
-    var todayCount = 0, upcoming = [];
+    // занятия сегодня и завтра
+    var todayL = [], tomorrowL = [];
     data.c.forEach(function (c) {
-      (c.x || []).forEach(function (iso) {
-        var diff = daysTo(iso);
-        if (diff === 0) todayCount++;
-        upcoming.push({ iso: iso, name: c.n, diff: diff });
+      (c.x || []).forEach(function (it) {
+        var iso = it[0], diff = daysTo(iso);
+        var item = { iso: iso, from: it[1], c: c };
+        if (diff === 0) todayL.push(item); else if (diff === 1) tomorrowL.push(item);
       });
     });
-    upcoming.sort(function (a, b) { return a.iso < b.iso ? -1 : 1; });
+    var byTime = function (a, b) { return a.iso < b.iso ? -1 : 1; };
+    todayL.sort(byTime); tomorrowL.sort(byTime);
 
-    $('tClients').textContent = data.c.length;
-    $('tToday').textContent = todayCount;
-    $('tDue').textContent = dueSum ? '$' + dueSum : due.length;
-    $('tDueL').textContent = 'ждём оплат';
-    if (due.length) $('tDueBox').classList.add('warn');
+    function lessonRow(it, compact) {
+      var r = el('div', 'lesson' + (compact ? ' compact' : ''));
+      r.appendChild(el('div', 'time', it.iso.slice(11, 16)));
+      var mid = el('div');
+      var who = el('div', 'who', it.c.n);
+      if (it.from) who.appendChild(tag('перенос', 'warn'));
+      mid.appendChild(who);
+      var meta = [];
+      var ct = clientTime(it.iso, it.c);
+      if (ct) meta.push(ct);
+      meta.push('осталось ' + it.c.l + ' ' + plural(it.c.l, 'занятие', 'занятия', 'занятий'));
+      if (it.from) meta.push('было ' + dateOf(it.from).getDate() + ' ' + MON_SHORT[dateOf(it.from).getMonth()] + ' ' + it.from.slice(11, 16));
+      mid.appendChild(el('div', 'meta', meta.join(' · ')));
+      r.appendChild(mid);
+      return r;
+    }
 
-    var dueBox = $('due');
-    if (!due.length) empty(dueBox, 'Пока никто не заканчивает абонемент.');
-    due.forEach(function (c) {
-      var d = daysTo(c.u);
-      var when = d < 0 ? 'срок истёк' : d === 0 ? 'срок сегодня' : 'через ' + d + ' ' + plural(d, 'день', 'дня', 'дней');
-      var urgent = d <= 7 || c.l <= 1;
-      dueBox.appendChild(row(c.n,
-        'осталось ' + c.l + ' из ' + c.t + ' · до ' + longDate(c.u) + ' (' + when + ')',
-        c.p || '', tag(urgent ? 'срочно' : 'скоро', urgent)));
+    var tBox = $('today');
+    if (!todayL.length) tBox.appendChild(el('div', 'empty', 'Сегодня занятий нет.'));
+    todayL.forEach(function (it) { tBox.appendChild(lessonRow(it, false)); });
+    $('todayCnt').textContent = todayL.length ? '· ' + todayL.length : '';
+    $('mark').hidden = !todayL.length;
+    if (tomorrowL.length) {
+      $('tomorrowBox').hidden = false;
+      tomorrowL.forEach(function (it) { $('tomorrow').appendChild(lessonRow(it, true)); });
+    }
+    $('mark').addEventListener('click', function () {
+      var link = 'https://t.me/SofiaPolenova_bot?start=day';
+      if (inTg && tg.openTelegramLink) tg.openTelegramLink(link); else window.open(link, '_blank');
     });
 
-    var nextBox = $('next');
-    if (!upcoming.length) empty(nextBox, 'Расписание клиентов ещё не задано: /schedule.');
-    upcoming.slice(0, 10).forEach(function (u) {
-      var d = dateOf(u.iso);
-      var label = u.diff === 0 ? 'Сегодня' : u.diff === 1 ? 'Завтра' : DOW[d.getDay()] + ', ' + d.getDate() + ' ' + MONTHS[d.getMonth()];
-      var r = row(u.name, label, u.iso.slice(11, 16));
-      if (u.diff === 0) r.querySelector('.s').classList.add('today');
-      nextBox.appendChild(r);
-    });
+    // клиенты по ближайшей ожидаемой оплате
+    var clients = data.c.slice().sort(function (a, b) { return daysTo(a.e) - daysTo(b.e) || a.l - b.l; });
+    var soon = clients.filter(function (c) { return daysTo(c.e) <= 7; });
+    var soonSum = soon.reduce(function (s, c) { return s + money(c.p); }, 0);
+    var sum = $('sum');
+    var s1 = el('span'); s1.innerHTML = 'Занятий сегодня: <b>' + todayL.length + '</b>'; sum.appendChild(s1);
+    var s2 = el('span'); s2.innerHTML = 'Оплат за 7 дней: <b>' + soon.length + (soonSum ? ' · $' + soonSum : '') + '</b>'; sum.appendChild(s2);
+    $('clientsCnt').textContent = '· ' + clients.length;
 
     var allBox = $('all');
-    data.c.slice().sort(function (a, b) { return daysTo(a.u) - daysTo(b.u); }).forEach(function (c) {
-      var sub = 'осталось ' + c.l + ' из ' + c.t + ' · до ' + longDate(c.u) + ' · ' + (c.z || 'МСК');
-      var r = row(c.n, sub, c.p || '', c.b ? null : tag('не в боте', true));
-      var bar = el('div', 'bar');
-      for (var i = 0; i < c.t; i++) bar.appendChild(el('i', i >= c.t - c.l ? 'on' : ''));
-      r.firstChild.appendChild(bar);
-      if (c.pd) r.firstChild.appendChild(el('div', 's', 'Ждёт новой даты занятий: ' + c.pd));
-      allBox.appendChild(r);
-    });
+    function render(filter) {
+      allBox.innerHTML = '';
+      var f = (filter || '').trim().toLowerCase();
+      var shown = clients.filter(function (c) { return !f || c.n.toLowerCase().indexOf(f) >= 0; });
+      if (!shown.length) { allBox.appendChild(el('div', 'empty', f ? 'Никого не нашла.' : 'Клиентов пока нет.')); return; }
+      var lastGroup = null;
+      shown.forEach(function (c) {
+        var d = daysTo(c.e);
+        var group = d <= 7 ? 'Ближайшие 7 дней' : d <= 31 ? 'В течение месяца' : 'Позже';
+        if (group !== lastGroup) { allBox.appendChild(el('div', 'grp', group)); lastGroup = group; }
+
+        var wrap = el('div', 'client' + (d < 0 ? ' late' : d <= 7 ? ' urgent' : ''));
+        var btn = el('button'); btn.type = 'button';
+        var left = el('div');
+        var name = el('div', 'name', c.n);
+        if (!c.b) name.appendChild(tag('не в боте', 'warn'));
+        if (c.pd) name.appendChild(tag('ждёт даты', 'warn'));
+        left.appendChild(name);
+        left.appendChild(el('div', 'sub', 'осталось ' + c.l + ' из ' + c.t + ' · до ' + longDate(c.u)));
+        var bar = el('div', 'bar');
+        for (var i = 0; i < c.t; i++) bar.appendChild(el('i', i >= c.t - c.l ? 'on' : ''));
+        left.appendChild(bar);
+        var due = el('div', 'due');
+        due.appendChild(el('div', 'd', shortDate(c.e) + (c.p ? ' · ' + c.p : '')));
+        due.appendChild(el('div', 'rel', d < 0 ? 'просрочено на ' + (-d) + ' дн.' : d === 0 ? 'сегодня' : 'через ' + d + ' ' + plural(d, 'день', 'дня', 'дней')));
+        btn.appendChild(left); btn.appendChild(due);
+        wrap.appendChild(btn);
+
+        var det = el('div', 'detail'); det.hidden = true;
+        function line(k, v) { var r = el('div'); r.appendChild(el('span', 'k', k)); r.appendChild(el('span', null, v)); det.appendChild(r); }
+        line('Оплата ожидается', longDate(c.e) + (c.er === 'l' ? ' (кончаются занятия)' : ' (кончается срок)'));
+        line('Абонемент до', longDate(c.u));
+        line('Часовой пояс', c.z || 'МСК');
+        (c.x || []).forEach(function (it, idx) {
+          var dd = dateOf(it[0]);
+          line(idx === 0 ? 'Ближайшие занятия' : '', DOW[dd.getDay()] + ', ' + dd.getDate() + ' ' + MON_SHORT[dd.getMonth()] + ' · ' + it[0].slice(11, 16) + ' МСК');
+        });
+        if (!(c.x || []).length) line('Ближайшие занятия', 'расписание не задано');
+        line('Последняя оплата', c.lp ? longDate(c.lp) : 'через бота не было');
+        wrap.appendChild(det);
+        btn.addEventListener('click', function () { det.hidden = !det.hidden; });
+        allBox.appendChild(wrap);
+      });
+    }
+    render('');
+    $('q').addEventListener('input', function () { render(this.value); });
 
     var paysBox = $('pays');
-    if (!data.h || !data.h.length) empty(paysBox, 'Оплат через бота пока нет.');
+    if (!data.h || !data.h.length) paysBox.appendChild(el('div', 'empty', 'Оплат через бота пока нет.'));
     (data.h || []).forEach(function (h) {
-      paysBox.appendChild(row(h.n, longDate(h.d) + ' · +' + h.a + ' ' + plural(h.a, 'занятие', 'занятия', 'занятий') + ' · до ' + longDate(h.u), h.p || ''));
+      var r = el('div', 'pay'), l = el('div');
+      l.appendChild(el('div', null, h.n));
+      l.appendChild(el('div', 's', longDate(h.d) + ' · +' + h.a + ' ' + plural(h.a, 'занятие', 'занятия', 'занятий') + ' · до ' + longDate(h.u)));
+      r.appendChild(l); r.appendChild(el('div', 'r', h.p || ''));
+      paysBox.appendChild(r);
     });
   });
 })();
