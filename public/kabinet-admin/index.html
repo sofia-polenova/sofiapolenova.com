@@ -59,6 +59,13 @@
   .btn:active { transform: scale(.985); }
 
   /* клиенты */
+  .segs { display: flex; gap: 8px; overflow-x: auto; margin: 0 -16px 12px; padding: 2px 16px; scrollbar-width: none; }
+  .segs::-webkit-scrollbar { display: none; }
+  .seg { flex: none; display: flex; align-items: center; gap: 7px; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 8px 14px; font-size: 14px; cursor: pointer; white-space: nowrap; }
+  .seg .c { font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .seg[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+  .seg[aria-selected="true"] .c { color: var(--accent-ink); opacity: .8; }
+  .segsum { font-size: 13px; color: var(--ink-2); margin: 0 0 10px; }
   .search { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); margin-bottom: 10px; }
   .grp { padding: 10px 16px 6px; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); background: var(--surface-2); }
   .client { border-top: 1px solid var(--line); }
@@ -155,7 +162,9 @@
     </section>
 
     <section>
-      <h2>Клиенты · по дате ожидаемой оплаты <span class="cnt" id="clientsCnt"></span></h2>
+      <h2>Клиенты · по дате оплаты</h2>
+      <div class="segs" id="segs" role="tablist" aria-label="Категории клиентов"></div>
+      <div class="segsum" id="segsum"></div>
       <input class="search" id="q" type="search" placeholder="Найти клиента" aria-label="Найти клиента">
       <div class="list" id="all"></div>
     </section>
@@ -265,6 +274,10 @@
     try { if (view === 'client' || fromApp) tg.BackButton.show(); else tg.BackButton.hide(); } catch (e) {}
   }
 
+  var SEGMENTS = [['p', 'Личная работа'], ['g', 'Групповые'], ['r', 'Программа'], ['c', 'Клуб']];
+  var seg = 'p';
+  try { seg = localStorage.getItem('sofia_seg') || 'p'; } catch (e) {}
+  var segOf = function (c) { return c.cg || 'p'; };
   var data, clients, daysTo, todayD;
   var selected = null, cat = 'Здоровье';
 
@@ -335,8 +348,9 @@
   function renderClients(filter) {
     var allBox = $('all'); allBox.innerHTML = '';
     var f = (filter || '').trim().toLowerCase();
-    var shown = clients.filter(function (c) { return !f || c.n.toLowerCase().indexOf(f) >= 0; });
-    if (!shown.length) { allBox.appendChild(el('div', 'empty', f ? 'Никого не нашла.' : 'Клиентов пока нет.')); return; }
+    var shown = clients.filter(function (c) { return f ? c.n.toLowerCase().indexOf(f) >= 0 : segOf(c) === seg; });
+    renderSegs(!!f);
+    if (!shown.length) { allBox.appendChild(el('div', 'empty', f ? 'Никого не нашла.' : 'В этой категории пока никого.')); return; }
     var lastGroup = null;
     shown.forEach(function (c) {
       var d = c.e ? daysTo(c.e) : null;
@@ -367,8 +381,30 @@
   }
 
   function subText(c) {
-    if (c.l != null) return 'осталось ' + c.l + ' из ' + c.t + ' · до ' + longDate(c.u);
-    return (c.f || 'абонемент') + (c.u ? ' · до ' + longDate(c.u) : '');
+    if (c.l != null) return 'осталось ' + c.l + ' из ' + c.t + ' · до ' + shortDate(c.u);
+    return (c.f || 'абонемент') + (c.u ? ' · до ' + shortDate(c.u) : '');
+  }
+  function renderSegs(searching) {
+    var box = $('segs'); box.innerHTML = '';
+    SEGMENTS.forEach(function (sg) {
+      var n = clients.filter(function (c) { return segOf(c) === sg[0]; }).length;
+      var b = el('button', 'seg'); b.type = 'button'; b.setAttribute('role', 'tab');
+      b.setAttribute('aria-selected', String(!searching && seg === sg[0]));
+      b.appendChild(document.createTextNode(sg[1]));
+      b.appendChild(el('span', 'c', String(n)));
+      b.addEventListener('click', function () {
+        seg = sg[0];
+        try { localStorage.setItem('sofia_seg', seg); } catch (e) {}
+        $('q').value = '';
+        renderClients('');
+      });
+      box.appendChild(b);
+    });
+    var list = clients.filter(function (c) { return searching || segOf(c) === seg; });
+    var soon = list.filter(function (c) { return c.e && daysTo(c.e) <= 7; });
+    var sum = soon.reduce(function (t, c) { return t + money(c.p); }, 0);
+    $('segsum').textContent = searching ? 'Поиск по всем категориям' :
+      list.length + ' ' + plural(list.length, 'клиент', 'клиента', 'клиентов') + ' · оплат за 7 дней: ' + soon.length + (sum ? ' · $' + sum : '');
   }
   function fact(box, k, v) { var r = el('div', 'row'); r.appendChild(el('span', 'k', k)); r.appendChild(el('span', 'v', v)); box.appendChild(r); }
 
@@ -478,7 +514,10 @@
     var dueDays = function (c) { return c.e ? daysTo(c.e) : 99999; };
     clients = d.c.slice().sort(function (a, b) { return dueDays(a) - dueDays(b) || (a.l == null ? 99 : a.l) - (b.l == null ? 99 : b.l); });
     $('stamp').textContent = DOW_FULL[todayD.getDay()] + ', ' + todayD.getDate() + ' ' + MONTHS[todayD.getMonth()];
-    $('clientsCnt').textContent = '· ' + clients.length;
+    if (!clients.some(function (c) { return segOf(c) === seg; })) {
+      var first = SEGMENTS.filter(function (sg) { return clients.some(function (c) { return segOf(c) === sg[0]; }); })[0];
+      if (first) seg = first[0];
+    }
     var pays = $('pays');
     if (!d.h || !d.h.length) pays.appendChild(el('div', 'empty', 'Оплат через бота пока нет.'));
     (d.h || []).forEach(function (h) {
