@@ -208,7 +208,8 @@
   function dateOf(iso) { var p = iso.slice(0, 10).split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
   function longDate(iso) { var d = dateOf(iso); return d.getDate() + ' ' + MONTHS[d.getMonth()]; }
   function shortDate(iso) { var d = dateOf(iso); return d.getDate() + ' ' + MON_SHORT[d.getMonth()]; }
-  function money(p) { var m = String(p || '').match(/[\d.]+/); return m ? parseFloat(m[0]) : 0; }
+  function money(p) { if (String(p || '').indexOf('$') < 0) return 0; var m = String(p).match(/[\d.]+/); return m ? parseFloat(m[0]) : 0; }
+  function priceOf(c) { return c.p || c.pr || ''; }
   function tag(text, kind) { return el('span', 'tag' + (kind ? ' ' + kind : ''), text); }
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   function clientTime(iso, c) {
@@ -325,7 +326,7 @@
     $('tomorrowBox').hidden = !tomorrowL.length;
     tomorrowL.forEach(function (it) { tm.appendChild(lessonRow(it, true)); });
     var s1 = $('sum'); s1.innerHTML = '';
-    var soon = clients.filter(function (c) { return daysTo(c.e) <= 7; });
+    var soon = clients.filter(function (c) { return c.e && daysTo(c.e) <= 7; });
     var soonSum = soon.reduce(function (s, c) { return s + money(c.p); }, 0);
     var a = el('span'); a.innerHTML = 'Занятий сегодня: <b>' + todayL.length + '</b>'; s1.appendChild(a);
     var b = el('span'); b.innerHTML = 'Оплат за 7 дней: <b>' + soon.length + (soonSum ? ' · $' + soonSum : '') + '</b>'; s1.appendChild(b);
@@ -338,10 +339,10 @@
     if (!shown.length) { allBox.appendChild(el('div', 'empty', f ? 'Никого не нашла.' : 'Клиентов пока нет.')); return; }
     var lastGroup = null;
     shown.forEach(function (c) {
-      var d = daysTo(c.e);
-      var group = d <= 7 ? 'Ближайшие 7 дней' : d <= 31 ? 'В течение месяца' : 'Позже';
+      var d = c.e ? daysTo(c.e) : null;
+      var group = d === null ? 'Срок не задан' : d <= 7 ? 'Ближайшие 7 дней' : d <= 31 ? 'В течение месяца' : 'Позже';
       if (group !== lastGroup) { allBox.appendChild(el('div', 'grp', group)); lastGroup = group; }
-      var wrap = el('div', 'client' + (d < 0 ? ' late' : d <= 7 ? ' urgent' : ''));
+      var wrap = el('div', 'client' + (d !== null && d < 0 ? ' late' : d !== null && d <= 7 ? ' urgent' : ''));
       var btn = el('button'); btn.type = 'button';
       var left = el('div');
       var name = el('div', 'name', c.n);
@@ -349,13 +350,15 @@
       if (!c.b) name.appendChild(tag('не в боте', 'warn'));
       if (c.pd) name.appendChild(tag('ждёт даты', 'warn'));
       left.appendChild(name);
-      left.appendChild(el('div', 'sub', 'осталось ' + c.l + ' из ' + c.t + ' · до ' + longDate(c.u)));
-      var bar = el('div', 'bar');
-      for (var i = 0; i < c.t; i++) bar.appendChild(el('i', i >= c.t - c.l ? 'on' : ''));
-      left.appendChild(bar);
+      left.appendChild(el('div', 'sub', subText(c)));
+      if (c.t) {
+        var bar = el('div', 'bar');
+        for (var i = 0; i < c.t; i++) bar.appendChild(el('i', i >= c.t - c.l ? 'on' : ''));
+        left.appendChild(bar);
+      }
       var due = el('div', 'due');
-      due.appendChild(el('div', 'd', shortDate(c.e) + (c.p ? ' · ' + c.p : '')));
-      due.appendChild(el('div', 'rel', d < 0 ? 'просрочено на ' + (-d) + ' дн.' : d === 0 ? 'сегодня' : 'через ' + d + ' ' + plural(d, 'день', 'дня', 'дней')));
+      due.appendChild(el('div', 'd', (c.e ? shortDate(c.e) : '—') + (priceOf(c) ? ' · ' + priceOf(c) : '')));
+      due.appendChild(el('div', 'rel', d === null ? 'нет даты' : d < 0 ? 'просрочено на ' + (-d) + ' дн.' : d === 0 ? 'сегодня' : 'через ' + d + ' ' + plural(d, 'день', 'дня', 'дней')));
       btn.appendChild(left); btn.appendChild(due);
       btn.addEventListener('click', function () { showClient(c); });
       wrap.appendChild(btn);
@@ -363,6 +366,10 @@
     });
   }
 
+  function subText(c) {
+    if (c.l != null) return 'осталось ' + c.l + ' из ' + c.t + ' · до ' + longDate(c.u);
+    return (c.f || 'абонемент') + (c.u ? ' · до ' + longDate(c.u) : '');
+  }
   function fact(box, k, v) { var r = el('div', 'row'); r.appendChild(el('span', 'k', k)); r.appendChild(el('span', 'v', v)); box.appendChild(r); }
 
   function renderNotes() {
@@ -391,12 +398,19 @@
   function renderClientView() {
     var c = selected;
     $('cvName').textContent = c.n;
-    $('cvSub').textContent = 'осталось ' + c.l + ' из ' + c.t + ' · пояс ' + (c.z || 'МСК');
+    $('cvSub').textContent = c.l != null ? 'осталось ' + c.l + ' из ' + c.t + ' · пояс ' + (c.z || 'МСК') : (c.f || 'абонемент');
     var facts = $('cvFacts'); facts.innerHTML = '';
-    var d = daysTo(c.e);
-    fact(facts, 'Оплата ожидается', shortDate(c.e) + (c.p ? ' · ' + c.p : '') + (d < 0 ? ' (просрочена)' : d === 0 ? ' (сегодня)' : ' (через ' + d + ' ' + plural(d, 'день', 'дня', 'дней') + ')'));
-    fact(facts, 'Причина', c.er === 'l' ? 'кончаются занятия' : 'кончается срок');
-    fact(facts, 'Абонемент до', longDate(c.u));
+    var d = c.e ? daysTo(c.e) : null;
+    if (c.f && c.l != null) fact(facts, 'Формат', c.f);
+    if (d !== null) {
+      fact(facts, 'Оплата ожидается', shortDate(c.e) + (priceOf(c) ? ' · ' + priceOf(c) : '') + (d < 0 ? ' (просрочена)' : d === 0 ? ' (сегодня)' : ' (через ' + d + ' ' + plural(d, 'день', 'дня', 'дней') + ')'));
+      fact(facts, 'Причина', c.er === 'l' ? 'кончаются занятия' : 'кончается срок');
+    } else {
+      fact(facts, 'Оплата ожидается', 'дата не задана');
+      if (priceOf(c)) fact(facts, 'Стоимость', priceOf(c));
+    }
+    if (c.u) fact(facts, 'Абонемент до', longDate(c.u));
+    if (c.nt) fact(facts, 'Из таблицы', c.nt);
     fact(facts, 'Последняя оплата', c.lp ? longDate(c.lp) : 'через бота не было');
     fact(facts, 'В боте', c.b ? 'да' : 'не открывал');
 
@@ -461,7 +475,8 @@
     data = d;
     todayD = dateOf(d.g);
     daysTo = function (iso) { return Math.round((dateOf(iso) - todayD) / 864e5); };
-    clients = d.c.slice().sort(function (a, b) { return daysTo(a.e) - daysTo(b.e) || a.l - b.l; });
+    var dueDays = function (c) { return c.e ? daysTo(c.e) : 99999; };
+    clients = d.c.slice().sort(function (a, b) { return dueDays(a) - dueDays(b) || (a.l == null ? 99 : a.l) - (b.l == null ? 99 : b.l); });
     $('stamp').textContent = DOW_FULL[todayD.getDay()] + ', ' + todayD.getDate() + ' ' + MONTHS[todayD.getMonth()];
     $('clientsCnt').textContent = '· ' + clients.length;
     var pays = $('pays');
