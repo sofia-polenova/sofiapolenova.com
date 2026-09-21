@@ -81,6 +81,26 @@
   .detail .k { color: var(--ink-2); }
   .detail div { display: flex; justify-content: space-between; gap: 12px; }
   .detail div span:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+  .back { background: none; border: 0; color: var(--accent); font-weight: 500; padding: 0; margin-bottom: 14px; cursor: pointer; }
+  .facts .row { display: flex; justify-content: space-between; gap: 12px; padding: 12px 16px; }
+  .facts .row + .row { border-top: 1px solid var(--line); }
+  .facts .k { color: var(--ink-2); }
+  .facts .v { font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+  .note { padding: 13px 16px; display: grid; gap: 4px; }
+  .note + .note { border-top: 1px solid var(--line); }
+  .note .txt { white-space: pre-wrap; overflow-wrap: anywhere; }
+  .note .meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 13px; color: var(--ink-2); }
+  .note .del { background: none; border: 0; color: var(--ink-2); padding: 2px 0; cursor: pointer; }
+  .note .del.sure { color: var(--bad); font-weight: 600; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 10px; }
+  .chip { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 7px 13px; font-size: 14px; cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+  textarea.text { width: 100%; min-height: 84px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); resize: vertical; }
+  .hint { font-size: 13px; color: var(--ink-2); margin-top: 8px; }
+  .visit { display: flex; justify-content: space-between; padding: 12px 16px; font-variant-numeric: tabular-nums; }
+  .visit + .visit { border-top: 1px solid var(--line); }
+  .visit .n { color: var(--ink-2); }
+  .health { color: var(--warn); font-size: 13px; }
   .pay { display: flex; justify-content: space-between; gap: 12px; padding: 13px 16px; }
   .pay + .pay { border-top: 1px solid var(--line); }
   .pay .s { font-size: 13px; color: var(--ink-2); }
@@ -97,6 +117,31 @@
   </header>
 
   <div id="noData" class="list" hidden><div class="empty">Данных нет. Откройте этот экран из бота: меню «Приложение» или команда /clients.</div></div>
+
+  <section id="clientView" hidden style="display:flex;flex-direction:column;gap:22px">
+    <div>
+      <button class="back" id="cvBack" type="button">‹ Все клиенты</button>
+      <h1 id="cvName"></h1>
+      <div class="stamp" id="cvSub"></div>
+    </div>
+    <div class="list facts" id="cvFacts"></div>
+    <section>
+      <h2>Заметки</h2>
+      <div class="list" id="cvNotes"></div>
+      <div class="chips" id="cvChips" role="group" aria-label="Тип заметки"></div>
+      <textarea class="text" id="cvText" placeholder="Например: болит правое колено, без прыжков" aria-label="Текст заметки"></textarea>
+      <button class="btn" id="cvAdd" type="button">Добавить заметку</button>
+      <div class="hint" id="cvHint"></div>
+    </section>
+    <section>
+      <h2>Проведённые занятия <span class="cnt" id="cvDoneCnt"></span></h2>
+      <div class="list" id="cvDone"></div>
+    </section>
+    <section>
+      <h2>Ближайшие занятия · МСК</h2>
+      <div class="list" id="cvNext"></div>
+    </section>
+  </section>
 
   <div id="content" hidden style="display:flex;flex-direction:column;gap:26px">
     <section>
@@ -134,9 +179,6 @@
   if (inTg) {
     try { tg.ready(); tg.expand(); } catch (e) {}
     if (tg.colorScheme) document.documentElement.setAttribute('data-theme', tg.colorScheme);
-    if (/[?&]from=app/.test(location.search)) {
-      try { tg.BackButton.show(); tg.BackButton.onClick(function () { history.back(); }); } catch (e) {}
-    }
   }
 
   function b64bytes(s) {
@@ -176,123 +218,263 @@
     return 'у клиента ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ' ' + (c.z || '');
   }
 
-  load().then(function (data) {
-    if (!data || !data.c) { $('noData').hidden = false; return; }
+  // ── заметки: облако Telegram (личное хранилище владельца), запасной вариант — браузер ──
+  var CATS = ['Здоровье', 'Травмы', 'Цели', 'Другое'];
+  var cloud = inTg && tg.CloudStorage ? tg.CloudStorage : null;
+  var notes = {};
+  function loadNotes(cb) {
+    if (cloud) {
+      cloud.getKeys(function (err, keys) {
+        keys = (keys || []).filter(function (k) { return k.indexOf('n_') === 0; });
+        if (err || !keys.length) return cb({});
+        cloud.getItems(keys, function (err2, vals) {
+          var out = {};
+          if (!err2 && vals) keys.forEach(function (k) { try { out[k.slice(2)] = JSON.parse(vals[k]); } catch (e) {} });
+          cb(out);
+        });
+      });
+    } else {
+      try { cb(JSON.parse(localStorage.getItem('sofia_notes') || '{}')); } catch (e) { cb({}); }
+    }
+  }
+  function saveNotes(key, cb) {
+    var arr = notes[key] || [];
+    if (cloud) {
+      var done = function (err) { cb(!err); };
+      if (arr.length) cloud.setItem('n_' + key, JSON.stringify(arr), done); else cloud.removeItem('n_' + key, done);
+    } else {
+      try { localStorage.setItem('sofia_notes', JSON.stringify(notes)); cb(true); } catch (e) { cb(false); }
+    }
+  }
+  var healthNote = function (c) {
+    var list = (notes[c.k] || []).filter(function (n) { return n.c === 'Здоровье'; });
+    return list.length ? list[list.length - 1].t : '';
+  };
+
+  var view = 'main';
+  var fromApp = /[?&]from=app/.test(location.search);
+  function goBack() {
+    if (view === 'client') showMain(); else if (fromApp) history.back();
+  }
+  if (inTg) {
+    try { tg.onEvent('backButtonClicked', goBack); } catch (e) {}
+  }
+  function syncBackButton() {
+    if (!inTg) return;
+    try { if (view === 'client' || fromApp) tg.BackButton.show(); else tg.BackButton.hide(); } catch (e) {}
+  }
+
+  var data, clients, daysTo, todayD;
+  var selected = null, cat = 'Здоровье';
+
+  function showMain() {
+    view = 'main';
+    $('clientView').hidden = true;
     $('content').hidden = false;
-    var today = dateOf(data.g);
-    var daysTo = function (iso) { return Math.round((dateOf(iso) - today) / 864e5); };
+    renderToday(); renderClients($('q').value);
+    syncBackButton();
+    window.scrollTo(0, 0);
+  }
+  function showClient(c) {
+    view = 'client'; selected = c;
+    $('content').hidden = true;
+    $('clientView').hidden = false;
+    renderClientView();
+    syncBackButton();
+    window.scrollTo(0, 0);
+  }
 
-    $('stamp').textContent = DOW_FULL[today.getDay()] + ', ' + today.getDate() + ' ' + MONTHS[today.getMonth()];
+  function lessonRow(it, compact) {
+    var r = el('div', 'lesson' + (compact ? ' compact' : ''));
+    r.appendChild(el('div', 'time', it.iso.slice(11, 16)));
+    var mid = el('div');
+    var who = el('div', 'who', it.c.n);
+    if (it.from) who.appendChild(tag('перенос', 'warn'));
+    mid.appendChild(who);
+    var meta = [];
+    var ct = clientTime(it.iso, it.c);
+    if (ct) meta.push(ct);
+    meta.push('осталось ' + it.c.l + ' ' + plural(it.c.l, 'занятие', 'занятия', 'занятий'));
+    if (it.from) meta.push('было ' + dateOf(it.from).getDate() + ' ' + MON_SHORT[dateOf(it.from).getMonth()] + ' ' + it.from.slice(11, 16));
+    mid.appendChild(el('div', 'meta', meta.join(' · ')));
+    var hn = healthNote(it.c);
+    if (hn) mid.appendChild(el('div', 'health', '⚠ ' + (hn.length > 60 ? hn.slice(0, 60) + '…' : hn)));
+    r.appendChild(mid);
+    r.style.cursor = 'pointer';
+    r.addEventListener('click', function () { showClient(it.c); });
+    return r;
+  }
 
-    // занятия сегодня и завтра
+  function renderToday() {
     var todayL = [], tomorrowL = [];
     data.c.forEach(function (c) {
       (c.x || []).forEach(function (it) {
-        var iso = it[0], diff = daysTo(iso);
-        var item = { iso: iso, from: it[1], c: c };
+        var diff = daysTo(it[0]);
+        var item = { iso: it[0], from: it[1], c: c };
         if (diff === 0) todayL.push(item); else if (diff === 1) tomorrowL.push(item);
       });
     });
     var byTime = function (a, b) { return a.iso < b.iso ? -1 : 1; };
     todayL.sort(byTime); tomorrowL.sort(byTime);
-
-    function lessonRow(it, compact) {
-      var r = el('div', 'lesson' + (compact ? ' compact' : ''));
-      r.appendChild(el('div', 'time', it.iso.slice(11, 16)));
-      var mid = el('div');
-      var who = el('div', 'who', it.c.n);
-      if (it.from) who.appendChild(tag('перенос', 'warn'));
-      mid.appendChild(who);
-      var meta = [];
-      var ct = clientTime(it.iso, it.c);
-      if (ct) meta.push(ct);
-      meta.push('осталось ' + it.c.l + ' ' + plural(it.c.l, 'занятие', 'занятия', 'занятий'));
-      if (it.from) meta.push('было ' + dateOf(it.from).getDate() + ' ' + MON_SHORT[dateOf(it.from).getMonth()] + ' ' + it.from.slice(11, 16));
-      mid.appendChild(el('div', 'meta', meta.join(' · ')));
-      r.appendChild(mid);
-      return r;
-    }
-
-    var tBox = $('today');
+    var tBox = $('today'); tBox.innerHTML = '';
     if (!todayL.length) tBox.appendChild(el('div', 'empty', 'Сегодня занятий нет.'));
     todayL.forEach(function (it) { tBox.appendChild(lessonRow(it, false)); });
     $('todayCnt').textContent = todayL.length ? '· ' + todayL.length : '';
     $('mark').hidden = !todayL.length;
-    if (tomorrowL.length) {
-      $('tomorrowBox').hidden = false;
-      tomorrowL.forEach(function (it) { $('tomorrow').appendChild(lessonRow(it, true)); });
-    }
-    $('mark').addEventListener('click', function () {
-      var link = 'https://t.me/SofiaPolenova_bot?start=day';
-      if (inTg && tg.openTelegramLink) tg.openTelegramLink(link); else window.open(link, '_blank');
-    });
-
-    // клиенты по ближайшей ожидаемой оплате
-    var clients = data.c.slice().sort(function (a, b) { return daysTo(a.e) - daysTo(b.e) || a.l - b.l; });
+    var tm = $('tomorrow'); tm.innerHTML = '';
+    $('tomorrowBox').hidden = !tomorrowL.length;
+    tomorrowL.forEach(function (it) { tm.appendChild(lessonRow(it, true)); });
+    var s1 = $('sum'); s1.innerHTML = '';
     var soon = clients.filter(function (c) { return daysTo(c.e) <= 7; });
     var soonSum = soon.reduce(function (s, c) { return s + money(c.p); }, 0);
-    var sum = $('sum');
-    var s1 = el('span'); s1.innerHTML = 'Занятий сегодня: <b>' + todayL.length + '</b>'; sum.appendChild(s1);
-    var s2 = el('span'); s2.innerHTML = 'Оплат за 7 дней: <b>' + soon.length + (soonSum ? ' · $' + soonSum : '') + '</b>'; sum.appendChild(s2);
-    $('clientsCnt').textContent = '· ' + clients.length;
+    var a = el('span'); a.innerHTML = 'Занятий сегодня: <b>' + todayL.length + '</b>'; s1.appendChild(a);
+    var b = el('span'); b.innerHTML = 'Оплат за 7 дней: <b>' + soon.length + (soonSum ? ' · $' + soonSum : '') + '</b>'; s1.appendChild(b);
+  }
 
-    var allBox = $('all');
-    function render(filter) {
-      allBox.innerHTML = '';
-      var f = (filter || '').trim().toLowerCase();
-      var shown = clients.filter(function (c) { return !f || c.n.toLowerCase().indexOf(f) >= 0; });
-      if (!shown.length) { allBox.appendChild(el('div', 'empty', f ? 'Никого не нашла.' : 'Клиентов пока нет.')); return; }
-      var lastGroup = null;
-      shown.forEach(function (c) {
-        var d = daysTo(c.e);
-        var group = d <= 7 ? 'Ближайшие 7 дней' : d <= 31 ? 'В течение месяца' : 'Позже';
-        if (group !== lastGroup) { allBox.appendChild(el('div', 'grp', group)); lastGroup = group; }
+  function renderClients(filter) {
+    var allBox = $('all'); allBox.innerHTML = '';
+    var f = (filter || '').trim().toLowerCase();
+    var shown = clients.filter(function (c) { return !f || c.n.toLowerCase().indexOf(f) >= 0; });
+    if (!shown.length) { allBox.appendChild(el('div', 'empty', f ? 'Никого не нашла.' : 'Клиентов пока нет.')); return; }
+    var lastGroup = null;
+    shown.forEach(function (c) {
+      var d = daysTo(c.e);
+      var group = d <= 7 ? 'Ближайшие 7 дней' : d <= 31 ? 'В течение месяца' : 'Позже';
+      if (group !== lastGroup) { allBox.appendChild(el('div', 'grp', group)); lastGroup = group; }
+      var wrap = el('div', 'client' + (d < 0 ? ' late' : d <= 7 ? ' urgent' : ''));
+      var btn = el('button'); btn.type = 'button';
+      var left = el('div');
+      var name = el('div', 'name', c.n);
+      if (healthNote(c)) name.appendChild(tag('здоровье', 'warn'));
+      if (!c.b) name.appendChild(tag('не в боте', 'warn'));
+      if (c.pd) name.appendChild(tag('ждёт даты', 'warn'));
+      left.appendChild(name);
+      left.appendChild(el('div', 'sub', 'осталось ' + c.l + ' из ' + c.t + ' · до ' + longDate(c.u)));
+      var bar = el('div', 'bar');
+      for (var i = 0; i < c.t; i++) bar.appendChild(el('i', i >= c.t - c.l ? 'on' : ''));
+      left.appendChild(bar);
+      var due = el('div', 'due');
+      due.appendChild(el('div', 'd', shortDate(c.e) + (c.p ? ' · ' + c.p : '')));
+      due.appendChild(el('div', 'rel', d < 0 ? 'просрочено на ' + (-d) + ' дн.' : d === 0 ? 'сегодня' : 'через ' + d + ' ' + plural(d, 'день', 'дня', 'дней')));
+      btn.appendChild(left); btn.appendChild(due);
+      btn.addEventListener('click', function () { showClient(c); });
+      wrap.appendChild(btn);
+      allBox.appendChild(wrap);
+    });
+  }
 
-        var wrap = el('div', 'client' + (d < 0 ? ' late' : d <= 7 ? ' urgent' : ''));
-        var btn = el('button'); btn.type = 'button';
-        var left = el('div');
-        var name = el('div', 'name', c.n);
-        if (!c.b) name.appendChild(tag('не в боте', 'warn'));
-        if (c.pd) name.appendChild(tag('ждёт даты', 'warn'));
-        left.appendChild(name);
-        left.appendChild(el('div', 'sub', 'осталось ' + c.l + ' из ' + c.t + ' · до ' + longDate(c.u)));
-        var bar = el('div', 'bar');
-        for (var i = 0; i < c.t; i++) bar.appendChild(el('i', i >= c.t - c.l ? 'on' : ''));
-        left.appendChild(bar);
-        var due = el('div', 'due');
-        due.appendChild(el('div', 'd', shortDate(c.e) + (c.p ? ' · ' + c.p : '')));
-        due.appendChild(el('div', 'rel', d < 0 ? 'просрочено на ' + (-d) + ' дн.' : d === 0 ? 'сегодня' : 'через ' + d + ' ' + plural(d, 'день', 'дня', 'дней')));
-        btn.appendChild(left); btn.appendChild(due);
-        wrap.appendChild(btn);
+  function fact(box, k, v) { var r = el('div', 'row'); r.appendChild(el('span', 'k', k)); r.appendChild(el('span', 'v', v)); box.appendChild(r); }
 
-        var det = el('div', 'detail'); det.hidden = true;
-        function line(k, v) { var r = el('div'); r.appendChild(el('span', 'k', k)); r.appendChild(el('span', null, v)); det.appendChild(r); }
-        line('Оплата ожидается', longDate(c.e) + (c.er === 'l' ? ' (кончаются занятия)' : ' (кончается срок)'));
-        line('Абонемент до', longDate(c.u));
-        line('Часовой пояс', c.z || 'МСК');
-        (c.x || []).forEach(function (it, idx) {
-          var dd = dateOf(it[0]);
-          line(idx === 0 ? 'Ближайшие занятия' : '', DOW[dd.getDay()] + ', ' + dd.getDate() + ' ' + MON_SHORT[dd.getMonth()] + ' · ' + it[0].slice(11, 16) + ' МСК');
-        });
-        if (!(c.x || []).length) line('Ближайшие занятия', 'расписание не задано');
-        line('Последняя оплата', c.lp ? longDate(c.lp) : 'через бота не было');
-        wrap.appendChild(det);
-        btn.addEventListener('click', function () { det.hidden = !det.hidden; });
-        allBox.appendChild(wrap);
+  function renderNotes() {
+    var box = $('cvNotes'); box.innerHTML = '';
+    var list = notes[selected.k] || [];
+    if (!list.length) { box.appendChild(el('div', 'empty', 'Заметок пока нет.')); return; }
+    list.slice().reverse().forEach(function (n) {
+      var row = el('div', 'note');
+      var top = el('div', 'meta');
+      var l = el('span'); l.appendChild(tag(n.c, n.c === 'Здоровье' || n.c === 'Травмы' ? 'warn' : '')); l.appendChild(document.createTextNode(' ' + longDate(n.d)));
+      top.appendChild(l);
+      var del = el('button', 'del', 'Удалить'); del.type = 'button';
+      del.addEventListener('click', function () {
+        if (!del.classList.contains('sure')) { del.classList.add('sure'); del.textContent = 'Точно удалить?'; return; }
+        var i = notes[selected.k].indexOf(n);
+        if (i >= 0) notes[selected.k].splice(i, 1);
+        saveNotes(selected.k, function (ok) { $('cvHint').textContent = ok ? '' : 'Не получилось удалить, попробуйте ещё раз.'; renderNotes(); });
       });
-    }
-    render('');
-    $('q').addEventListener('input', function () { render(this.value); });
+      top.appendChild(del);
+      row.appendChild(el('div', 'txt', n.t));
+      row.appendChild(top);
+      box.appendChild(row);
+    });
+  }
 
-    var paysBox = $('pays');
-    if (!data.h || !data.h.length) paysBox.appendChild(el('div', 'empty', 'Оплат через бота пока нет.'));
-    (data.h || []).forEach(function (h) {
+  function renderClientView() {
+    var c = selected;
+    $('cvName').textContent = c.n;
+    $('cvSub').textContent = 'осталось ' + c.l + ' из ' + c.t + ' · пояс ' + (c.z || 'МСК');
+    var facts = $('cvFacts'); facts.innerHTML = '';
+    var d = daysTo(c.e);
+    fact(facts, 'Оплата ожидается', shortDate(c.e) + (c.p ? ' · ' + c.p : '') + (d < 0 ? ' (просрочена)' : d === 0 ? ' (сегодня)' : ' (через ' + d + ' ' + plural(d, 'день', 'дня', 'дней') + ')'));
+    fact(facts, 'Причина', c.er === 'l' ? 'кончаются занятия' : 'кончается срок');
+    fact(facts, 'Абонемент до', longDate(c.u));
+    fact(facts, 'Последняя оплата', c.lp ? longDate(c.lp) : 'через бота не было');
+    fact(facts, 'В боте', c.b ? 'да' : 'не открывал');
+
+    renderNotes();
+    var chips = $('cvChips'); chips.innerHTML = '';
+    CATS.forEach(function (name) {
+      var b = el('button', 'chip', name); b.type = 'button';
+      b.setAttribute('aria-pressed', String(name === cat));
+      b.addEventListener('click', function () { cat = name; renderClientView(); });
+      chips.appendChild(b);
+    });
+    $('cvHint').textContent = cloud ? 'Заметки видите только вы, они хранятся в вашем Telegram.' : 'В браузере заметки сохраняются только на этом устройстве.';
+
+    var done = c.dn || [];
+    $('cvDoneCnt').textContent = c.dc ? '· ' + c.dc : '';
+    var dBox = $('cvDone'); dBox.innerHTML = '';
+    if (!done.length) dBox.appendChild(el('div', 'empty', 'Проведённых занятий бот пока не записал. Прошлые даты можно добавить командой /history.'));
+    done.slice().reverse().forEach(function (iso, i) {
+      var dd = dateOf(iso);
+      var r = el('div', 'visit');
+      r.appendChild(el('span', null, DOW[dd.getDay()] + ', ' + dd.getDate() + ' ' + MONTHS[dd.getMonth()] + ' ' + dd.getFullYear()));
+      r.appendChild(el('span', 'n', '№ ' + (c.dc - i)));
+      dBox.appendChild(r);
+    });
+    if (c.dc > done.length) dBox.appendChild(el('div', 'empty', 'Показаны последние ' + done.length + ' из ' + c.dc + '.'));
+
+    var nBox = $('cvNext'); nBox.innerHTML = '';
+    if (!(c.x || []).length) nBox.appendChild(el('div', 'empty', 'Расписание не задано.'));
+    (c.x || []).forEach(function (it) {
+      var dd = dateOf(it[0]);
+      var r = el('div', 'visit');
+      var l = el('span', null, DOW[dd.getDay()] + ', ' + dd.getDate() + ' ' + MONTHS[dd.getMonth()] + ' · ' + it[0].slice(11, 16));
+      if (it[1]) l.appendChild(tag('перенос', 'warn'));
+      r.appendChild(l);
+      r.appendChild(el('span', 'n', clientTime(it[0], c)));
+      nBox.appendChild(r);
+    });
+  }
+
+  $('cvBack').addEventListener('click', showMain);
+  $('cvAdd').addEventListener('click', function () {
+    var text = $('cvText').value.trim();
+    if (!text || !selected) return;
+    var key = selected.k;
+    notes[key] = notes[key] || [];
+    var note = { t: text, c: cat, d: data.g };
+    notes[key].push(note);
+    saveNotes(key, function (ok) {
+      if (!ok) { notes[key].pop(); $('cvHint').textContent = 'Не сохранилось: слишком много заметок или нет связи.'; return; }
+      $('cvText').value = '';
+      renderClientView();
+    });
+  });
+  $('mark').addEventListener('click', function () {
+    var link = 'https://t.me/SofiaPolenova_bot?start=day';
+    if (inTg && tg.openTelegramLink) tg.openTelegramLink(link); else window.open(link, '_blank');
+  });
+  $('q').addEventListener('input', function () { renderClients(this.value); });
+
+  load().then(function (d) {
+    if (!d || !d.c) { $('noData').hidden = false; return; }
+    data = d;
+    todayD = dateOf(d.g);
+    daysTo = function (iso) { return Math.round((dateOf(iso) - todayD) / 864e5); };
+    clients = d.c.slice().sort(function (a, b) { return daysTo(a.e) - daysTo(b.e) || a.l - b.l; });
+    $('stamp').textContent = DOW_FULL[todayD.getDay()] + ', ' + todayD.getDate() + ' ' + MONTHS[todayD.getMonth()];
+    $('clientsCnt').textContent = '· ' + clients.length;
+    var pays = $('pays');
+    if (!d.h || !d.h.length) pays.appendChild(el('div', 'empty', 'Оплат через бота пока нет.'));
+    (d.h || []).forEach(function (h) {
       var r = el('div', 'pay'), l = el('div');
       l.appendChild(el('div', null, h.n));
       l.appendChild(el('div', 's', longDate(h.d) + ' · +' + h.a + ' ' + plural(h.a, 'занятие', 'занятия', 'занятий') + ' · до ' + longDate(h.u)));
       r.appendChild(l); r.appendChild(el('div', 'r', h.p || ''));
-      paysBox.appendChild(r);
+      pays.appendChild(r);
     });
+    showMain();
+    loadNotes(function (n) { notes = n || {}; if (view === 'main') { renderToday(); renderClients($('q').value); } });
   });
 })();
 </script>
